@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ExpressionTreeExperiment1
 {
@@ -25,6 +24,46 @@ namespace ExpressionTreeExperiment1
             Debug.WriteLine($"expFunc1Compiled(5) = {expFunc1Compiled(5)}");
             Debug.WriteLine($"expFunc1Compiled(3) = {expFunc1Compiled(3)}");
             Debug.WriteLine($"expFunc1Compiled(7) = {expFunc1Compiled(7)}");
+
+            expFunc1.TraceNode(0);
+        }
+
+    }
+
+    static class ExtensionMethods
+    {
+        public static void TraceNode(this LambdaExpression lambdaExpression, int level)
+        {
+            var levelSpace = new string(' ', level * 2);
+            Debug.WriteLine($"|{levelSpace}|- {lambdaExpression.NodeType}");
+            Debug.WriteLine($"|{levelSpace}|- Parameters");
+            foreach (var lambdaExpressionParameter in lambdaExpression.Parameters)
+            {
+                lambdaExpressionParameter.TraceNode(level+1);
+            }
+            Debug.WriteLine("|");
+            Debug.WriteLine($"|{levelSpace}|- Body [{lambdaExpression.Body.NodeType}]");
+            (lambdaExpression.Body as BinaryExpression)?.TraceNode(level+1);
+        }
+
+        public static void TraceNode(this ParameterExpression parameterExpression, int level)
+        {
+            var levelSpace = new string(' ', level * 2);
+            Debug.WriteLine($"|{levelSpace}|- {parameterExpression.Name} ({parameterExpression.Type})");
+        }
+
+        public static void TraceNode(this BinaryExpression binaryExpression, int level)
+        {
+            var levelSpace = new string(' ', level * 2);
+            Debug.WriteLine($"|{levelSpace}|- {binaryExpression.ToString()} ({binaryExpression.Type})");
+            (binaryExpression.Left as ParameterExpression)?.TraceNode(level + 1);
+            (binaryExpression.Right as ConstantExpression)?.TraceNode(level + 1);
+        }
+
+        public static void TraceNode(this ConstantExpression constantExpression, int level)
+        {
+            var levelSpace = new string(' ', level * 2);
+            Debug.WriteLine($"|{levelSpace}|- {constantExpression.Value} ({constantExpression.Type})");
         }
     }
 }
