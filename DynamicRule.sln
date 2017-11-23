@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Experiments", "4 - Expe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionTreeExperiment1", "4 - experiments\ExpressionTreeExperiment1\ExpressionTreeExperiment1.csproj", "{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RuleEngine", "1 - src\RuleEngine\RuleEngine.csproj", "{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,12 +30,17 @@ Global
 		{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8} = {A7F9D167-0B41-4770-BEC0-F1DF0A2067B5}
+		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56} = {0548B483-1C20-41A2-8FC2-B1C81A126724}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E799544-0217-479E-A142-014AD9DD3982}
