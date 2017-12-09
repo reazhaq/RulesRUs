@@ -3,8 +3,8 @@ using RuleEngine.Rules;
 
 namespace RuleEngine.Interfaces
 {
-    public interface IValidationRuleCompiler<TTarget, TResult>
+    public interface IValidationRuleCompiler<TTarget>
     {
-        Func<TTarget, TResult> CompileRule(ValidationRule<TTarget, TResult> validationRule);
+        Func<TTarget, bool> CompileRule(ValidationRule<TTarget> validationRule);
     }
 }

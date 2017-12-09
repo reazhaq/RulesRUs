@@ -1,4 +1,6 @@
-﻿namespace RuleEngine.Rules
+﻿using System.Linq.Expressions;
+
+namespace RuleEngine.Rules
 {
     public abstract class Rule
     {
@@ -9,6 +11,7 @@
         // in the event of a rule logic failure - send this error
         public RuleError RuleError { get; set; }
 
+        public abstract Expression BuildExpression(ParameterExpression parameter);
         public abstract bool Compile();
     }
 }

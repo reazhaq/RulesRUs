@@ -1,7 +1,7 @@
 ﻿namespace RuleEngine.Interfaces
 {
-    public interface IValidationRule<in TTarget, out TResult>
+    public interface IValidationRule<in TTarget>
     {
-        TResult Execute(TTarget targetObject);
+        bool Execute(TTarget targetObject);
     }
 }

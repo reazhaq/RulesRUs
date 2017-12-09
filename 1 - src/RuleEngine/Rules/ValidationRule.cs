@@ -1,14 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq.Expressions;
 using RuleEngine.Interfaces;
 using RuleEngine.RuleCompilers;
 
 namespace RuleEngine.Rules
 {
-    public class ValidationRule<TTarget, TResult> : Rule, IValidationRule<TTarget, TResult>
+    public class ValidationRule<TTarget> : Rule, IValidationRule<TTarget>
     {
-        private Func<TTarget, TResult> CompiledDelegate { get; set; }
-        private static readonly IValidationRuleCompiler<TTarget, TResult> ValidationRuleCompiler = new ValidationRuleCompiler<TTarget, TResult>();
+        private Func<TTarget, bool> CompiledDelegate { get; set; }
+        private static readonly IValidationRuleCompiler<TTarget> ValidationRuleCompiler = new ValidationRuleCompiler<TTarget>();
+
+        public string RelationBetweenChildrenRules { get; set; }
+        public IList<ValidationRule<TTarget>> ChildrenRules { get; } = new List<ValidationRule<TTarget>>();
+        public IList<object> Inputs { get; } = new List<object>();
+
+        public override Expression BuildExpression(ParameterExpression funcParameter)
+        {
+            throw new NotImplementedException();
+        }
 
         public override bool Compile()
         {
@@ -16,7 +27,7 @@ namespace RuleEngine.Rules
             return CompiledDelegate != null;
         }
 
-        public TResult Execute(TTarget targetObject)
+        public bool Execute(TTarget targetObject)
         {
             if (CompiledDelegate == null)
                 throw new Exception("A Rule must be compiled first");
