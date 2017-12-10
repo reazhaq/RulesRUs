@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net.Http;
-using FluentAssert;
 using RuleEngine.Rules;
 using Xunit;
 using Xunit.Abstractions;
+using FluentAssertions;
 
 namespace RuleEngineTests.Rules
 {
@@ -41,11 +41,17 @@ namespace RuleEngineTests.Rules
             _testOutputHelper.WriteLine($"instanceOfConstantRuleOfTypeT = {instanceOfConstantRuleOfTypeT}");
 
             var propertyInfo = instanceOfConstantRuleOfTypeT.GetType().GetProperty("Value");
-            propertyInfo.ShouldNotBeNull();
+            propertyInfo
+                .Should()
+                .NotBeNull();
             propertyInfo.SetValue(instanceOfConstantRuleOfTypeT, Convert.ChangeType(value, propertyInfo.PropertyType));
             
             var compileResult = instanceOfConstantRuleOfTypeT.GetType().GetMethod("Compile").Invoke(instanceOfConstantRuleOfTypeT, null);
-            compileResult.ShouldBeOfType<bool>().ShouldBeEqualTo(true);
+            compileResult
+                .Should()
+                .NotBeNull()
+                .And.BeOfType<bool>()
+                .And.Be(true);
             _testOutputHelper.WriteLine($"compileResult = {compileResult}");
 
             var executeResult = instanceOfConstantRuleOfTypeT.GetType().GetMethod("Execute").Invoke(instanceOfConstantRuleOfTypeT, null);
