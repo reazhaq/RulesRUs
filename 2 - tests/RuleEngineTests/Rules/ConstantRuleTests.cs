@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Net.Http;
 using RuleEngine.Rules;
 using Xunit;
 using Xunit.Abstractions;
