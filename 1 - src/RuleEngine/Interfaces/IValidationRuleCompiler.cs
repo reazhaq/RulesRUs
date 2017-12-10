@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Linq.Expressions;
 using RuleEngine.Rules;
 
 namespace RuleEngine.Interfaces
 {
-    public interface IValidationRuleCompiler<TTarget>
+    public interface IValidationRuleCompiler<TTarget, TTargetValue>
     {
-        Func<TTarget, bool> CompileRule(ValidationRule<TTarget> validationRule);
+        Expression BuildExpression(ParameterExpression funcParameter);
+        Func<TTarget, bool> CompileRule(ValidationRule<TTarget, TTargetValue> validationRule);
     }
 }

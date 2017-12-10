@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using RuleEngine.Interfaces;
@@ -6,26 +7,28 @@ using RuleEngine.Rules;
 
 namespace RuleEngine.RuleCompilers
 {
-    public class ValidationRuleCompiler<TTarget> : IValidationRuleCompiler<TTarget>
+    public class ValidationRuleCompiler<TTarget, TTargetValue> : RuleCompilerBase, IValidationRuleCompiler<TTarget, TTargetValue>
     {
-        public Func<TTarget, bool> CompileRule(ValidationRule<TTarget> validationRule)
+        public Expression BuildExpression(ParameterExpression funcParameter)
         {
-            var funcParameter = Expression.Parameter(typeof(TTarget), "rootArgument");
-            if (validationRule.ChildrenRules.Any() && validationRule.ChildrenRules.Count >= 2)
+            return funcParameter;
+        }
+
+        public Func<TTarget, bool> CompileRule(ValidationRule<TTarget, TTargetValue> validationRule)
+        {
+            var funcParameter = Expression.Parameter(typeof(TTarget));
+
+            var targetValueParam = Expression.Parameter(typeof(TTargetValue));
+            var targetValueExpression = validationRule.ValueToValidateAgainst.BuildExpression(targetValueParam);
+
+            if (Enum.TryParse(validationRule.OperatorToUse, out ExpressionType operatorToUse) &&
+                LogicalOperatorsToUseAtTheRuleLevel.Contains(operatorToUse))
             {
-                var leftExpression = validationRule.ChildrenRules[0].BuildExpression(funcParameter);
-                var rightExpression = validationRule.ChildrenRules[1].BuildExpression(funcParameter);
-                var binaryExpression = Expression.AndAlso(leftExpression, rightExpression);
-                return Expression.Lambda<Func<TTarget, bool>>(binaryExpression, funcParameter).Compile();
+                var leftExpression = funcParameter;
+                var thisExpression = Expression.MakeBinary(operatorToUse, leftExpression, targetValueExpression);
+                Debug.WriteLine($"validation expression = {thisExpression}");
 
-                //var newFuncMethod = new Func<Expression, Expression, Expression>(Expression.And);
-
-                //var expression = newFuncMethod(leftExpression, rightExpression);
-                //for (int index = 2; index < validationRule.ChildrenRules.Count; index++)
-                //{
-                //    expression = newFuncMethod(expression,
-                //        validationRule.ChildrenRules[index].BuildExpression(funcParameter));
-                //}
+                return Expression.Lambda<Func<TTarget, bool>>(thisExpression, funcParameter).Compile();
             }
 
             throw new NotImplementedException();
