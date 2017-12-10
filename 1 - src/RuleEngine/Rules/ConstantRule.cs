@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices.ComTypes;
 using RuleEngine.Common;
 using RuleEngine.Interfaces;
 
@@ -13,15 +14,17 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(ParameterExpression parameter)
         {
+            var tType = typeof(T);
             if (string.IsNullOrEmpty(Value) || Value.Equals("null", StringComparison.InvariantCultureIgnoreCase))
             {
-                if (Nullable.GetUnderlyingType(typeof(T)) != null)
-                    return Expression.Constant(null, typeof(T));
+                if (!tType.IsValueType || Nullable.GetUnderlyingType(tType) != null)
+                    return Expression.Constant(default(T), tType);
 
-                throw new RuleEngineException($"{typeof(T)} is not nullable and null and/or empty string can't be assigned");
+                throw new RuleEngineException($"{typeof(T)} is not nullable and [null and/or empty string] can't be assigned");
             }
 
-            return Expression.Constant(Convert.ChangeType(Value, typeof(T)));
+            tType = Nullable.GetUnderlyingType(tType) ?? tType;
+            return Expression.Constant(Convert.ChangeType(Value, tType));
         }
 
         public override bool Compile()
@@ -30,7 +33,7 @@ namespace RuleEngine.Rules
             var expression = BuildExpression(parameter);
             Debug.WriteLine($"Expressiong for ConstantRule with value:{Value} is {expression}");
 
-            CompiledDelegate = Expression.Lambda<Func<T>>(expression).Compile();
+            CompiledDelegate = Expression.Lambda<Func<T>>(Expression.Convert(expression, typeof(T))).Compile();
             return CompiledDelegate != null;
         }
 
