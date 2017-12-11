@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using RuleEngine.Rules;
 using RuleEngineTests.Fixture;
 using RuleEngineTests.Model;
@@ -22,7 +21,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void RuleToCheckIfAnIntegerMatchesRuleValueOrNot()
         {
-            var numberShouldBe5Rule = new ValidationRule<int, int>
+            var numberShouldBe5Rule = new ValidationRule<int>
             {
                 ValueToValidateAgainst = new ConstantRule<int> {Value = "5"},
                 OperatorToUse = "Equal",
@@ -31,7 +30,7 @@ namespace RuleEngineTests.Rules
             var compileResult = numberShouldBe5Rule.Compile();
             compileResult.Should().BeTrue();
 
-            var numberShouldNotBe5Rule = new ValidationRule<int, int>
+            var numberShouldNotBe5Rule = new ValidationRule<int>
             {
                 ValueToValidateAgainst = new ConstantRule<int> { Value = "5" },
                 OperatorToUse = "NotEqual",
@@ -64,7 +63,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void RuleToCheckIfRootObjectIsNullOrNot()
         {
-            var checkForNotNullRule = new ValidationRule<Game, Game>
+            var checkForNotNullRule = new ValidationRule<Game>
             {
                 ValueToValidateAgainst = new ConstantRule<Game> {Value = "null"},
                 OperatorToUse = "NotEqual"
@@ -74,7 +73,7 @@ namespace RuleEngineTests.Rules
                 .Should()
                 .BeTrue();
 
-            var checkForNullRule = new ValidationRule<Game, Game>
+            var checkForNullRule = new ValidationRule<Game>
             {
                 ValueToValidateAgainst = new ConstantRule<Game> {Value = "null"},
                 OperatorToUse = "Equal"
@@ -109,5 +108,56 @@ namespace RuleEngineTests.Rules
             _testOutcomeHelper.WriteLine($"with null parameter executeResult = {ruleExecuteResult}; expecting true");
         }
 
+        [Fact]
+        public void ApplyRuleToFieldOrProperty()
+        {
+            var rankingLessThan100Rule = new ValidationRule<Game>
+            {
+                OperatorToUse = "LessThan",
+                ValueToValidateAgainst = new ConstantRule<int> { Value = "100" },
+                ObjectToValidate = "Ranking",
+                RuleError = new RuleError { Code = "c1", Message = "Ranking must be less than 100" }
+            };
+
+            var compileResult = rankingLessThan100Rule.Compile();
+            compileResult.Should().BeTrue();
+
+            var executeResult = rankingLessThan100Rule.Execute(_game);
+            executeResult.Should().BeTrue();
+
+            var someOtherGameWithHighRanking = new Game {Ranking = 101};
+            executeResult = rankingLessThan100Rule.Execute(someOtherGameWithHighRanking);
+            executeResult.Should().BeFalse();
+            _testOutcomeHelper.WriteLine($"with {nameof(someOtherGameWithHighRanking.Ranking)}={someOtherGameWithHighRanking.Ranking} " +
+                                         $"{nameof(rankingLessThan100Rule)} failed. " +
+                                         $"Error code={rankingLessThan100Rule.RuleError.Code}, " +
+                                         $"message={rankingLessThan100Rule.RuleError.Message}");
+        }
+
+        [Fact]
+        public void ApplyRuleToSubFieldOrProperty()
+        {
+            var nameLengthGreaterThan3Rule = new ValidationRule<Game>
+            {
+                OperatorToUse = "GreaterThan",
+                ValueToValidateAgainst = new ConstantRule<int> {Value = "3"},
+                ObjectToValidate = "Name.Length",
+                RuleError = new RuleError { Code = "c1", Message = "Name length must be greater than 3"}
+            };
+
+            var compileResult = nameLengthGreaterThan3Rule.Compile();
+            compileResult.Should().BeTrue();
+
+            var executeResult = nameLengthGreaterThan3Rule.Execute(_game);
+            executeResult.Should().BeTrue();
+
+            var someGameWithShortName = new Game {Name = "foo"};
+            executeResult = nameLengthGreaterThan3Rule.Execute(someGameWithShortName);
+            executeResult.Should().BeFalse();
+            _testOutcomeHelper.WriteLine($"with {nameof(someGameWithShortName.Name)}={someGameWithShortName.Name} " +
+                                         $"{nameof(nameLengthGreaterThan3Rule)} failed. " +
+                                         $"Error code={nameLengthGreaterThan3Rule.RuleError.Code}, " +
+                                         $"message={nameLengthGreaterThan3Rule.RuleError.Message}");
+        }
     }
 }

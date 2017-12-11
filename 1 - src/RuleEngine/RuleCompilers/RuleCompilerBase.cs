@@ -12,7 +12,9 @@ namespace RuleEngine.RuleCompilers
 
         protected readonly ExpressionType[] LogicalOperatorsToUseAtTheRuleLevel =
         {
-            ExpressionType.NotEqual, ExpressionType.Equal
+            ExpressionType.NotEqual, ExpressionType.Equal,
+            ExpressionType.GreaterThan, ExpressionType.GreaterThanOrEqual,
+            ExpressionType.LessThan, ExpressionType.LessThanOrEqual
         };
     }
 }

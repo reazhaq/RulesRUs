@@ -6,21 +6,22 @@ using RuleEngine.RuleCompilers;
 
 namespace RuleEngine.Rules
 {
-    public class ValidationRule<TTarget, TTargetValue> : Rule, IValidationRule<TTarget>
+    public class ValidationRule<TTarget> : Rule, IValidationRule<TTarget>
     {
         private Func<TTarget, bool> CompiledDelegate { get; set; }
-        private static readonly IValidationRuleCompiler<TTarget, TTargetValue> ValidationRuleCompiler = new ValidationRuleCompiler<TTarget, TTargetValue>();
+        private static readonly IValidationRuleCompiler<TTarget> ValidationRuleCompiler = new ValidationRuleCompiler<TTarget>();
+
+        public Rule ValueToValidateAgainst;
+        public string OperatorToUse;
+        public string ObjectToValidate { get; set; }
 
         public string RelationBetweenChildrenRules { get; set; }
         public IList<Rule> ChildrenRules { get; } = new List<Rule>();
         public IList<object> Inputs { get; } = new List<object>();
 
-        public ConstantRule<TTargetValue> ValueToValidateAgainst;
-        public string OperatorToUse;
-
         public override Expression BuildExpression(ParameterExpression funcParameter)
         {
-            return ValidationRuleCompiler.BuildExpression(funcParameter);
+            return ValidationRuleCompiler.BuildExpression(funcParameter, this);
         }
 
         public override bool Compile()
