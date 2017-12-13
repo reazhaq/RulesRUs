@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using RuleEngine.Interfaces;
 using RuleEngine.RuleCompilers;
@@ -21,7 +22,9 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(ParameterExpression funcParameter)
         {
-            return ValidationRuleCompiler.BuildExpression(funcParameter, this);
+            var expression = ValidationRuleCompiler.BuildExpression(funcParameter, this);
+            Debug.WriteLine(expression);
+            return expression;
         }
 
         public override bool Compile()

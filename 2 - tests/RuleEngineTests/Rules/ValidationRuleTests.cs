@@ -159,5 +159,53 @@ namespace RuleEngineTests.Rules
                                          $"Error code={nameLengthGreaterThan3Rule.RuleError.Code}, " +
                                          $"message={nameLengthGreaterThan3Rule.RuleError.Message}");
         }
+
+        [Fact]
+        public void ValidationRuleWithChildrenValidationRules()
+        {
+            var gameNotNullAndNameIsGreaterThan3CharsRule = new ValidationRule<Game>
+            {
+                OperatorToUse = "AndAlso",
+                RuleError = new RuleError { Code = "c", Message = "m"}
+            };
+            gameNotNullAndNameIsGreaterThan3CharsRule.ChildrenRules.Add
+            (
+                new ValidationRule<Game>
+                {
+                    OperatorToUse = "NotEqual",
+                    ValueToValidateAgainst = new ConstantRule<Game> {Value = "null"}
+                }
+            );
+            gameNotNullAndNameIsGreaterThan3CharsRule.ChildrenRules.Add
+            (
+                new ValidationRule<Game>
+                {
+                    ValueToValidateAgainst = new ConstantRule<string> {Value = "null"},
+                    ObjectToValidate = "Name",
+                    OperatorToUse = "NotEqual"
+                }
+            );
+            gameNotNullAndNameIsGreaterThan3CharsRule.ChildrenRules.Add
+            (
+                new ValidationRule<Game>
+                {
+                    ValueToValidateAgainst = new ConstantRule<int> {Value = "3"},
+                    ObjectToValidate = "Name.Length",
+                    OperatorToUse = "GreaterThan"
+                }
+            );
+
+            var compileResult = gameNotNullAndNameIsGreaterThan3CharsRule.Compile();
+            compileResult.Should().BeTrue();
+
+            var executeResult = gameNotNullAndNameIsGreaterThan3CharsRule.Execute(_game);
+            executeResult.Should().BeTrue();
+
+            executeResult = gameNotNullAndNameIsGreaterThan3CharsRule.Execute(null);
+            executeResult.Should().BeFalse();
+            _testOutcomeHelper.WriteLine($"{nameof(gameNotNullAndNameIsGreaterThan3CharsRule)} failed. " +
+                                         $"Error code={gameNotNullAndNameIsGreaterThan3CharsRule.RuleError.Code}, " +
+                                         $"message={gameNotNullAndNameIsGreaterThan3CharsRule.RuleError.Message}");
+        }
     }
 }

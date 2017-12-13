@@ -14,23 +14,41 @@ namespace RuleEngine.RuleCompilers
     {
         public Expression BuildExpression(ParameterExpression rootParameterExpression, ValidationRule<TTarget> validationRuleToBuildExpression)
         {
+            if (!Enum.TryParse(validationRuleToBuildExpression.OperatorToUse, out ExpressionType operatorToUse) ||
+                (!LogicalOperatorsToUseAtTheRuleLevel.Contains(operatorToUse) && !LogicalOperatorsToBindChildrenRules.Contains(operatorToUse))
+            )
+                throw new RuleEngineException("bad operator to use"); //todo: update message 
+
+            var targetValueParam = Expression.Parameter(typeof(Rule));
+            var targetValueExpression = validationRuleToBuildExpression.ValueToValidateAgainst?.BuildExpression(targetValueParam);
+
             if (!validationRuleToBuildExpression.ChildrenRules.Any())
             {
-                if (validationRuleToBuildExpression.ObjectToValidate == null)
-                    return rootParameterExpression;
+                // ObjectToValidate is where a rule defines what need to be validated
+                // if nothing; means check the object against something like not null
+                // if it has dots; means rule is checking against a sub-property or field
+                // if it has some value but no dots; meaning we are looking for a property or field
 
-                if (validationRuleToBuildExpression.ObjectToValidate.Contains("."))
+                Expression leftExpression;
+                if (validationRuleToBuildExpression.ObjectToValidate == null)
+                    leftExpression = rootParameterExpression;
+
+                else if (validationRuleToBuildExpression.ObjectToValidate.Contains("."))
                 {
                     var partsAndPieces = validationRuleToBuildExpression.ObjectToValidate.Split('.');
-                    Expression body = rootParameterExpression;
+                    Expression bodyWithSubProperty = rootParameterExpression;
                     foreach (var partsAndPiece in partsAndPieces)
                     {
-                        body = Expression.PropertyOrField(body, partsAndPiece);
+                        bodyWithSubProperty = Expression.PropertyOrField(bodyWithSubProperty, partsAndPiece);
                     }
-                    return body;
+                    leftExpression = bodyWithSubProperty;
                 }
+                else
+                    leftExpression = Expression.PropertyOrField(rootParameterExpression, validationRuleToBuildExpression.ObjectToValidate);
 
-                return Expression.PropertyOrField(rootParameterExpression, validationRuleToBuildExpression.ObjectToValidate);
+                var binaryExpressionBody = Expression.MakeBinary(operatorToUse, leftExpression, targetValueExpression);
+                Debug.WriteLine($"validation expression = {binaryExpressionBody}");
+                return binaryExpressionBody;
             }
 
             IList<Expression> childrenExpressions = new List<Expression>();
@@ -39,38 +57,22 @@ namespace RuleEngine.RuleCompilers
                 childrenExpressions.Add(childrenRule.BuildExpression(rootParameterExpression));
             }
 
-            throw new NotImplementedException();
+            if (childrenExpressions.Count == 1)
+                return childrenExpressions[0];
+
+            var bodyWithChildren = Expression.AndAlso(childrenExpressions[0], childrenExpressions[1]);
+            for (var index = 2; index < childrenExpressions.Count; index++)
+                bodyWithChildren = Expression.AndAlso(bodyWithChildren, childrenExpressions[index]);
+
+            Debug.WriteLine($"validation expression = {bodyWithChildren}");
+            return bodyWithChildren;
         }
 
         public Func<TTarget, bool> CompileRule(ValidationRule<TTarget> validationRuleToCompile)
         {
             var funcParameter = Expression.Parameter(typeof(TTarget));
-
-            var targetValueParam = Expression.Parameter(typeof(Rule));
-            var targetValueExpression = validationRuleToCompile.ValueToValidateAgainst?.BuildExpression(targetValueParam);
-
-            if (Enum.TryParse(validationRuleToCompile.OperatorToUse, out ExpressionType operatorToUse))
-            {
-                //Expression leftExpression = null;
-                //if (LogicalOperatorsToUseAtTheRuleLevel.Contains(operatorToUse))
-                //{
-                //    leftExpression = BuildExpression(funcParameter, validationRuleToCompile);
-                //}
-                //else if (LogicalOperatorsToBindChildrenRules.Contains(operatorToUse) && validationRuleToCompile.ChildrenRules.Any())
-                //{
-                //    leftExpression = BuildExpression(funcParameter, validationRuleToCompile);
-                //}
-
-                //if(leftExpression == null) throw new RuleEngineException("validation rule with non-supported opreator to use");
-
-                var leftExpression = BuildExpression(funcParameter, validationRuleToCompile);
-                var binaryExpressionBody = Expression.MakeBinary(operatorToUse, leftExpression, targetValueExpression);
-                Debug.WriteLine($"validation expression = {binaryExpressionBody}");
-
-                return Expression.Lambda<Func<TTarget, bool>>(binaryExpressionBody, funcParameter).Compile();
-            }
-
-            throw new NotImplementedException();
+            var binaryExpressionBody = BuildExpression(funcParameter, validationRuleToCompile);
+            return Expression.Lambda<Func<TTarget, bool>>(binaryExpressionBody, funcParameter).Compile();
         }
     }
 }
