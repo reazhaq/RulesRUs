@@ -6,8 +6,9 @@ namespace RuleEngine.RuleCompilers
     {
         protected readonly ExpressionType[] LogicalOperatorsToBindChildrenRules =
         {
-            ExpressionType.And, ExpressionType.AndAlso,
-            ExpressionType.Or, ExpressionType.OrElse
+            ExpressionType.Not,
+            //ExpressionType.And, ExpressionType.Or,
+            ExpressionType.AndAlso,ExpressionType.OrElse
         };
 
         protected readonly ExpressionType[] LogicalOperatorsToUseAtTheRuleLevel =

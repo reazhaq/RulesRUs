@@ -161,7 +161,7 @@ namespace RuleEngineTests.Rules
         }
 
         [Fact]
-        public void ValidationRuleWithChildrenValidationRules()
+        public void ValidationRuleWithAndAlsoChildrenValidationRules()
         {
             var gameNotNullAndNameIsGreaterThan3CharsRule = new ValidationRule<Game>
             {
@@ -206,6 +206,81 @@ namespace RuleEngineTests.Rules
             _testOutcomeHelper.WriteLine($"{nameof(gameNotNullAndNameIsGreaterThan3CharsRule)} failed. " +
                                          $"Error code={gameNotNullAndNameIsGreaterThan3CharsRule.RuleError.Code}, " +
                                          $"message={gameNotNullAndNameIsGreaterThan3CharsRule.RuleError.Message}");
+        }
+
+        [Fact]
+        public void ValidataionRuleWithOneNotChild()
+        {
+            var gameNullRuleByUsingNotWithNotEqualToNullChild = new ValidationRule<Game>
+            {
+                OperatorToUse = "Not",
+                RuleError = new RuleError {Code = "c", Message = "m"}
+            };
+            gameNullRuleByUsingNotWithNotEqualToNullChild.ChildrenRules.Add(
+                new ValidationRule<Game>
+                {
+                    OperatorToUse = "NotEqual",
+                    ValueToValidateAgainst = new ConstantRule<Game> {Value = "null"}
+                }
+            );
+
+            var compileResult = gameNullRuleByUsingNotWithNotEqualToNullChild.Compile();
+            compileResult.Should().BeTrue();
+
+            var executeResult = gameNullRuleByUsingNotWithNotEqualToNullChild.Execute(_game);
+            executeResult.Should().BeFalse();
+
+            executeResult = gameNullRuleByUsingNotWithNotEqualToNullChild.Execute(null);
+            executeResult.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ValidationRuleWithOrElseChildrenValidationRules()
+        {
+            var gameIsNullOrNameIsGreaterThan3CharsRule = new ValidationRule<Game> {OperatorToUse = "OrElse"};
+            gameIsNullOrNameIsGreaterThan3CharsRule.ChildrenRules.Add(new ValidationRule<Game>
+            {
+                OperatorToUse = "Equal",
+                ValueToValidateAgainst = new ConstantRule<Game> {Value = "null"}
+            });
+            gameIsNullOrNameIsGreaterThan3CharsRule.ChildrenRules.Add
+            (
+                new ValidationRule<Game>
+                {
+                    OperatorToUse = "AndAlso",
+                    ChildrenRules =
+                    {
+                        new ValidationRule<Game>
+                        {
+                            ValueToValidateAgainst = new ConstantRule<string> {Value = "null"},
+                            ObjectToValidate = "Name",
+                            OperatorToUse = "NotEqual"
+                        },
+                        new ValidationRule<Game>
+                        {
+                            ValueToValidateAgainst = new ConstantRule<int> {Value = "3"},
+                            ObjectToValidate = "Name.Length",
+                            OperatorToUse = "GreaterThan"
+                        }
+
+                    }
+                }
+            );
+
+            var compileResult = gameIsNullOrNameIsGreaterThan3CharsRule.Compile();
+            compileResult.Should().BeTrue();
+
+            var executeResult = gameIsNullOrNameIsGreaterThan3CharsRule.Execute(_game);
+            executeResult.Should().BeTrue();
+
+            executeResult = gameIsNullOrNameIsGreaterThan3CharsRule.Execute(null);
+            executeResult.Should().BeTrue();
+
+            executeResult = gameIsNullOrNameIsGreaterThan3CharsRule.Execute(new Game {Name = null});
+            executeResult.Should().BeFalse();
+
+            executeResult = gameIsNullOrNameIsGreaterThan3CharsRule.Execute(new Game {Name = "a"});
+            executeResult.Should().BeFalse();
         }
     }
 }

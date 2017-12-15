@@ -8,6 +8,7 @@ namespace RuleEngineTests.Model
         public string Name { get; set; }
         public string Description { get; set; }
         public int Ranking { get; set; }
+        public bool Active { get; set; }
 
         public IList<Player> Players { get; } = new List<Player>();
 

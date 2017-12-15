@@ -10,6 +10,38 @@ namespace ExpressionTreeExperiment1
         {
             Console.WriteLine("Hello World!");
 
+            //Test1();
+            //Test2();
+            Test3();
+        }
+
+        private static void Test3()
+        {
+            Expression<Func<int>> someDefault = () => 5;
+            Expression<Func<int, Func<int>>> boo = i => someDefault.Compile();
+            boo.TraceNode(0);
+            var booCompiled = boo.Compile();
+            var blah = booCompiled(99);
+            Debug.WriteLine(blah());
+
+            Expression<Func<string, int>> whatever = s => someDefault.Compile()();
+            var whateverCompiled = whatever.Compile();
+            Debug.WriteLine(whateverCompiled("something"));
+        }
+
+        private static void Test2()
+        {
+            Expression<Func<int>> someDefault = () => 5;
+            Expression<Func<int, Expression<Func<int>>>> boo = i => someDefault;
+            boo.TraceNode(0);
+            var booCompiled = boo.Compile();
+            var blah = booCompiled(99);
+            Debug.WriteLine(blah);
+            Debug.WriteLine(blah.Compile()());
+        }
+
+        private static void Test1()
+        {
             Func<int, bool> func1 = x => x > 5;
             Expression<Func<int, bool>> expFunc1 = x => x > 5;
 
@@ -27,7 +59,6 @@ namespace ExpressionTreeExperiment1
 
             expFunc1.TraceNode(0);
         }
-
     }
 
     static class ExtensionMethods

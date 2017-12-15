@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections;
+﻿using RuleEngine.Common;
+using RuleEngine.Interfaces;
+using RuleEngine.Rules;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using RuleEngine.Common;
-using RuleEngine.Interfaces;
-using RuleEngine.Rules;
 
 namespace RuleEngine.RuleCompilers
 {
@@ -57,15 +56,29 @@ namespace RuleEngine.RuleCompilers
                 childrenExpressions.Add(childrenRule.BuildExpression(rootParameterExpression));
             }
 
-            if (childrenExpressions.Count == 1)
-                return childrenExpressions[0];
+            Expression bodyExpression = null;
+            if (childrenExpressions.Any())
+            {
+                switch (operatorToUse)
+                {
+                    case ExpressionType.Not:
+                        bodyExpression = Expression.Not(childrenExpressions[0]);
+                        break;
+                    case ExpressionType.AndAlso:
+                        bodyExpression = Expression.AndAlso(childrenExpressions[0], childrenExpressions[1]);
+                        for (var index = 2; index < childrenExpressions.Count; index++)
+                            bodyExpression = Expression.AndAlso(bodyExpression, childrenExpressions[index]);
+                        break;
+                    default:
+                        bodyExpression = Expression.OrElse(childrenExpressions[0], childrenExpressions[1]);
+                        for (var index = 2; index < childrenExpressions.Count; index++)
+                            bodyExpression = Expression.OrElse(bodyExpression, childrenExpressions[index]);
+                        break;
+                }
+            }
 
-            var bodyWithChildren = Expression.AndAlso(childrenExpressions[0], childrenExpressions[1]);
-            for (var index = 2; index < childrenExpressions.Count; index++)
-                bodyWithChildren = Expression.AndAlso(bodyWithChildren, childrenExpressions[index]);
-
-            Debug.WriteLine($"validation expression = {bodyWithChildren}");
-            return bodyWithChildren;
+            Debug.WriteLine($"validation expression = {bodyExpression}");
+            return bodyExpression;
         }
 
         public Func<TTarget, bool> CompileRule(ValidationRule<TTarget> validationRuleToCompile)

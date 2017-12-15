@@ -15,6 +15,7 @@ namespace RuleEngineTests.Fixture
             {
                 Name = "Game 1",
                 Description = "super boring game",
+                Active = false,
                 Ranking = 99
             };
             Game.Players.Add(new Player
