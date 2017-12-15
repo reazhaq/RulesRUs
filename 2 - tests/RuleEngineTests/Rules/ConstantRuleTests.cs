@@ -15,6 +15,30 @@ namespace RuleEngineTests.Rules
             _testOutputHelper = testOutputHelper;
         }
 
+        [Fact]
+        public void ConstantRuleOfTypeIntThatReturns55WhenValueIsSetTo55()
+        {
+            var ruleReturning55 = new ConstantRule<int>{Value = "55"};
+            var compileResult = ruleReturning55.Compile();
+            compileResult.Should().BeTrue();
+
+            var executeResult = ruleReturning55.Execute();
+            executeResult.Should().Be(55);
+        }
+
+        [Fact]
+        public void ConstantRuleOfTypeDoubleThatReturnsWhatIsSetAsValueString()
+        {
+            var ruleReturningDouble = new ConstantRule<double>{Value = "99.1"};
+            var compileResult = ruleReturningDouble.Compile();
+            compileResult.Should().BeTrue();
+
+            var executeResult = ruleReturningDouble.Execute();
+            executeResult.Should().Be(99.1);
+        }
+
+        // shortcut - quick tests to work with different types
+        // unfortunately, it is not very read-friendly; due to generic with reflection
         [Theory]
         [InlineData(typeof(string), "something", "something")]
         [InlineData(typeof(string), "null", null)]

@@ -6,6 +6,7 @@ using RuleEngine.Interfaces;
 
 namespace RuleEngine.Rules
 {
+    // creates a typed lambda that takes no paramter and returns a fixed value
     public class ConstantRule<T> : Rule, IConstantRule<T>
     {
         private Func<T> CompiledDelegate { get; set; }
