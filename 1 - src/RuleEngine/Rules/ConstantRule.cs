@@ -13,7 +13,7 @@ namespace RuleEngine.Rules
         private Func<T> CompiledDelegate { get; set; }
         public string Value { get; set; }
 
-        public override Expression BuildExpression(ParameterExpression parameter)
+        public override Expression BuildExpression(params ParameterExpression[] _)
         {
             var tType = typeof(T);
             if (string.IsNullOrEmpty(Value) || Value.Equals("null", StringComparison.InvariantCultureIgnoreCase))

@@ -92,4 +92,17 @@ namespace RuleEngine.RuleCompilers
             return Expression.Lambda<Func<T, bool>>(binaryExpressionBody, funcParameter).Compile();
         }
     }
+
+    public class ValidationRuleCompiler<T1, T2> : RuleCompilerBase, IValidationRuleCompiler<T1, T2>
+    {
+        public Expression BuildExpression(ParameterExpression param1, ParameterExpression param2, ValidationRule<T1, T2> validationRuleToBuildExpression)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Func<T1, T2, bool> CompileRule(ValidationRule<T1, T2> validationRuleToCompile)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

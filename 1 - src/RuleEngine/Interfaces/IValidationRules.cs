@@ -1,6 +1,4 @@
-﻿using System.Runtime.InteropServices.ComTypes;
-
-namespace RuleEngine.Interfaces
+﻿namespace RuleEngine.Interfaces
 {
     public interface IValidationRule<in T>
     {
@@ -9,6 +7,6 @@ namespace RuleEngine.Interfaces
 
     public interface IValidationRule<in T1, in T2>
     {
-        bool Execute(T1 param1, ITypeInfo2 param2);
+        bool Execute(T1 param1, T2 param2);
     }
 }

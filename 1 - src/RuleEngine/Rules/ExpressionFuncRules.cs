@@ -8,17 +8,18 @@ namespace RuleEngine.Rules
 {
     public class ExpressionFuncRules<T> : Rule, IExpressionFuncRule<T>
     {
-        private readonly Expression<Func<T>> _ruleExpression;
         private Func<T> CompiledDelegate { get; set; }
+        public Expression<Func<T>> RuleExpression { get; }
 
-        public ExpressionFuncRules(Expression<Func<T>> ruleExpression) => _ruleExpression = ruleExpression;
-        public override Expression BuildExpression(ParameterExpression parameter) => _ruleExpression;
+        public ExpressionFuncRules(Expression<Func<T>> ruleExpression) => RuleExpression = ruleExpression;
+        public override Expression BuildExpression(params ParameterExpression[] _) => RuleExpression;
+
         public override bool Compile()
         {
 #if DEBUG
-            _ruleExpression.TraceNode();
+            RuleExpression.TraceNode();
 #endif
-            CompiledDelegate = _ruleExpression.Compile();
+            CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
         }
 
@@ -34,13 +35,14 @@ namespace RuleEngine.Rules
     public class ExpressionFuncRules<T1, T2> : Rule, IExpressionFuncRule<T1, T2>
     {
         private Func<T1, T2> CompiledDelegate { get; set; }
-        private readonly Expression<Func<T1, T2>> _ruleExpression;
+        public Expression<Func<T1, T2>> RuleExpression { get; }
 
-        public ExpressionFuncRules(Expression<Func<T1, T2>> ruleExpression) => _ruleExpression = ruleExpression;
-        public override Expression BuildExpression(ParameterExpression parameter) => _ruleExpression;
+        public ExpressionFuncRules(Expression<Func<T1, T2>> ruleExpression) => RuleExpression = ruleExpression;
+        public override Expression BuildExpression(params ParameterExpression[] _) => RuleExpression;
+
         public override bool Compile()
         {
-            CompiledDelegate = _ruleExpression.Compile();
+            CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
         }
 
@@ -56,13 +58,14 @@ namespace RuleEngine.Rules
     public class ExpressionFuncRules<T1, T2, T3> : Rule, IExpressionFuncRule<T1,T2,T3>
     {
         private Func<T1, T2, T3> CompiledDelegate { get; set; }
-        private readonly Expression<Func<T1, T2, T3>> _ruleExpression;
+        public Expression<Func<T1, T2, T3>> RuleExpression { get; }
 
-        public ExpressionFuncRules(Expression<Func<T1, T2, T3>> ruleExpression) => _ruleExpression = ruleExpression;
-        public override Expression BuildExpression(ParameterExpression parameter) => _ruleExpression;
+        public ExpressionFuncRules(Expression<Func<T1, T2, T3>> ruleExpression) => RuleExpression = ruleExpression;
+        public override Expression BuildExpression(params ParameterExpression[] _) => RuleExpression;
+
         public override bool Compile()
         {
-            CompiledDelegate = _ruleExpression.Compile();
+            CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
         }
 

@@ -11,7 +11,7 @@ namespace RuleEngine.Rules
         // in the event of a rule logic failure - send this error
         public RuleError RuleError { get; set; }
 
-        public abstract Expression BuildExpression(ParameterExpression parameter);
+        public abstract Expression BuildExpression(params ParameterExpression[] parameter);
         public abstract bool Compile();
     }
 }

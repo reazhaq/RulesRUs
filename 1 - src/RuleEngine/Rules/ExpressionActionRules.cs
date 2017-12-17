@@ -9,17 +9,17 @@ namespace RuleEngine.Rules
     public class ExpressionActionRules<T> : Rule, IExpressionActionRule<T>
     {
         private Action<T> CompiledDelegate { get; set; }
-        private readonly Expression<Action<T>> _ruleExpression;
+        public Expression<Action<T>> RuleExpression { get; }
 
-        public ExpressionActionRules(Expression<Action<T>> ruleExpression) => _ruleExpression = ruleExpression;
-        public override Expression BuildExpression(ParameterExpression parameter) => _ruleExpression;
+        public ExpressionActionRules(Expression<Action<T>> ruleExpression) => RuleExpression = ruleExpression;
+        public override Expression BuildExpression(params ParameterExpression[] _) => RuleExpression;
 
         public override bool Compile()
         {
 #if DEBUG
-            _ruleExpression.TraceNode();
+            RuleExpression.TraceNode();
 #endif
-            CompiledDelegate = _ruleExpression.Compile();
+            CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
         }
 
