@@ -12,7 +12,16 @@ namespace ExpressionTreeExperiment1
 
             //Test1();
             //Test2();
-            Test3();
+            //Test3();
+            Test4();
+        }
+
+        private static void Test4()
+        {
+            Expression<Func<int>> blah = () => 99;
+            blah.TraceNode(0);
+            var foo = blah.Compile();
+            foo();
         }
 
         private static void Test3()
