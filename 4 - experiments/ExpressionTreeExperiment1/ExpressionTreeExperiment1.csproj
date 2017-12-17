@@ -5,4 +5,8 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\1 - src\RuleEngine\RuleEngine.csproj" />
+  </ItemGroup>
+
 </Project>

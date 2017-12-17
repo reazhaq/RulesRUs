@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using RuleEngine.Utils;
 
 namespace RuleEngine.RuleCompilers
 {
@@ -85,6 +86,9 @@ namespace RuleEngine.RuleCompilers
         {
             var funcParameter = Expression.Parameter(typeof(TTarget));
             var binaryExpressionBody = BuildExpression(funcParameter, validationRuleToCompile);
+#if DEBUG
+            (binaryExpressionBody as BinaryExpression)?.TraceNode();
+#endif
             return Expression.Lambda<Func<TTarget, bool>>(binaryExpressionBody, funcParameter).Compile();
         }
     }

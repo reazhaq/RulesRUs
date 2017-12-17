@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces;
+using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
@@ -31,8 +32,10 @@ namespace RuleEngine.Rules
         {
             var parameter = Expression.Parameter(typeof(T));
             var expression = BuildExpression(parameter);
-            Debug.WriteLine($"Expressiong for ConstantRule with value:{Value} is {expression}");
-
+#if DEBUG
+            Debug.WriteLine($"Expression for ConstantRule with value: {Value} is {expression}");
+            expression.TraceNode();
+#endif
             CompiledDelegate = Expression.Lambda<Func<T>>(Expression.Convert(expression, typeof(T))).Compile();
             return CompiledDelegate != null;
         }

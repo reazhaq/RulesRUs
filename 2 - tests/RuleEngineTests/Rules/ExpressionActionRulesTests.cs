@@ -28,7 +28,7 @@ namespace RuleEngineTests.Rules
             var compileResult = updateGameRankingRule.Compile();
             compileResult.Should().BeTrue();
             updateGameRankingRule.Execute(_game1);
-            _game1.Ranking.Should().BeOfType(typeof(int)).And.Be(int.MinValue);
+            _game1.Ranking.Should().Be(int.MinValue);
         }
 
         private void ApplySomeRule(Game game) => game.Ranking = int.MinValue;

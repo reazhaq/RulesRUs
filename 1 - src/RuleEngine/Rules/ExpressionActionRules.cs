@@ -2,6 +2,7 @@
 using System.Linq.Expressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces;
+using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
@@ -15,6 +16,9 @@ namespace RuleEngine.Rules
 
         public override bool Compile()
         {
+#if DEBUG
+            _ruleExpression.TraceNode();
+#endif
             CompiledDelegate = _ruleExpression.Compile();
             return CompiledDelegate != null;
         }
