@@ -10,7 +10,7 @@ namespace RuleEngineTests.Model
         public int Ranking { get; set; }
         public bool Active { get; set; }
 
-        public IList<Player> Players { get; } = new List<Player>();
+        public List<Player> Players { get; } = new List<Player>();
 
         public bool HasPlayer(int id) => Players.Any(p => p.Id == id);
     }
