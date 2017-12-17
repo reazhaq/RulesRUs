@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Runtime.InteropServices.ComTypes;
 using RuleEngine.Interfaces;
 using RuleEngine.RuleCompilers;
 
@@ -39,6 +40,24 @@ namespace RuleEngine.Rules
                 throw new Exception("A Rule must be compiled first");
 
             return CompiledDelegate(targetObject);
+        }
+    }
+
+    public class ValidationRule<T1, T2> : Rule, IValidationRule<T1, T2>
+    {
+        public override Expression BuildExpression(ParameterExpression parameter)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Compile()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Execute(T1 param1, ITypeInfo2 param2)
+        {
+            throw new NotImplementedException();
         }
     }
 }
