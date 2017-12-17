@@ -7,10 +7,10 @@ using RuleEngine.RuleCompilers;
 
 namespace RuleEngine.Rules
 {
-    public class ValidationRule<TTarget> : Rule, IValidationRule<TTarget>
+    public class ValidationRule<T> : Rule, IValidationRule<T>
     {
-        private Func<TTarget, bool> CompiledDelegate { get; set; }
-        private static readonly IValidationRuleCompiler<TTarget> ValidationRuleCompiler = new ValidationRuleCompiler<TTarget>();
+        private Func<T, bool> CompiledDelegate { get; set; }
+        private static readonly IValidationRuleCompiler<T> ValidationRuleCompiler = new ValidationRuleCompiler<T>();
 
         public Rule ValueToValidateAgainst;
         public string OperatorToUse;
@@ -33,7 +33,7 @@ namespace RuleEngine.Rules
             return CompiledDelegate != null;
         }
 
-        public bool Execute(TTarget targetObject)
+        public bool Execute(T targetObject)
         {
             if (CompiledDelegate == null)
                 throw new Exception("A Rule must be compiled first");

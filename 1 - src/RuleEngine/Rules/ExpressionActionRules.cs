@@ -6,7 +6,7 @@ using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
-    public class ExpressionActionRules<T> : Rule, IExpressionActionRules<T>
+    public class ExpressionActionRules<T> : Rule, IExpressionActionRule<T>
     {
         private Action<T> CompiledDelegate { get; set; }
         private readonly Expression<Action<T>> _ruleExpression;

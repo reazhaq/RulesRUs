@@ -4,9 +4,9 @@ using RuleEngine.Rules;
 
 namespace RuleEngine.Interfaces
 {
-    public interface IValidationRuleCompiler<TTarget>
+    public interface IValidationRuleCompiler<T>
     {
-        Expression BuildExpression(ParameterExpression funcParameter, ValidationRule<TTarget> validationRuleToBuildExpression);
-        Func<TTarget, bool> CompileRule(ValidationRule<TTarget> validationRuleToCompile);
+        Expression BuildExpression(ParameterExpression funcParameter, ValidationRule<T> validationRuleToBuildExpression);
+        Func<T, bool> CompileRule(ValidationRule<T> validationRuleToCompile);
     }
 }

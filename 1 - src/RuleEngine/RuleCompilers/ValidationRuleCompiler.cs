@@ -10,9 +10,9 @@ using RuleEngine.Utils;
 
 namespace RuleEngine.RuleCompilers
 {
-    public class ValidationRuleCompiler<TTarget> : RuleCompilerBase, IValidationRuleCompiler<TTarget>
+    public class ValidationRuleCompiler<T> : RuleCompilerBase, IValidationRuleCompiler<T>
     {
-        public Expression BuildExpression(ParameterExpression rootParameterExpression, ValidationRule<TTarget> validationRuleToBuildExpression)
+        public Expression BuildExpression(ParameterExpression rootParameterExpression, ValidationRule<T> validationRuleToBuildExpression)
         {
             if (!Enum.TryParse(validationRuleToBuildExpression.OperatorToUse, out ExpressionType operatorToUse) ||
                 (!LogicalOperatorsToUseAtTheRuleLevel.Contains(operatorToUse) && !LogicalOperatorsToBindChildrenRules.Contains(operatorToUse))
@@ -82,14 +82,14 @@ namespace RuleEngine.RuleCompilers
             return bodyExpression;
         }
 
-        public Func<TTarget, bool> CompileRule(ValidationRule<TTarget> validationRuleToCompile)
+        public Func<T, bool> CompileRule(ValidationRule<T> validationRuleToCompile)
         {
-            var funcParameter = Expression.Parameter(typeof(TTarget));
+            var funcParameter = Expression.Parameter(typeof(T));
             var binaryExpressionBody = BuildExpression(funcParameter, validationRuleToCompile);
 #if DEBUG
             (binaryExpressionBody as BinaryExpression)?.TraceNode();
 #endif
-            return Expression.Lambda<Func<TTarget, bool>>(binaryExpressionBody, funcParameter).Compile();
+            return Expression.Lambda<Func<T, bool>>(binaryExpressionBody, funcParameter).Compile();
         }
     }
 }

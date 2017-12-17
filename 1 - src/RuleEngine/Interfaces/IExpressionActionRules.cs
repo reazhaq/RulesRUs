@@ -1,6 +1,6 @@
 ﻿namespace RuleEngine.Interfaces
 {
-    public interface IExpressionActionRules<in T>
+    public interface IExpressionActionRule<in T>
     {
         void Execute(T parameter);
     }

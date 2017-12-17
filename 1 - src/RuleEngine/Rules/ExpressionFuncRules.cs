@@ -6,7 +6,7 @@ using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
-    public class ExpressionFuncRules<T> : Rule, IExpressionFuncRules<T>
+    public class ExpressionFuncRules<T> : Rule, IExpressionFuncRule<T>
     {
         private readonly Expression<Func<T>> _ruleExpression;
         private Func<T> CompiledDelegate { get; set; }
@@ -31,7 +31,7 @@ namespace RuleEngine.Rules
         }
     }
 
-    public class ExpressionFuncRules<T1, T2> : Rule, IExpressionFuncRules<T1, T2>
+    public class ExpressionFuncRules<T1, T2> : Rule, IExpressionFuncRule<T1, T2>
     {
         private Func<T1, T2> CompiledDelegate { get; set; }
         private readonly Expression<Func<T1, T2>> _ruleExpression;
@@ -53,7 +53,7 @@ namespace RuleEngine.Rules
         }
     }
 
-    public class ExpressionFuncRules<T1, T2, T3> : Rule, IExpressionFuncRules<T1,T2,T3>
+    public class ExpressionFuncRules<T1, T2, T3> : Rule, IExpressionFuncRule<T1,T2,T3>
     {
         private Func<T1, T2, T3> CompiledDelegate { get; set; }
         private readonly Expression<Func<T1, T2, T3>> _ruleExpression;
