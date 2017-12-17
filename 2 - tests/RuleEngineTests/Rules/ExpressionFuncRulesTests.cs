@@ -8,13 +8,13 @@ using Xunit.Abstractions;
 
 namespace RuleEngineTests.Rules
 {
-    public class ExpressionRuleTests : IClassFixture<ExpressionRuleFixture>
+    public class ExpressionFuncRulesTests : IClassFixture<ExpressionRulesFixture>
     {
         private readonly ITestOutputHelper _testOutcomeHelper;
         private readonly Game _game1;
         private readonly Game _game2;
 
-        public ExpressionRuleTests(ExpressionRuleFixture expressionRuleFixture, ITestOutputHelper testOutcomeHelper)
+        public ExpressionFuncRulesTests(ExpressionRulesFixture expressionRuleFixture, ITestOutputHelper testOutcomeHelper)
         {
             _game1 = expressionRuleFixture.Game1;
             _game2 = expressionRuleFixture.Game2;
@@ -24,7 +24,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void OneOutParameterExpressionTest()
         {
-            var ruleReturningAFixedValue = new ExpressionRule<int>(() => int.MaxValue);
+            var ruleReturningAFixedValue = new ExpressionFuncRules<int>(() => int.MaxValue);
             var compileResult = ruleReturningAFixedValue.Compile();
             compileResult.Should().BeTrue();
             var executeResult = ruleReturningAFixedValue.Execute();
@@ -34,7 +34,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void OneInOneOutParameterExpressionTest()
         {
-            var ruleReturningCountOfPlayers = new ExpressionRule<Game, int>(
+            var ruleReturningCountOfPlayers = new ExpressionFuncRules<Game, int>(
                                                 g => (g == null || g.Players == null) ? 0 : g.Players.Count);
             var compileResult = ruleReturningCountOfPlayers.Compile();
             compileResult.Should().BeTrue();
@@ -45,7 +45,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void TwoInOneOutParameterExpressionTest()
         {
-            var ruleReturningTotalCountOfPlayers = new ExpressionRule<Game, Game, int>((g1, g2) =>
+            var ruleReturningTotalCountOfPlayers = new ExpressionFuncRules<Game, Game, int>((g1, g2) =>
                                                     ((g1 == null || g1.Players == null) ? 0 : g1.Players.Count) +
                                                         ((g2 == null || g2.Players == null) ? 0 : g2.Players.Count)
                                                 );

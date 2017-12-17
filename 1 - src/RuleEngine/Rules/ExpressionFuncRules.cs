@@ -5,12 +5,12 @@ using RuleEngine.Interfaces;
 
 namespace RuleEngine.Rules
 {
-    public class ExpressionRule<T> : Rule, IExpressionRule<T>
+    public class ExpressionFuncRules<T> : Rule, IExpressionFuncRules<T>
     {
         private readonly Expression<Func<T>> _ruleExpression;
         private Func<T> CompiledDelegate { get; set; }
 
-        public ExpressionRule(Expression<Func<T>> ruleExpression) => _ruleExpression = ruleExpression;
+        public ExpressionFuncRules(Expression<Func<T>> ruleExpression) => _ruleExpression = ruleExpression;
         public override Expression BuildExpression(ParameterExpression parameter) => _ruleExpression;
         public override bool Compile()
         {
@@ -27,12 +27,12 @@ namespace RuleEngine.Rules
         }
     }
 
-    public class ExpressionRule<T1, T2> : Rule, IExpressionRule<T1, T2>
+    public class ExpressionFuncRules<T1, T2> : Rule, IExpressionFuncRules<T1, T2>
     {
         private Func<T1, T2> CompiledDelegate { get; set; }
         private readonly Expression<Func<T1, T2>> _ruleExpression;
 
-        public ExpressionRule(Expression<Func<T1, T2>> ruleExpression) => _ruleExpression = ruleExpression;
+        public ExpressionFuncRules(Expression<Func<T1, T2>> ruleExpression) => _ruleExpression = ruleExpression;
         public override Expression BuildExpression(ParameterExpression parameter) => _ruleExpression;
         public override bool Compile()
         {
@@ -49,12 +49,12 @@ namespace RuleEngine.Rules
         }
     }
 
-    public class ExpressionRule<T1, T2, T3> : Rule, IExpressionRule<T1,T2,T3>
+    public class ExpressionFuncRules<T1, T2, T3> : Rule, IExpressionFuncRules<T1,T2,T3>
     {
         private Func<T1, T2, T3> CompiledDelegate { get; set; }
         private readonly Expression<Func<T1, T2, T3>> _ruleExpression;
 
-        public ExpressionRule(Expression<Func<T1, T2, T3>> ruleExpression) => _ruleExpression = ruleExpression;
+        public ExpressionFuncRules(Expression<Func<T1, T2, T3>> ruleExpression) => _ruleExpression = ruleExpression;
         public override Expression BuildExpression(ParameterExpression parameter) => _ruleExpression;
         public override bool Compile()
         {

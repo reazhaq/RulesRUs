@@ -3,13 +3,13 @@ using RuleEngineTests.Model;
 
 namespace RuleEngineTests.Fixture
 {
-    public class ExpressionRuleFixture : IDisposable
+    public class ExpressionRulesFixture : IDisposable
     {
         public void Dispose(){}
         public Game Game1 { get; }
         public Game Game2 { get; }
 
-        public ExpressionRuleFixture()
+        public ExpressionRulesFixture()
         {
             Game1 = new Game
             {
