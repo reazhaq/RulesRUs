@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using RuleEngine.Rules;
 using RuleEngineTests.Fixture;
@@ -53,6 +55,24 @@ namespace RuleEngineTests.Rules
             compileResult.Should().BeTrue();
             var executeResult = ruleReturningTotalCountOfPlayers.Execute(_game1, _game2);
             executeResult.Should().BeOfType(typeof(int)).And.Be(_game1.Players.Count + _game2.Players.Count);
+        }
+
+        [Fact]
+        public void TwoInOneOutParameterExpressionTest2()
+        {
+            var ruleFindCountriesNotInOther = new ExpressionFuncRules<Game, Game, IEnumerable<Player>>((g1, g2) =>
+                g1.Players.Except(g2.Players, new PlayerCountryEqualityComparer())
+            );
+            var compileResult = ruleFindCountriesNotInOther.Compile();
+            compileResult.Should().BeTrue();
+            var executeResult = ruleFindCountriesNotInOther.Execute(_game1, _game2).ToList();
+            executeResult.Should().BeOfType(typeof(List<Player>));
+            _testOutcomeHelper.WriteLine(".............g1.except(g2)....");
+            executeResult.ForEach(p => _testOutcomeHelper.WriteLine($"country: {p.Country.CountryCode}"));
+
+            executeResult = ruleFindCountriesNotInOther.Execute(_game2, _game1).ToList();
+            _testOutcomeHelper.WriteLine(".............g2.except(g1)....");
+            executeResult.ForEach(p => _testOutcomeHelper.WriteLine($"country: {p.Country.CountryCode}"));
         }
     }
 }

@@ -20,7 +20,7 @@ namespace RuleEngineTests.Fixture
                 Active = false,
                 Ranking = 99
             };
-            Game1.Players.AddRange(Enumerable.Range(1, 4).Select(x => new Player
+            Game1.Players.AddRange(Enumerable.Range(1, 40).Select(x => new Player
             {
                 Id = x,
                 Name = $"Player{x}",
@@ -39,7 +39,7 @@ namespace RuleEngineTests.Fixture
                 Active = true,
                 Ranking = 98
             };
-            Game2.Players.AddRange(Enumerable.Range(1, 6).Select(x => new Player
+            Game2.Players.AddRange(Enumerable.Range(1, 60).Select(x => new Player
             {
                 Id = x,
                 Name = $"Player{x}",
