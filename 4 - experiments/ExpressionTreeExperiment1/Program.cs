@@ -12,10 +12,28 @@ namespace ExpressionTreeExperiment1
         {
             Console.WriteLine("Hello World!");
 
-            Test1();
+            //Test1();
             //Test2();
             //Test3();
-            Test4();
+            //Test4();
+            Test5();
+        }
+
+        private static void Test5()
+        {
+            var foo = "somestring";
+            var blah = foo.Split('.');
+            foreach (var s in blah)
+            {
+                Debug.WriteLine(s);
+            }
+
+            foo = "something.blah";
+            blah = foo.Split('.');
+            foreach (var s in blah)
+            {
+                Debug.WriteLine(s);
+            }
         }
 
         private static void Test4()

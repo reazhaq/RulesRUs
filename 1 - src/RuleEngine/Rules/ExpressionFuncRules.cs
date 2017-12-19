@@ -42,6 +42,9 @@ namespace RuleEngine.Rules
 
         public override bool Compile()
         {
+#if DEBUG
+            RuleExpression.TraceNode();
+#endif
             CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
         }
@@ -65,6 +68,9 @@ namespace RuleEngine.Rules
 
         public override bool Compile()
         {
+#if DEBUG
+            RuleExpression.TraceNode();
+#endif
             CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
         }

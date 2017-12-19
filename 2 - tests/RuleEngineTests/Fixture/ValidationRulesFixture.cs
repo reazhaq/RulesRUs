@@ -4,13 +4,13 @@ using RuleEngineTests.Model;
 
 namespace RuleEngineTests.Fixture
 {
-    public class ValidationRuleFixture : IDisposable
+    public class ValidationRulesFixture : IDisposable
     {
         public void Dispose() { }
 
         public Game Game { get; }
 
-        public ValidationRuleFixture()
+        public ValidationRulesFixture()
         {
             var someRandomNumber = new Random();
 

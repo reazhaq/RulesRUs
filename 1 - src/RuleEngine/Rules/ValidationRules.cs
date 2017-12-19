@@ -51,6 +51,10 @@ namespace RuleEngine.Rules
         private Func<T1, T2, bool> CompiledDelegate { get; set; }
         private static readonly IValidationRuleCompiler<T1, T2> ValidationRuleCompiler = new ValidationRuleCompiler<T1, T2>();
 
+        public string OperatorToUse;
+        public string ObjectToValidate1;
+        public string ObjectToValidate2;
+
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
             if (parameters == null || parameters.Length != 2)

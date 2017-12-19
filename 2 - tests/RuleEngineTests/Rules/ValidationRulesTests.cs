@@ -7,12 +7,12 @@ using Xunit.Abstractions;
 
 namespace RuleEngineTests.Rules
 {
-    public class ValidationRuleTests : IClassFixture<ValidationRuleFixture>
+    public class ValidationRulesTests : IClassFixture<ValidationRulesFixture>
     {
         private readonly ITestOutputHelper _testOutcomeHelper;
         private readonly Game _game;
 
-        public ValidationRuleTests(ValidationRuleFixture validationRuleFixture, ITestOutputHelper testOutcomeHelper)
+        public ValidationRulesTests(ValidationRulesFixture validationRuleFixture, ITestOutputHelper testOutcomeHelper)
         {
             _game = validationRuleFixture.Game;
             _testOutcomeHelper = testOutcomeHelper;
@@ -280,6 +280,25 @@ namespace RuleEngineTests.Rules
             executeResult.Should().BeFalse();
 
             executeResult = gameIsNullOrNameIsGreaterThan3CharsRule.Execute(new Game {Name = "a"});
+            executeResult.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ValidationRuleWithTwoTypes()
+        {
+            var twoPlayersScoreRule = new ValidationRule<Player, Player>
+            {
+                OperatorToUse = "GreaterThan",
+                ObjectToValidate1 = "CurrentScore",
+                ObjectToValidate2 = "CurrentScore"
+            };
+
+            var compileResult = twoPlayersScoreRule.Compile();
+            compileResult.Should().BeTrue();
+
+            var executeResult = twoPlayersScoreRule.Execute(_game.Players[0], _game.Players[1]);
+            executeResult.Should().BeTrue();
+            executeResult = twoPlayersScoreRule.Execute(_game.Players[1], _game.Players[0]);
             executeResult.Should().BeFalse();
         }
     }
