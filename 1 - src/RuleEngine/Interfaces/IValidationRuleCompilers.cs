@@ -6,7 +6,7 @@ namespace RuleEngine.Interfaces
 {
     public interface IValidationRuleCompiler<T>
     {
-        Expression BuildExpression(ParameterExpression funcParameter, ValidationRule<T> validationRuleToBuildExpression);
+        Expression BuildExpression(ParameterExpression param, ValidationRule<T> validationRuleToBuildExpression);
         Func<T, bool> CompileRule(ValidationRule<T> validationRuleToCompile);
     }
 

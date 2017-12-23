@@ -10,23 +10,7 @@ using RuleEngine.Utils;
 
 namespace RuleEngine.RuleCompilers
 {
-    public class ValidationRuleCompilerBase : RuleCompilerBase
-    {
-        protected virtual Expression GetExpression(ParameterExpression param, string objectToValidate)
-        {
-            if (string.IsNullOrEmpty(objectToValidate))
-                return param;
-
-            var partsAndPieces = objectToValidate.Split('.');
-            Expression bodyWithSubProperty = param;
-            foreach (var partsAndPiece in partsAndPieces)
-                bodyWithSubProperty = Expression.PropertyOrField(bodyWithSubProperty, partsAndPiece);
-
-            return bodyWithSubProperty;
-        }
-    }
-
-    public class ValidationRuleCompiler<T> : ValidationRuleCompilerBase, IValidationRuleCompiler<T>
+    public class ValidationRuleCompiler<T> : RuleCompilerBase, IValidationRuleCompiler<T>
     {
         public Expression BuildExpression(ParameterExpression rootParameterExpression, ValidationRule<T> validationRuleToBuildExpression)
         {
@@ -40,7 +24,7 @@ namespace RuleEngine.RuleCompilers
                 var targetValueParam = Expression.Parameter(typeof(Rule));
                 var targetValueExpression = validationRuleToBuildExpression.ValueToValidateAgainst?.BuildExpression(targetValueParam);
 
-                var leftExpression = GetExpression(rootParameterExpression, validationRuleToBuildExpression.ObjectToValidate);
+                var leftExpression = GetExpressionWithSubProperty(rootParameterExpression, validationRuleToBuildExpression.ObjectToValidate);
                 var binaryExpressionBody = Expression.MakeBinary(operatorToUse, leftExpression, targetValueExpression);
                 Debug.WriteLine($"{nameof(binaryExpressionBody)}: {binaryExpressionBody}");
                 return binaryExpressionBody;
@@ -88,7 +72,7 @@ namespace RuleEngine.RuleCompilers
         }
     }
 
-    public class ValidationRuleCompiler<T1, T2> : ValidationRuleCompilerBase, IValidationRuleCompiler<T1, T2>
+    public class ValidationRuleCompiler<T1, T2> : RuleCompilerBase, IValidationRuleCompiler<T1, T2>
     {
         public Expression BuildExpression(ParameterExpression param1, ParameterExpression param2, ValidationRule<T1, T2> validationRuleToBuildExpression)
         {
@@ -97,8 +81,8 @@ namespace RuleEngine.RuleCompilers
             )
                 throw new RuleEngineException($"Bad {nameof(operatorToUse)} value {operatorToUse}"); //todo: update message 
 
-            var expression1 = GetExpression(param1, validationRuleToBuildExpression.ObjectToValidate1);
-            var expression2 = GetExpression(param2, validationRuleToBuildExpression.ObjectToValidate2);
+            var expression1 = GetExpressionWithSubProperty(param1, validationRuleToBuildExpression.ObjectToValidate1);
+            var expression2 = GetExpressionWithSubProperty(param2, validationRuleToBuildExpression.ObjectToValidate2);
 
             var binaryExpression = Expression.MakeBinary(operatorToUse, expression1, expression2);
             Debug.WriteLine($"{nameof(binaryExpression)}: {binaryExpression}");

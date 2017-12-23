@@ -17,5 +17,24 @@ namespace RuleEngine.RuleCompilers
             ExpressionType.GreaterThan, ExpressionType.GreaterThanOrEqual,
             ExpressionType.LessThan, ExpressionType.LessThanOrEqual
         };
+
+        protected readonly string[] RegularExpressionOperator =
+        {
+            "IsMatch"
+        };
+
+        protected virtual Expression GetExpressionWithSubProperty(ParameterExpression param, string objectToValidate)
+        {
+            if (string.IsNullOrEmpty(objectToValidate))
+                return param;
+
+            var partsAndPieces = objectToValidate.Split('.');
+            Expression bodyWithSubProperty = param;
+            foreach (var partsAndPiece in partsAndPieces)
+                bodyWithSubProperty = Expression.PropertyOrField(bodyWithSubProperty, partsAndPiece);
+
+            return bodyWithSubProperty;
+        }
+
     }
 }

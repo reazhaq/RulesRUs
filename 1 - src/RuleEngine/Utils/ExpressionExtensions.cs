@@ -19,6 +19,7 @@ namespace RuleEngine.Utils
 
         public static void TraceNode(this Expression expression, int level = 0)
         {
+            if (expression == null) return;
             switch (expression)
             {
                 case BinaryExpression binaryExpression:
@@ -36,8 +37,14 @@ namespace RuleEngine.Utils
                 case LambdaExpression lambdaExpression:
                     lambdaExpression.TraceNode(level);
                     break;
+                case Expression expression2:
+                    var levelSpace = new string(' ', level * NumberOfSpaces);
+                    Debug.WriteLine($"|{levelSpace}|- Expression Type: {expression.GetType().Name}");
+                    Debug.WriteLine($"|{levelSpace}|- Expression.NodeType: {expression2.NodeType}");
+                    Debug.WriteLine($"|{levelSpace}|- Expression.DebugView: {expression2.GetDebugView()}");
+                    break;
                 default:
-                    Debug.WriteLine($"Trace Node is not defined for {typeof(Expression)}");
+                    Debug.WriteLine($"Trace Node is not defined for {expression.GetType()}");
                     break;
             }
         }
@@ -46,7 +53,7 @@ namespace RuleEngine.Utils
         {
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- binaryExpression.NodeType: {binaryExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- binaryExpression.DebugView: {GetDebugView(binaryExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- binaryExpression.DebugView: {binaryExpression.GetDebugView()}");
 
             level++;
             binaryExpression.Left?.TraceNode(level);
@@ -57,7 +64,7 @@ namespace RuleEngine.Utils
         {
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- blockExpression.NodeType: {blockExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- blockExpression.DebugView: {GetDebugView(blockExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- blockExpression.DebugView: {blockExpression.GetDebugView()}");
 
             level++;
             Debug.WriteLine($"|{levelSpace}|- Variables count: {blockExpression.Variables.Count}");
@@ -73,7 +80,7 @@ namespace RuleEngine.Utils
         {
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- conditionalExpression.NodeType: {conditionalExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- conditionalExpression.DebugView: {GetDebugView(conditionalExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- conditionalExpression.DebugView: {conditionalExpression.GetDebugView()}");
 
             level++;
             Debug.WriteLine($"|{levelSpace}|- IfFalse:");
@@ -87,21 +94,21 @@ namespace RuleEngine.Utils
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- constantExpression.Value: {constantExpression.Value ?? "null"}");
             Debug.WriteLine($"|{levelSpace}|- constantExpression.Type: {constantExpression.Type}");
-            Debug.WriteLine($"|{levelSpace}|- constantExpression.DebugView: {GetDebugView(constantExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- constantExpression.DebugView: {constantExpression.GetDebugView()}");
         }
 
         public static void TraceNode(this DynamicExpression dynamicExpression, int level = 0)
         {
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- dynamicExpression.NodeType: {dynamicExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- dynamicExpression.DebugView: {GetDebugView(dynamicExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- dynamicExpression.DebugView: {dynamicExpression.GetDebugView()}");
         }
 
         public static void TraceNode(this LambdaExpression lambdaExpression, int level = 0)
         {
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- lambdaExpression.NodeType: {lambdaExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- lambdaExpression.DebugView: {GetDebugView(lambdaExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- lambdaExpression.DebugView: {lambdaExpression.GetDebugView()}");
 
             var nextLevel = level + 1;
             Debug.WriteLine($"|{levelSpace}|- Parameters count: {lambdaExpression.Parameters.Count}");
@@ -117,21 +124,21 @@ namespace RuleEngine.Utils
         {
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- memberExpression.NodeType: {memberExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- memberExpression.DebugView: {GetDebugView(memberExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- memberExpression.DebugView: {memberExpression.GetDebugView()}");
         }
 
         public static void TraceNode(this MethodCallExpression methodCallExpression, int level = 0)
         {
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- methodCallExpression.NodeType: {methodCallExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- methodCallExpression.DebugView: {GetDebugView(methodCallExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- methodCallExpression.DebugView: {methodCallExpression.GetDebugView()}");
         }
 
         public static void TraceNode(this NewExpression newExpression, int level = 0)
         {
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- newExpression.NodeType: {newExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- newExpression.DebugView: {GetDebugView(newExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- newExpression.DebugView: {newExpression.GetDebugView()}");
         }
 
         public static void TraceNode(this ParameterExpression parameterExpression, int level = 0)
@@ -139,7 +146,7 @@ namespace RuleEngine.Utils
             var levelSpace = new string(' ', level * NumberOfSpaces);
             Debug.WriteLine($"|{levelSpace}|- parameterExpression.Name: {parameterExpression.Name ?? "null"}");
             Debug.WriteLine($"|{levelSpace}|- parameterExpression.Type: {parameterExpression.Type}");
-            Debug.WriteLine($"|{levelSpace}|- parameterExpression.DebugView: {GetDebugView(parameterExpression)}");
+            Debug.WriteLine($"|{levelSpace}|- parameterExpression.DebugView: {parameterExpression.GetDebugView()}");
         }
     }
 }

@@ -19,7 +19,7 @@ namespace RuleEngine.Rules
 
         public string RelationBetweenChildrenRules { get; set; }
         public IList<Rule> ChildrenRules { get; } = new List<Rule>();
-        public IList<object> Inputs { get; } = new List<object>();
+        //public IList<object> Inputs { get; } = new List<object>();
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
