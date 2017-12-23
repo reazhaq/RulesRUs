@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using RuleEngine.Rules;
 
-namespace RuleEngine.Interfaces
+namespace RuleEngine.Interfaces.Compilers
 {
     public interface IValidationRuleCompiler<T>
     {

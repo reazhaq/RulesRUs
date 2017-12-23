@@ -1,4 +1,4 @@
-﻿namespace RuleEngine.Interfaces
+﻿namespace RuleEngine.Interfaces.Rules
 {
     public interface IExpressionActionRule<in T>
     {
