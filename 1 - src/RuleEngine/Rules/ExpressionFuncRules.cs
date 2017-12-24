@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 using RuleEngine.Common;
-using RuleEngine.Interfaces;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Utils;
 

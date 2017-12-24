@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using RuleEngine.Rules;
-using RuleEngineTests.Fixture;
 using RuleEngineTests.Model;
 using Xunit;
 using Xunit.Abstractions;

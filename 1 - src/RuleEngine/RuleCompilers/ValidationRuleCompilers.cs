@@ -1,5 +1,4 @@
 ﻿using RuleEngine.Common;
-using RuleEngine.Interfaces;
 using RuleEngine.Rules;
 using System;
 using System.Collections.Generic;

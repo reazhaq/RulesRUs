@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using RuleEngine.Interfaces.Compilers;
-using RuleEngine.Interfaces.Rules;
 using RuleEngine.Rules;
 using RuleEngine.Utils;
 

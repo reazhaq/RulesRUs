@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using RuleEngine.Interfaces.Rules;
 using RuleEngine.Rules;
 
 namespace RuleEngine.Interfaces.Compilers

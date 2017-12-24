@@ -1,5 +1,4 @@
-﻿using System;
-using FluentAssertions;
+﻿using FluentAssertions;
 using RuleEngine.Rules;
 using RuleEngineTests.Fixture;
 using RuleEngineTests.Model;

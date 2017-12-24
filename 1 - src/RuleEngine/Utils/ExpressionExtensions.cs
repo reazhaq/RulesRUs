@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -42,9 +41,6 @@ namespace RuleEngine.Utils
                     Debug.WriteLine($"|{levelSpace}|- Expression Type: {expression.GetType().Name}");
                     Debug.WriteLine($"|{levelSpace}|- Expression.NodeType: {expression2.NodeType}");
                     Debug.WriteLine($"|{levelSpace}|- Expression.DebugView: {expression2.GetDebugView()}");
-                    break;
-                default:
-                    Debug.WriteLine($"Trace Node is not defined for {expression.GetType()}");
                     break;
             }
         }
