@@ -45,5 +45,30 @@ namespace RuleEngineTests.Rules
             executeResult = nameEqualsRule.Execute(_game2);
             executeResult.Should().Be(!expectedResult);
         }
+
+        [Theory]
+        [InlineData("Game 1", true)]
+        [InlineData("game 1", true)]
+        [InlineData("game 2", false)]
+        [InlineData("gaMe 2", false)]
+        public void CallEqualsMethodOnNameUsingConstantRule(string input1, bool expectedResult)
+        {
+            var nameEqualsRule = new MethodCallRule<Game, bool>
+            {
+                ObjectToValidate = "Name",
+                OperatorToUse = "Equals",
+                Inputs = { new ConstantRule<string> { Value = input1}, new ConstantRule<StringComparison> { Value="CurrentCultureIgnoreCase"} }
+            };
+
+            var compileResult = nameEqualsRule.Compile();
+            compileResult.Should().BeTrue();
+
+
+            var executeResult = nameEqualsRule.Execute(_game1);
+            executeResult.Should().Be(expectedResult);
+
+            executeResult = nameEqualsRule.Execute(_game2);
+            executeResult.Should().Be(!expectedResult);
+        }
     }
 }

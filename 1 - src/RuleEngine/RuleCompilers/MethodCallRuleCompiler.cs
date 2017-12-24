@@ -14,13 +14,28 @@ namespace RuleEngine.RuleCompilers
         {
             var expression = GetExpressionWithSubProperty(param, methodCallRuleToBuildExpression.ObjectToValidate);
 
-            var inputTypes = methodCallRuleToBuildExpression.Inputs?.Select(i => i.GetType()).ToArray();
+            var inputTypes = new Type[methodCallRuleToBuildExpression.Inputs.Count];
+            var argumentsExpressions = new Expression[methodCallRuleToBuildExpression.Inputs.Count];
+            for (var index = 0; index < methodCallRuleToBuildExpression.Inputs.Count; index++)
+            {
+                var input = methodCallRuleToBuildExpression.Inputs[index];
+                if (input is Rule)
+                {
+                    argumentsExpressions[index] = (input as Rule).BuildExpression(param);
+                    inputTypes[index] = argumentsExpressions[index].Type;
+                }
+                else
+                {
+                    argumentsExpressions[index] = Expression.Constant(input);
+                    inputTypes[index] = input.GetType();
+                }
+            }
+
             var expressionType = expression.Type.GetMethod(methodCallRuleToBuildExpression.OperatorToUse, inputTypes);
             if (!expressionType.IsGenericMethod)
                 inputTypes = null;
-            var expressions = methodCallRuleToBuildExpression.Inputs?.Select(Expression.Constant).ToArray();
-
-            return Expression.Call(expression, methodCallRuleToBuildExpression.OperatorToUse, inputTypes, expressions);
+            
+            return Expression.Call(expression, methodCallRuleToBuildExpression.OperatorToUse, inputTypes, argumentsExpressions);
         }
 
         public Func<TTarget, TResult> CompileRule(MethodCallRule<TTarget, TResult> methodCallRuleToCompile)

@@ -26,7 +26,8 @@ namespace RuleEngine.Rules
             }
 
             tType = Nullable.GetUnderlyingType(tType) ?? tType;
-            return Expression.Constant(Convert.ChangeType(Value, tType));
+            var valueToConvert = tType.IsEnum ? Enum.Parse(tType, Value) : Value;
+            return Expression.Constant(Convert.ChangeType(valueToConvert, tType));
         }
 
         public override bool Compile()
