@@ -25,7 +25,7 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter");
 
             var expression = RegExRuleCompiler.BuildExpression(parameters[0], this);
-            Debug.WriteLine(expression);
+            Debug.WriteLine($"  {nameof(expression)}: {expression}");
             return expression;
         }
 

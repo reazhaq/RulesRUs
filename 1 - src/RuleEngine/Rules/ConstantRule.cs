@@ -41,7 +41,7 @@ namespace RuleEngine.Rules
             return CompiledDelegate != null;
         }
 
-        public T Execute()
+        public T Get()
         {
             if(CompiledDelegate == null)
                 throw new RuleEngineException("Rule has to be compiled before it can be executed");

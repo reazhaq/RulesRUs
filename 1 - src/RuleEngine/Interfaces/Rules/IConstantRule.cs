@@ -2,6 +2,6 @@
 {
     public interface IConstantRule<out T>
     {
-        T Execute();
+        T Get();
     }
 }

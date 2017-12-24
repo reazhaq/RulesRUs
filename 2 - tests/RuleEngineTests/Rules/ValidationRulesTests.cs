@@ -39,21 +39,21 @@ namespace RuleEngineTests.Rules
             compileResult = numberShouldNotBe5Rule.Compile();
             compileResult.Should().BeTrue();
 
-            var ruleExecuteResult = numberShouldBe5Rule.Execute(5);
+            var ruleExecuteResult = numberShouldBe5Rule.IsValid(5);
             ruleExecuteResult.Should().BeTrue();
             _testOutcomeHelper.WriteLine($"with 5 {nameof(numberShouldBe5Rule)} execute result: {ruleExecuteResult}");
 
-            ruleExecuteResult = numberShouldBe5Rule.Execute(6);
+            ruleExecuteResult = numberShouldBe5Rule.IsValid(6);
             ruleExecuteResult.Should().BeFalse();
             _testOutcomeHelper.WriteLine($"with 6 {nameof(numberShouldBe5Rule)} failed. " +
                                          $"Error code={numberShouldBe5Rule.RuleError.Code}, " +
                                          $"message={numberShouldBe5Rule.RuleError.Message}");
 
-            ruleExecuteResult = numberShouldNotBe5Rule.Execute(6);
+            ruleExecuteResult = numberShouldNotBe5Rule.IsValid(6);
             ruleExecuteResult.Should().BeTrue();
             _testOutcomeHelper.WriteLine($"with 6 {nameof(numberShouldNotBe5Rule)} execute result: {ruleExecuteResult}");
 
-            ruleExecuteResult = numberShouldNotBe5Rule.Execute(5);
+            ruleExecuteResult = numberShouldNotBe5Rule.IsValid(5);
             ruleExecuteResult.Should().BeFalse();
             _testOutcomeHelper.WriteLine($"with 5 {nameof(numberShouldNotBe5Rule)} failed. " +
                                          $"Error code={numberShouldNotBe5Rule.RuleError.Code}, " +
@@ -69,9 +69,7 @@ namespace RuleEngineTests.Rules
                 OperatorToUse = "NotEqual"
             };
             var compileResult = checkForNotNullRule.Compile();
-            compileResult
-                .Should()
-                .BeTrue();
+            compileResult.Should().BeTrue();
 
             var checkForNullRule = new ValidationRule<Game>
             {
@@ -79,33 +77,23 @@ namespace RuleEngineTests.Rules
                 OperatorToUse = "Equal"
             };
             compileResult = checkForNullRule.Compile();
-            compileResult
-                .Should()
-                .BeTrue();
+            compileResult.Should().BeTrue();
 
-            var ruleExecuteResult = checkForNotNullRule.Execute(_game);
-            ruleExecuteResult
-                .Should()
-                .BeTrue();
-            _testOutcomeHelper.WriteLine($"with non-null parameter executeResult = {ruleExecuteResult}; expecting true");
+            var ruleExecuteResult = checkForNotNullRule.IsValid(_game);
+            ruleExecuteResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"with non-null parameter validationResult = {ruleExecuteResult}; expecting true");
 
-            ruleExecuteResult = checkForNotNullRule.Execute(null);
-            ruleExecuteResult
-                .Should()
-                .BeFalse();
-            _testOutcomeHelper.WriteLine($"with null parameter executeResult = {ruleExecuteResult}; expecting false");
+            ruleExecuteResult = checkForNotNullRule.IsValid(null);
+            ruleExecuteResult.Should().BeFalse();
+            _testOutcomeHelper.WriteLine($"with null parameter validationResult = {ruleExecuteResult}; expecting false");
 
-            ruleExecuteResult = checkForNullRule.Execute(_game);
-            ruleExecuteResult
-                .Should()
-                .BeFalse();
-            _testOutcomeHelper.WriteLine($"with non-null parameter executeResult = {ruleExecuteResult}; expecting false");
+            ruleExecuteResult = checkForNullRule.IsValid(_game);
+            ruleExecuteResult.Should().BeFalse();
+            _testOutcomeHelper.WriteLine($"with non-null parameter validationResult = {ruleExecuteResult}; expecting false");
 
-            ruleExecuteResult = checkForNullRule.Execute(null);
-            ruleExecuteResult
-                .Should()
-                .BeTrue();
-            _testOutcomeHelper.WriteLine($"with null parameter executeResult = {ruleExecuteResult}; expecting true");
+            ruleExecuteResult = checkForNullRule.IsValid(null);
+            ruleExecuteResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"with null parameter validationResult = {ruleExecuteResult}; expecting true");
         }
 
         [Fact]
@@ -122,12 +110,12 @@ namespace RuleEngineTests.Rules
             var compileResult = rankingLessThan100Rule.Compile();
             compileResult.Should().BeTrue();
 
-            var executeResult = rankingLessThan100Rule.Execute(_game);
-            executeResult.Should().BeTrue();
+            var validationResult = rankingLessThan100Rule.IsValid(_game);
+            validationResult.Should().BeTrue();
 
             var someOtherGameWithHighRanking = new Game {Ranking = 101};
-            executeResult = rankingLessThan100Rule.Execute(someOtherGameWithHighRanking);
-            executeResult.Should().BeFalse();
+            validationResult = rankingLessThan100Rule.IsValid(someOtherGameWithHighRanking);
+            validationResult.Should().BeFalse();
             _testOutcomeHelper.WriteLine($"with {nameof(someOtherGameWithHighRanking.Ranking)}={someOtherGameWithHighRanking.Ranking} " +
                                          $"{nameof(rankingLessThan100Rule)} failed. " +
                                          $"Error code={rankingLessThan100Rule.RuleError.Code}, " +
@@ -148,12 +136,12 @@ namespace RuleEngineTests.Rules
             var compileResult = nameLengthGreaterThan3Rule.Compile();
             compileResult.Should().BeTrue();
 
-            var executeResult = nameLengthGreaterThan3Rule.Execute(_game);
-            executeResult.Should().BeTrue();
+            var validationResult = nameLengthGreaterThan3Rule.IsValid(_game);
+            validationResult.Should().BeTrue();
 
             var someGameWithShortName = new Game {Name = "foo"};
-            executeResult = nameLengthGreaterThan3Rule.Execute(someGameWithShortName);
-            executeResult.Should().BeFalse();
+            validationResult = nameLengthGreaterThan3Rule.IsValid(someGameWithShortName);
+            validationResult.Should().BeFalse();
             _testOutcomeHelper.WriteLine($"with {nameof(someGameWithShortName.Name)}={someGameWithShortName.Name} " +
                                          $"{nameof(nameLengthGreaterThan3Rule)} failed. " +
                                          $"Error code={nameLengthGreaterThan3Rule.RuleError.Code}, " +
@@ -166,43 +154,37 @@ namespace RuleEngineTests.Rules
             var gameNotNullAndNameIsGreaterThan3CharsRule = new ValidationRule<Game>
             {
                 OperatorToUse = "AndAlso",
-                RuleError = new RuleError { Code = "c", Message = "m"}
+                RuleError = new RuleError {Code = "c", Message = "m"},
+                ChildrenRules =
+                {
+                    new ValidationRule<Game>
+                    {
+                        OperatorToUse = "NotEqual",
+                        ValueToValidateAgainst = new ConstantRule<Game> {Value = "null"}
+                    },
+                    new ValidationRule<Game>
+                    {
+                        ValueToValidateAgainst = new ConstantRule<string> {Value = "null"},
+                        ObjectToValidate = "Name",
+                        OperatorToUse = "NotEqual"
+                    },
+                    new ValidationRule<Game>
+                    {
+                        ValueToValidateAgainst = new ConstantRule<int> {Value = "3"},
+                        ObjectToValidate = "Name.Length",
+                        OperatorToUse = "GreaterThan"
+                    }
+                }
             };
-            gameNotNullAndNameIsGreaterThan3CharsRule.ChildrenRules.Add
-            (
-                new ValidationRule<Game>
-                {
-                    OperatorToUse = "NotEqual",
-                    ValueToValidateAgainst = new ConstantRule<Game> {Value = "null"}
-                }
-            );
-            gameNotNullAndNameIsGreaterThan3CharsRule.ChildrenRules.Add
-            (
-                new ValidationRule<Game>
-                {
-                    ValueToValidateAgainst = new ConstantRule<string> {Value = "null"},
-                    ObjectToValidate = "Name",
-                    OperatorToUse = "NotEqual"
-                }
-            );
-            gameNotNullAndNameIsGreaterThan3CharsRule.ChildrenRules.Add
-            (
-                new ValidationRule<Game>
-                {
-                    ValueToValidateAgainst = new ConstantRule<int> {Value = "3"},
-                    ObjectToValidate = "Name.Length",
-                    OperatorToUse = "GreaterThan"
-                }
-            );
 
             var compileResult = gameNotNullAndNameIsGreaterThan3CharsRule.Compile();
             compileResult.Should().BeTrue();
 
-            var executeResult = gameNotNullAndNameIsGreaterThan3CharsRule.Execute(_game);
-            executeResult.Should().BeTrue();
+            var validationResult = gameNotNullAndNameIsGreaterThan3CharsRule.IsValid(_game);
+            validationResult.Should().BeTrue();
 
-            executeResult = gameNotNullAndNameIsGreaterThan3CharsRule.Execute(null);
-            executeResult.Should().BeFalse();
+            validationResult = gameNotNullAndNameIsGreaterThan3CharsRule.IsValid(null);
+            validationResult.Should().BeFalse();
             _testOutcomeHelper.WriteLine($"{nameof(gameNotNullAndNameIsGreaterThan3CharsRule)} failed. " +
                                          $"Error code={gameNotNullAndNameIsGreaterThan3CharsRule.RuleError.Code}, " +
                                          $"message={gameNotNullAndNameIsGreaterThan3CharsRule.RuleError.Message}");
@@ -227,11 +209,11 @@ namespace RuleEngineTests.Rules
             var compileResult = gameNullRuleByUsingNotWithNotEqualToNullChild.Compile();
             compileResult.Should().BeTrue();
 
-            var executeResult = gameNullRuleByUsingNotWithNotEqualToNullChild.Execute(_game);
-            executeResult.Should().BeFalse();
+            var validationResult = gameNullRuleByUsingNotWithNotEqualToNullChild.IsValid(_game);
+            validationResult.Should().BeFalse();
 
-            executeResult = gameNullRuleByUsingNotWithNotEqualToNullChild.Execute(null);
-            executeResult.Should().BeTrue();
+            validationResult = gameNullRuleByUsingNotWithNotEqualToNullChild.IsValid(null);
+            validationResult.Should().BeTrue();
         }
 
         [Fact]
@@ -270,17 +252,17 @@ namespace RuleEngineTests.Rules
             var compileResult = gameIsNullOrNameIsGreaterThan3CharsRule.Compile();
             compileResult.Should().BeTrue();
 
-            var executeResult = gameIsNullOrNameIsGreaterThan3CharsRule.Execute(_game);
-            executeResult.Should().BeTrue();
+            var validationResult = gameIsNullOrNameIsGreaterThan3CharsRule.IsValid(_game);
+            validationResult.Should().BeTrue();
 
-            executeResult = gameIsNullOrNameIsGreaterThan3CharsRule.Execute(null);
-            executeResult.Should().BeTrue();
+            validationResult = gameIsNullOrNameIsGreaterThan3CharsRule.IsValid(null);
+            validationResult.Should().BeTrue();
 
-            executeResult = gameIsNullOrNameIsGreaterThan3CharsRule.Execute(new Game {Name = null});
-            executeResult.Should().BeFalse();
+            validationResult = gameIsNullOrNameIsGreaterThan3CharsRule.IsValid(new Game {Name = null});
+            validationResult.Should().BeFalse();
 
-            executeResult = gameIsNullOrNameIsGreaterThan3CharsRule.Execute(new Game {Name = "a"});
-            executeResult.Should().BeFalse();
+            validationResult = gameIsNullOrNameIsGreaterThan3CharsRule.IsValid(new Game {Name = "a"});
+            validationResult.Should().BeFalse();
         }
 
         [Fact]
@@ -296,10 +278,10 @@ namespace RuleEngineTests.Rules
             var compileResult = twoPlayersScoreRule.Compile();
             compileResult.Should().BeTrue();
 
-            var executeResult = twoPlayersScoreRule.Execute(_game.Players[0], _game.Players[1]);
-            executeResult.Should().BeTrue();
-            executeResult = twoPlayersScoreRule.Execute(_game.Players[1], _game.Players[0]);
-            executeResult.Should().BeFalse();
+            var validationResult = twoPlayersScoreRule.IsValid(_game.Players[0], _game.Players[1]);
+            validationResult.Should().BeTrue();
+            validationResult = twoPlayersScoreRule.IsValid(_game.Players[1], _game.Players[0]);
+            validationResult.Should().BeFalse();
         }
     }
 }

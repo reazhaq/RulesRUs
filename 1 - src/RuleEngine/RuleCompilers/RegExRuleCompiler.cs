@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
@@ -40,6 +41,7 @@ namespace RuleEngine.RuleCompilers
             var funcParameter = Expression.Parameter(typeof(T));
             var binaryExpressionBody = BuildExpression(funcParameter, regExRuleToCompile);
 #if DEBUG
+            Debug.WriteLine($"{nameof(binaryExpressionBody)}: {binaryExpressionBody}");
             binaryExpressionBody.TraceNode();
 #endif
             return Expression.Lambda<Func<T, bool>>(binaryExpressionBody, funcParameter).Compile();

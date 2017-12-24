@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces;
@@ -18,6 +19,7 @@ namespace RuleEngine.Rules
         public override bool Compile()
         {
 #if DEBUG
+            Debug.WriteLine($"ExpressionFuncRules<{typeof(T)}> RuleExpression: {RuleExpression}");
             RuleExpression.TraceNode();
 #endif
             CompiledDelegate = RuleExpression.Compile();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text;
 using RuleEngine.Common;
 using RuleEngine.Interfaces;
 using RuleEngine.Interfaces.Compilers;
@@ -21,7 +22,6 @@ namespace RuleEngine.Rules
 
         public string RelationBetweenChildrenRules { get; set; }
         public IList<Rule> ChildrenRules { get; } = new List<Rule>();
-        //public IList<object> Inputs { get; } = new List<object>();
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
@@ -29,7 +29,7 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter");
 
             var expression = ValidationRuleCompiler.BuildExpression(parameters[0], this);
-            Debug.WriteLine(expression);
+            Debug.WriteLine($"  {nameof(expression)}: {expression}");
             return expression;
         }
 
@@ -39,7 +39,7 @@ namespace RuleEngine.Rules
             return CompiledDelegate != null;
         }
 
-        public bool Execute(T targetObject)
+        public bool IsValid(T targetObject)
         {
             if (CompiledDelegate == null)
                 throw new Exception("A Rule must be compiled first");
@@ -63,7 +63,7 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with two parameter");
 
             var expression = ValidationRuleCompiler.BuildExpression(parameters[0], parameters[1], this);
-            Debug.WriteLine(expression);
+            Debug.WriteLine($"  {nameof(expression)}: {expression}");
             return expression;
         }
 
@@ -73,7 +73,7 @@ namespace RuleEngine.Rules
             return CompiledDelegate != null;
         }
 
-        public bool Execute(T1 param1, T2 param2)
+        public bool IsValid(T1 param1, T2 param2)
         {
             if (CompiledDelegate == null)
                 throw new Exception("A Rule must be compiled first");

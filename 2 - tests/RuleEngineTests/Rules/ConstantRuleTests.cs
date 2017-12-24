@@ -22,8 +22,8 @@ namespace RuleEngineTests.Rules
             var compileResult = ruleReturning55.Compile();
             compileResult.Should().BeTrue();
 
-            var executeResult = ruleReturning55.Execute();
-            executeResult.Should().Be(55);
+            var value = ruleReturning55.Get();
+            value.Should().Be(55);
         }
 
         [Fact]
@@ -33,8 +33,8 @@ namespace RuleEngineTests.Rules
             var compileResult = ruleReturningDouble.Compile();
             compileResult.Should().BeTrue();
 
-            var executeResult = ruleReturningDouble.Execute();
-            executeResult.Should().Be(99.1);
+            var value = ruleReturningDouble.Get();
+            value.Should().Be(99.1);
         }
 
         // shortcut - quick tests to work with different types
@@ -54,7 +54,7 @@ namespace RuleEngineTests.Rules
         [InlineData(typeof(float), "1.2", 1.2)]
         [InlineData(typeof(float?), "null", null)]
         [InlineData(typeof(float?), "12.34", 12.34)]
-        public void ConsttantRuleChangesStringAssignedValueToTypedLambda(Type constantType, string value, object expectedResult)
+        public void ConsttantRuleChangesStringAssignedValueToTypedLambda(Type constantType, string valueToUse, object expectedResult)
         {
             var constantRuleGenericType = typeof(ConstantRule<>);
             var typesToUse = new[] {constantType};
@@ -66,7 +66,7 @@ namespace RuleEngineTests.Rules
             propertyInfo
                 .Should()
                 .NotBeNull();
-            propertyInfo.SetValue(instanceOfConstantRuleOfTypeT, Convert.ChangeType(value, propertyInfo.PropertyType));
+            propertyInfo.SetValue(instanceOfConstantRuleOfTypeT, Convert.ChangeType(valueToUse, propertyInfo.PropertyType));
             
             var compileResult = instanceOfConstantRuleOfTypeT.GetType().GetMethod("Compile").Invoke(instanceOfConstantRuleOfTypeT, null);
             compileResult
@@ -76,8 +76,8 @@ namespace RuleEngineTests.Rules
                 .And.Be(true);
             _testOutputHelper.WriteLine($"compileResult = {compileResult}");
 
-            var executeResult = instanceOfConstantRuleOfTypeT.GetType().GetMethod("Execute").Invoke(instanceOfConstantRuleOfTypeT, null);
-            _testOutputHelper.WriteLine($"executeResult = {executeResult ?? "null"}");
+            var value = instanceOfConstantRuleOfTypeT.GetType().GetMethod("Get").Invoke(instanceOfConstantRuleOfTypeT, null);
+            _testOutputHelper.WriteLine($"value = {value ?? "null"}");
 
             object expectedTypedResult;
             var underyingType = Nullable.GetUnderlyingType(constantType) ?? constantType;
@@ -91,7 +91,7 @@ namespace RuleEngineTests.Rules
             else
                 expectedTypedResult = Convert.ChangeType(expectedResult, underyingType);
 
-            Assert.True(executeResult?.Equals(expectedTypedResult) ?? expectedTypedResult == null);
+            Assert.True(value?.Equals(expectedTypedResult) ?? expectedTypedResult == null);
         }
     }
 }
