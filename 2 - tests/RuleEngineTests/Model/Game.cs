@@ -13,5 +13,7 @@ namespace RuleEngineTests.Model
         public List<Player> Players { get; } = new List<Player>();
 
         public bool HasPlayer(int id) => Players.Any(p => p.Id == id);
+
+        public void FlipActive() => Active = !Active;
     }
 }

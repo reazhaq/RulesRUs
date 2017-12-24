@@ -41,14 +41,14 @@ namespace RuleEngineTests.Fixture
             };
             Game2.Players.AddRange(Enumerable.Range(1, 60).Select(x => new Player
             {
-                Id = x,
-                Name = $"Player{x}",
+                Id = 99-x,
+                Name = $"Player{99-x}",
                 Country = new Country
                 {
                     CountryCode = Country.Countries[someRandomNumber.Next(x, Country.Countries.Length - 1)]
                 },
                 CurrentScore = 100 - x,
-                CurrentCoOrdinates = new CoOrdinate { X = x, Y = x }
+                CurrentCoOrdinates = new CoOrdinate { X = 99-x, Y = 99-x }
             }));
         }
     }
