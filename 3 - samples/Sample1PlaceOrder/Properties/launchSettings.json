@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Sample1PlaceOrder": {
+      "commandName": "Project",
+      "commandLineArgs": "-o"
+    }
+  }
+}
