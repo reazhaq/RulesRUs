@@ -20,8 +20,8 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
-            if (parameters == null || parameters.Length != 1)
-                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter");
+            if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T))
+                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
             var expression = MethodVoidCallRuleCompiler.BuildExpression(parameters[0], this);
             Debug.WriteLine($"  {nameof(expression)}: {expression}");
@@ -37,7 +37,7 @@ namespace RuleEngine.Rules
         public void Execute(T param)
         {
             if (CompiledDelegate == null)
-                throw new Exception("A Rule must be compiled first");
+                throw new RuleEngineException("A Rule must be compiled first");
 
             CompiledDelegate(param);
         }
@@ -45,8 +45,8 @@ namespace RuleEngine.Rules
 
     public class MethodCallRule<TTarget, TResult> : Rule, IMethodCallRule<TTarget, TResult>
     {
-        private Func<TTarget,TResult> CompiledDelegate { get; set; }
-        private static readonly IMethodCallRuleCompiler<TTarget,TResult> MethodCallRuleCompiler = new MethodCallRuleCompiler<TTarget, TResult>();
+        private Func<TTarget, TResult> CompiledDelegate { get; set; }
+        private static readonly IMethodCallRuleCompiler<TTarget, TResult> MethodCallRuleCompiler = new MethodCallRuleCompiler<TTarget, TResult>();
 
         public string MethodToCall;
         public string ObjectToCallMethodOn { get; set; }
@@ -54,8 +54,8 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
-            if (parameters == null || parameters.Length != 1)
-                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter");
+            if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(TTarget))
+                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(TTarget)}");
 
             var expression = MethodCallRuleCompiler.BuildExpression(parameters[0], this);
             Debug.WriteLine($"  {nameof(expression)}: {expression}");
@@ -71,7 +71,7 @@ namespace RuleEngine.Rules
         public TResult Execute(TTarget target)
         {
             if (CompiledDelegate == null)
-                throw new Exception("A Rule must be compiled first");
+                throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(target);
         }

@@ -19,8 +19,8 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
-            if (parameters == null || parameters.Length != 1)
-                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter");
+            if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T))
+                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
             var expression = RegExRuleCompiler.BuildExpression(parameters[0], this);
             Debug.WriteLine($"  {nameof(expression)}: {expression}");
@@ -36,7 +36,7 @@ namespace RuleEngine.Rules
         public bool IsMatch(T targetObject)
         {
             if (CompiledDelegate == null)
-                throw new Exception("A Rule must be compiled first");
+                throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(targetObject);
         }

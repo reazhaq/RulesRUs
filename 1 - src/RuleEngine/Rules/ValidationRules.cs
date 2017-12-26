@@ -23,8 +23,8 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
-            if(parameters == null || parameters.Length!=1)
-                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter");
+            if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T))
+                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
             var expression = ValidationRuleCompiler.BuildExpression(parameters[0], this);
             Debug.WriteLine($"  {nameof(expression)}: {expression}");
@@ -40,7 +40,7 @@ namespace RuleEngine.Rules
         public bool IsValid(T targetObject)
         {
             if (CompiledDelegate == null)
-                throw new Exception("A Rule must be compiled first");
+                throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(targetObject);
         }
@@ -57,8 +57,8 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
-            if (parameters == null || parameters.Length != 2)
-                throw new RuleEngineException($"{nameof(BuildExpression)} must call with two parameter");
+            if (parameters == null || parameters.Length != 2 || parameters[0].Type != typeof(T1) || parameters[1].Type != typeof(T2))
+                throw new RuleEngineException($"{nameof(BuildExpression)} must call with two parameters of {typeof(T1)} and {typeof(T2)}");
 
             var expression = ValidationRuleCompiler.BuildExpression(parameters[0], parameters[1], this);
             Debug.WriteLine($"  {nameof(expression)}: {expression}");
@@ -74,7 +74,7 @@ namespace RuleEngine.Rules
         public bool IsValid(T1 param1, T2 param2)
         {
             if (CompiledDelegate == null)
-                throw new Exception("A Rule must be compiled first");
+                throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(param1, param2);
         }
