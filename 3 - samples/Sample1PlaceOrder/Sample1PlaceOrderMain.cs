@@ -9,7 +9,7 @@ namespace Sample1PlaceOrder
 {
     class Sample1PlaceOrderMain
     {
-        private static readonly List<Rule> _orderRules = new List<Rule>();
+        private static readonly List<Rule> OrderRules = new List<Rule>();
 
         static void Main(string[] args)
         {
@@ -43,7 +43,7 @@ namespace Sample1PlaceOrder
                 RuleError = new RuleError { Code = "c1", Message = "order can't be null"}
             };
             if(orderRule.Compile())
-                _orderRules.Add(orderRule);
+                OrderRules.Add(orderRule);
 
             var orderCustomerAndProductCannotBeNullRule = new ValidationRule<Order>
             {
@@ -56,7 +56,7 @@ namespace Sample1PlaceOrder
                 }
             };
             if(orderCustomerAndProductCannotBeNullRule.Compile())
-                _orderRules.Add(orderCustomerAndProductCannotBeNullRule);
+                OrderRules.Add(orderCustomerAndProductCannotBeNullRule);
 
             var orderCustomerFirstNameRule = new ValidationRule<Order>
             {
@@ -69,7 +69,7 @@ namespace Sample1PlaceOrder
                 }
             };
             if(orderCustomerFirstNameRule.Compile())
-                _orderRules.Add(orderCustomerFirstNameRule);
+                OrderRules.Add(orderCustomerFirstNameRule);
 
             var orderCustomerLastNameRule = new ValidationRule<Order>
             {
@@ -82,7 +82,7 @@ namespace Sample1PlaceOrder
                 }
             };
             if(orderCustomerLastNameRule.Compile())
-                _orderRules.Add(orderCustomerLastNameRule);
+                OrderRules.Add(orderCustomerLastNameRule);
 
             var orderProductIdPositiveOrNameGreaterThan5 = new ValidationRule<Order>
             {
@@ -103,7 +103,7 @@ namespace Sample1PlaceOrder
                 }
             };
             if(orderProductIdPositiveOrNameGreaterThan5.Compile())
-                _orderRules.Add(orderProductIdPositiveOrNameGreaterThan5);
+                OrderRules.Add(orderProductIdPositiveOrNameGreaterThan5);
         }
 
         private static void PlaceAnOrder()
@@ -126,7 +126,7 @@ namespace Sample1PlaceOrder
 
             Console.WriteLine($"Order = {order}");
             var ruleErrors = new List<RuleError>();
-            foreach (var orderRule in _orderRules)
+            foreach (var orderRule in OrderRules)
             {
                 if (orderRule is ValidationRule<Order> && !((orderRule as ValidationRule<Order>).IsValid(order)))
                     ruleErrors.Add(orderRule.RuleError);

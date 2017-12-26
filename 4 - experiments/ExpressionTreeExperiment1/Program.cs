@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using RuleEngine.Utils;
+using System.Linq;
 
 namespace ExpressionTreeExperiment1
 {
@@ -15,7 +17,43 @@ namespace ExpressionTreeExperiment1
             //Test2();
             //Test3();
             //Test4();
-            Test5();
+            //Test5();
+
+            Test6();
+        }
+
+        private static void Test6()
+        {
+            var moo = 5;
+            var foo = "blah";
+            Expression<Func<string>> blah = () => (moo == 6 ? foo : "boo");
+            blah.TraceNode();
+
+
+            var names = new List<string> {"one", "two", "three", "four"};
+            if (names.ContainsValue("One", null))
+                Debug.WriteLine("one");
+
+            if (names.ContainsValue("One", StringComparer.OrdinalIgnoreCase))
+                Debug.WriteLine("one.1");
+
+            Expression<Func<IList<string>, string, bool>> findExpression = (someList, value) => someList.ContainsValue(value, StringComparer.OrdinalIgnoreCase);
+            Debug.WriteLine(findExpression);
+            findExpression.TraceNode();
+
+            var foo3 = findExpression.Compile()(names, "three");
+
+            var foo2 = names.ContainsValue("three", StringComparer.OrdinalIgnoreCase);
+
+            Expression<Func<IList<int>, int, bool>> findIntExpression = (intList, value) => intList.ContainsValue(value, EqualityComparer<int>.Default);
+            Debug.WriteLine(findIntExpression);
+            findIntExpression.TraceNode();
+
+            // T ValueToLookup
+            // List<T> ValueList
+            // IEqualityComparer<T> compararToUse
+            // bool ContainsValue(T)
+
         }
 
         private static void Test5()
