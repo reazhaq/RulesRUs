@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
+using RuleEngine.Interfaces.Rules;
 using RuleEngine.Rules;
 using Sample1PlaceOrder.Model;
 
@@ -14,6 +15,10 @@ namespace Sample1PlaceOrder
         static void Main(string[] args)
         {
             Console.WriteLine("Simple Place Order example");
+            Console.WriteLine("Rule: order cannot be null, customer can't be null and product can't be null");
+            Console.WriteLine("Rule: first name can't be null and has to be 3+ chars");
+            Console.WriteLine("Rule: last name can't be null and has to be 4+ chars");
+            Console.WriteLine("Rule: product id has to be positive or name has to be 5+ chars");
 
             LoadAndCompileRules();
 
@@ -61,7 +66,7 @@ namespace Sample1PlaceOrder
             var orderCustomerFirstNameRule = new ValidationRule<Order>
             {
                 OperatorToUse = "AndAlso",
-                RuleError = new RuleError { Code = "c3", Message = "first name can't be null and has to be 3+ chars long"},
+                RuleError = new RuleError { Code = "c3", Message = "first name can't be null/empty and has to be 3+ chars long"},
                 ChildrenRules =
                 {
                     new ValidationRule<Order>{OperatorToUse = "NotEqual", ObjectToValidate = "Customer.FirstName", ValueToValidateAgainst = new ConstantRule<string>{Value = "null"}},
@@ -74,7 +79,7 @@ namespace Sample1PlaceOrder
             var orderCustomerLastNameRule = new ValidationRule<Order>
             {
                 OperatorToUse = "AndAlso",
-                RuleError = new RuleError { Code = "c4", Message = "last name can't be null and has to be 4+ chars long"},
+                RuleError = new RuleError { Code = "c4", Message = "last name can't be null/empty and has to be 4+ chars long"},
                 ChildrenRules =
                 {
                     new ValidationRule<Order>{OperatorToUse = "NotEqual", ObjectToValidate = "Customer.LastName", ValueToValidateAgainst = new ConstantRule<string>{Value = "null"}},
@@ -87,7 +92,7 @@ namespace Sample1PlaceOrder
             var orderProductIdPositiveOrNameGreaterThan5 = new ValidationRule<Order>
             {
                 OperatorToUse = "OrElse",
-                RuleError = new RuleError { Code = "c5", Message = "id must be greater than zero or name has to be 5+ chars"},
+                RuleError = new RuleError { Code = "c5", Message = "id must be greater than zero or name has to be non-null and 5+ chars"},
                 ChildrenRules =
                 {
                     new ValidationRule<Order>{OperatorToUse = "GreaterThan", ObjectToValidate = "Product.Id", ValueToValidateAgainst = new ConstantRule<int>{Value = "0"}},
@@ -128,14 +133,10 @@ namespace Sample1PlaceOrder
             var ruleErrors = new List<RuleError>();
             foreach (var orderRule in OrderRules)
             {
-                if (orderRule is ValidationRule<Order> && !((orderRule as ValidationRule<Order>).IsValid(order)))
+                if (orderRule is IValidationRule<Order> && !((orderRule as IValidationRule<Order>).IsValid(order)))
                     ruleErrors.Add(orderRule.RuleError);
             }
 
-            Console.WriteLine("Rule: order cannot be null, customer can't be null and product can't be null");
-            Console.WriteLine("Rule: first name can't be null and has to be 3+ chars");
-            Console.WriteLine("Rule: last name can't be null and has to be 4+ chars");
-            Console.WriteLine("Rule: product id has to be positive or name has to be 5+ chars");
             Console.WriteLine("Errors found:");
             Console.WriteLine(JsonConvert.SerializeObject(ruleErrors, Formatting.Indented));
         }
