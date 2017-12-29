@@ -9,14 +9,28 @@ using RuleEngine.RuleCompilers;
 
 namespace RuleEngine.Rules
 {
-    public class MethodVoidCallRule<T> : Rule, IMethodVoidCallRule<T>
+    public class MethodCallBase : Rule
+    {
+        public string MethodToCall;
+        public string MethodClassName { get; set; } //todo: need for extension method
+        public string ObjectToCallMethodOn { get; set; }
+        public List<object> Inputs { get; } = new List<object>();
+
+        public override Expression BuildExpression(params ParameterExpression[] parameters)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool Compile()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class MethodVoidCallRule<T> : MethodCallBase, IMethodVoidCallRule<T>
     {
         private Action<T> CompiledDelegate { get; set; }
         private static readonly IMethodVoidCallRuleCompiler<T> MethodVoidCallRuleCompiler = new MethodVoidCallRuleCompiler<T>();
-
-        public string MethodToCall;
-        public string ObjectToCallMethodOn { get; set; }
-        public List<object> Inputs { get; } = new List<object>();
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
@@ -43,14 +57,10 @@ namespace RuleEngine.Rules
         }
     }
 
-    public class MethodCallRule<TTarget, TResult> : Rule, IMethodCallRule<TTarget, TResult>
+    public class MethodCallRule<TTarget, TResult> : MethodCallBase, IMethodCallRule<TTarget, TResult>
     {
         private Func<TTarget, TResult> CompiledDelegate { get; set; }
         private static readonly IMethodCallRuleCompiler<TTarget, TResult> MethodCallRuleCompiler = new MethodCallRuleCompiler<TTarget, TResult>();
-
-        public string MethodToCall;
-        public string ObjectToCallMethodOn { get; set; }
-        public List<object> Inputs { get; } = new List<object>();
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {

@@ -35,6 +35,5 @@ namespace RuleEngine.RuleCompilers
 
             return bodyWithSubProperty;
         }
-
     }
 }

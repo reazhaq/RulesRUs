@@ -65,6 +65,7 @@ namespace RuleEngine.RuleCompilers
         {
             var funcParameter = Expression.Parameter(typeof(T));
             var binaryExpressionBody = BuildExpression(funcParameter, validationRuleToCompile);
+            if (binaryExpressionBody == null) return null;
 #if DEBUG
             Debug.WriteLine($"{nameof(binaryExpressionBody)} ready to compile: {binaryExpressionBody}");
             binaryExpressionBody.TraceNode();
@@ -95,6 +96,7 @@ namespace RuleEngine.RuleCompilers
             var param1 = Expression.Parameter(typeof(T1));
             var param2 = Expression.Parameter(typeof(T2));
             var expressionBody = BuildExpression(param1, param2, validationRuleToCompile);
+            if (expressionBody == null) return null;
 #if DEBUG
             Debug.WriteLine($"{nameof(expressionBody)} ready to compile: {expressionBody}");
             expressionBody.TraceNode();

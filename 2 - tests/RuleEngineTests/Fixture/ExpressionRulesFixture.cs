@@ -18,7 +18,8 @@ namespace RuleEngineTests.Fixture
                 Name = "Game 1",
                 Description = "super boring game",
                 Active = false,
-                Ranking = 99
+                Ranking = 99,
+                Rating = "Low"
             };
             Game1.Players.AddRange(Enumerable.Range(1, 40).Select(x => new Player
             {
@@ -37,7 +38,8 @@ namespace RuleEngineTests.Fixture
                 Name = "Game 2",
                 Description = "super cool game",
                 Active = true,
-                Ranking = 98
+                Ranking = 98,
+                Rating = "Medium"
             };
             Game2.Players.AddRange(Enumerable.Range(1, 60).Select(x => new Player
             {

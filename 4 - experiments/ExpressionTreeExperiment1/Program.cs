@@ -4,6 +4,8 @@ using System.Diagnostics;
 using System.Linq.Expressions;
 using RuleEngine.Utils;
 using System.Linq;
+using System.Reflection;
+using RuleEngine.Rules;
 
 namespace ExpressionTreeExperiment1
 {
@@ -19,41 +21,95 @@ namespace ExpressionTreeExperiment1
             //Test4();
             //Test5();
 
-            Test6();
+            //Test6();
         }
 
         private static void Test6()
         {
-            var moo = 5;
-            var foo = "blah";
-            Expression<Func<string>> blah = () => (moo == 6 ? foo : "boo");
-            blah.TraceNode();
+            var names = new List<string> { "one", "two", "three", "four" };
 
 
-            var names = new List<string> {"one", "two", "three", "four"};
-            if (names.ContainsValue("One", null))
-                Debug.WriteLine("one");
+            Expression<Func<string, bool>> findValueExpression =
+                s => names.Contains(s, StringComparer.OrdinalIgnoreCase);
+            findValueExpression.TraceNode();
+            var moo = findValueExpression.Compile();
+            var mooo = moo("one");
 
-            if (names.ContainsValue("One", StringComparer.OrdinalIgnoreCase))
-                Debug.WriteLine("one.1");
 
-            Expression<Func<IList<string>, string, bool>> findExpression = (someList, value) => someList.ContainsValue(value, StringComparer.OrdinalIgnoreCase);
-            Debug.WriteLine(findExpression);
+
+            var foo = (IEqualityComparer<string>)StringComparer.OrdinalIgnoreCase;
+            Expression<Func<string, bool>> findExpression = s => names.Contains(s, foo);
             findExpression.TraceNode();
+            var moo2 = findExpression.Compile();
 
-            var foo3 = findExpression.Compile()(names, "three");
 
-            var foo2 = names.ContainsValue("three", StringComparer.OrdinalIgnoreCase);
+            var comparerType = Type.GetType("System.StringComparer");
+            var ignoreCase = comparerType.GetProperty("OrdinalIgnoreCase");
 
-            Expression<Func<IList<int>, int, bool>> findIntExpression = (intList, value) => intList.ContainsValue(value, EqualityComparer<int>.Default);
-            Debug.WriteLine(findIntExpression);
-            findIntExpression.TraceNode();
+            Debug.WriteLine(foo);
+            Debug.WriteLine(ignoreCase);
 
-            // T ValueToLookup
-            // List<T> ValueList
-            // IEqualityComparer<T> compararToUse
-            // bool ContainsValue(T)
+//            //var moo = 5;
+//            //var foo = "blah";
+//            //Expression<Func<string>> blah = () => (moo == 6 ? foo : "boo");
+//            //blah.TraceNode();
 
+
+//            //if (names.ContainsValue("One", null))
+//            //    Debug.WriteLine("one");
+
+//            //if (names.ContainsValue("One", StringComparer.OrdinalIgnoreCase))
+//            //    Debug.WriteLine("one.1");
+
+//            //Expression<Func<IList<string>, string, bool>> findExpression = (someList, value) => someList.ContainsValue(value, StringComparer.OrdinalIgnoreCase);
+//            //Debug.WriteLine(findExpression);
+//            //findExpression.TraceNode();
+
+//            //var foo3 = findExpression.Compile()(names, "three");
+
+//            //var foo2 = names.ContainsValue("three", StringComparer.OrdinalIgnoreCase);
+
+//            //Expression<Func<IList<int>, int, bool>> findIntExpression = (intList, value) => intList.ContainsValue(value, EqualityComparer<int>.Default);
+//            //Debug.WriteLine(findIntExpression);
+//            //findIntExpression.TraceNode();
+
+//            //// T ValueToLookup
+//            //// List<T> ValueList
+//            //// IEqualityComparer<T> compararToUse
+//            //// bool ContainsValue(T)
+
+//            //var t = Type.GetType("StringComparer");
+//            //var b = t.GetProperty("OrdinalIgnoreCase");
+//            var t = typeof(StringComparer);
+//            var p = t.GetRuntimeProperty("OrdinalIgnoreCase");
+
+////            var comparer = "StringComparer.OrdinalIgnoreCase";
+////            var comparerParts = comparer.Split('.');
+////            var type = Type.GetType(comparerParts[0]);
+//////            var c = type.GetRuntimeProperty(comparerParts[1]);
+
+////            //var pc = p == c;
+
+//            var blah2 = Type.GetType("System.StringComparer");
+//            var blah22 = blah2.GetRuntimeProperty("OrdinalIgnoreCase");
+//            var mooo = p == blah22;
+
+//            ////Expression blah = Expression.Parameter(typeof(StringComparer));
+//            ////Debug.WriteLine(blah);
+//            ////blah.TraceNode();
+
+//            Expression<Func<string, bool>> findValueExpression =
+//                s => names.Contains(s, StringComparer.OrdinalIgnoreCase);
+//            //Debug.WriteLine(findValueExpression);
+//            //findValueExpression.TraceNode();
+//            //var foo4 = findValueExpression.Compile()("Four");
+
+//            var methodCallRule = new MethodCallRule<IList<string>, bool> {MethodToCall = "ContainsValue", MethodClassName = "RuleEngine.Utils.ListExtensions", Inputs=
+//            {
+//                "Four", StringComparer.OrdinalIgnoreCase
+//            }};
+//            var a = methodCallRule.Compile();
+//            var b = methodCallRule.Execute(names);
         }
 
         private static void Test5()

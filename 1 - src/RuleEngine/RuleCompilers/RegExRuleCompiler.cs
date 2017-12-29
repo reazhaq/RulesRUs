@@ -40,6 +40,7 @@ namespace RuleEngine.RuleCompilers
         {
             var funcParameter = Expression.Parameter(typeof(T));
             var binaryExpressionBody = BuildExpression(funcParameter, regExRuleToCompile);
+            if (binaryExpressionBody == null) return null;
 #if DEBUG
             Debug.WriteLine($"{nameof(binaryExpressionBody)}: {binaryExpressionBody}");
             binaryExpressionBody.TraceNode();
