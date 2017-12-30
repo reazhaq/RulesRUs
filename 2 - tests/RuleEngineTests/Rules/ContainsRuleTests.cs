@@ -51,5 +51,32 @@ namespace RuleEngineTests.Rules
             var containsValue = containsRule.ContainsValue(valueToSearch);
             containsValue.Should().Be(expectedResult);
         }
+
+        [Fact]
+        public void CreateComparerOnTheFlyUsingReflection()
+        {
+            var className = "System.StringComparer";
+            var comparerProp = "OrdinalIgnoreCase";
+
+            var type = Type.GetType(className);
+            var comparerPropInfo = type.GetProperty(comparerProp);
+            var comparer = (IEqualityComparer<string>) comparerPropInfo.GetValue(null);
+
+            var containsRule = new ContainsValueRule<string>
+            {
+                EqualityComparer = comparer,
+                CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+            };
+
+            var compileResult = containsRule.Compile();
+            compileResult.Should().BeTrue();
+
+            var a1 = containsRule.ContainsValue("One");
+            a1.Should().BeTrue();
+            var a2 = containsRule.ContainsValue("tWo");
+            a2.Should().BeTrue();
+            var a7 = containsRule.ContainsValue("seven");
+            a7.Should().BeFalse();
+        }
     }
 }
