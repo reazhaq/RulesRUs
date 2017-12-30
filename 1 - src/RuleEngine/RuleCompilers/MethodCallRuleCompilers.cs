@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using RuleEngine.Common;
 using RuleEngine.Interfaces.Compilers;
 using RuleEngine.Rules;
 using RuleEngine.Utils;
@@ -35,28 +36,13 @@ namespace RuleEngine.RuleCompilers
         protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall, Type[] inputTypes,
             Expression expression)
         {
-            if(string.IsNullOrEmpty(methodClassName))
-                return expression.Type.GetMethod(methodToCall, inputTypes);
+            if (string.IsNullOrEmpty(methodClassName))
+                return expression.Type.GetMethodInfo(methodToCall, Array.AsReadOnly(inputTypes));
 
-            //var type = expression.Type;
-            //var classType = Type.GetType(methodClassName);
-            //var isClassTypeGeneric = classType.IsGenericType;
+            var type = Type.GetType(methodClassName);
+            if (type == null) throw new RuleEngineException($"can't find class named: {methodClassName}");
 
-            //foreach (var methodInfo in classType.GetMethods().Where(m=>m.Name.Equals(methodToCall, StringComparison.OrdinalIgnoreCase)))
-            //{
-            //    var isMethodGeneric = methodInfo.IsGenericMethod;
-            //    var parameters = isMethodGeneric
-            //        ? methodInfo.MakeGenericMethod(type).GetParameters()
-            //        : methodInfo.GetParameters();
-            //}
-
-            // todo: make this work for generic method...
-            // todo: example - to get methodInfo for IList<string> extension method
-            // todo: input types or method parameters need to be adjusted to match for T
-            // assume extension method
-            var extensionInputType = new []{expression.Type};
-            return Type.GetType(methodClassName)
-                .GetMethod(methodToCall, extensionInputType.Concat(inputTypes).ToArray());
+            return type.GetMethodInfo(methodToCall, Array.AsReadOnly(inputTypes));
         }
     }
 

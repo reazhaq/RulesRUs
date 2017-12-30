@@ -1,40 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace RuleEngine.Utils
 {
-    internal static class ReflectionExtensions
+    public static class ReflectionExtensions
     {
-        //public static IEqualityComparer<T> GetEqualityComparer<T>(Type type, string fieldOrPropertyName)
-        //{
-        //    if (type == null) throw new ArgumentNullException($"{nameof(type)} cannot be null");
-        //    if (string.IsNullOrEmpty(fieldOrPropertyName)) throw new ArgumentNullException($"{nameof(fieldOrPropertyName)} cannot be null");
+        public static MethodInfo GetMethodInfo(this Type type, string methodName, IReadOnlyCollection<Type> parameters)
+        {
+            if (string.IsNullOrEmpty(methodName))
+                throw new ArgumentNullException($"{nameof(methodName)} can't be null/empty");
 
-        //    if (TryGetFieldValue(type, fieldOrPropertyName, out var fieldValue))
-        //        return (IEqualityComparer<T>)fieldValue;
+            foreach (var methodInfo in type.GetMethods().Where(m => m.Name.Equals(methodName)))
+            {
+                var isGenericMethod = methodInfo.IsGenericMethod;
+                var genericArguments = methodInfo.GetGenericArguments();
 
-        //    if (TryGetPropertyValue(type, fieldOrPropertyName, out var propValue))
-        //        return (IEqualityComparer<T>)propValue;
+                var parametersForTheMethod = isGenericMethod
+                    ? methodInfo.MakeGenericMethod(genericArguments).GetParameters()
+                    : methodInfo.GetParameters();
+                var parameterTypes = parametersForTheMethod.Select(pi => pi.ParameterType).ToList();
 
-        //    return null;
-        //}
+                var isExtensionMethod = methodInfo.IsDefined(typeof(ExtensionAttribute), false) &&
+                                        methodInfo.IsStatic && parameterTypes.Count > 0;
+                if (isExtensionMethod)
+                    parameterTypes = parameterTypes.Skip(1).ToList();
 
-        //private static bool TryGetPropertyValue(Type type, string fieldOrPropertyName, out object propValue)
-        //{
-        //    propValue = null;
-        //    var property = type.GetProperty(fieldOrPropertyName);
-        //    if (property == null) return false;
+                if (parameterTypes.Count == (parameters?.Count ?? 0) && (parameters == null || parameterTypes.SequenceEqual(parameters)))
+                    return methodInfo;
+            }
 
-        //    var isStatic = property.GetAccessors()?[0].IsStatic;
-
-
-        //    return false;
-        //}
-
-        //private static bool TryGetFieldValue(Type type, string fieldOrPropertyName, out object fieldValue)
-        //{
-        //    fieldValue = null;
-        //    throw new NotImplementedException();
-        //}
+            return null;
+        }
     }
 }
