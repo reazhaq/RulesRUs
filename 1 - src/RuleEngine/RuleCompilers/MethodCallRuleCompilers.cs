@@ -13,36 +13,16 @@ namespace RuleEngine.RuleCompilers
 {
     public class MethodCallBase : RuleCompilerBase
     {
-        protected virtual Expression[] GetArgumentsExpressions(ParameterExpression param, List<object> inputs, Type[] inputTypes)
-        {
-            var argumentsExpressions = new Expression[inputs.Count];
-            for (var index = 0; index < inputs.Count; index++)
-            {
-                var input = inputs[index];
-                if (input is Rule)
-                {
-                    argumentsExpressions[index] = (input as Rule).BuildExpression(param);
-                    inputTypes[index] = argumentsExpressions[index].Type;
-                }
-                else
-                {
-                    argumentsExpressions[index] = Expression.Constant(input);
-                    inputTypes[index] = input.GetType();
-                }
-            }
-            return argumentsExpressions;
-        }
-
         protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall, Type[] inputTypes,
             Expression expression)
         {
             if (string.IsNullOrEmpty(methodClassName))
-                return expression.Type.GetMethodInfo(methodToCall, Array.AsReadOnly(inputTypes));
+                return expression.Type.GetMethodInfo(methodToCall, inputTypes);
 
             var type = Type.GetType(methodClassName);
             if (type == null) throw new RuleEngineException($"can't find class named: {methodClassName}");
 
-            return type.GetMethodInfo(methodToCall, Array.AsReadOnly(inputTypes));
+            return type.GetMethodInfo(methodToCall, inputTypes);
         }
     }
 

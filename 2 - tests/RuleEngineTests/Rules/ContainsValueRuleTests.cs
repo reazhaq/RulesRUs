@@ -6,7 +6,7 @@ using Xunit;
 
 namespace RuleEngineTests.Rules
 {
-    public class ContainsRuleTests
+    public class ContainsValueRuleTests
     {
         [Theory]
         [InlineData("one", true)]

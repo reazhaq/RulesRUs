@@ -1,4 +1,7 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using RuleEngine.Rules;
 
 namespace RuleEngine.RuleCompilers
 {
@@ -22,6 +25,26 @@ namespace RuleEngine.RuleCompilers
         {
             "IsMatch"
         };
+
+        protected virtual Expression[] GetArgumentsExpressions(ParameterExpression param, List<object> inputs, Type[] inputTypes)
+        {
+            var argumentsExpressions = new Expression[inputs.Count];
+            for (var index = 0; index < inputs.Count; index++)
+            {
+                var input = inputs[index];
+                if (input is Rule)
+                {
+                    argumentsExpressions[index] = (input as Rule).BuildExpression(param);
+                    inputTypes[index] = argumentsExpressions[index].Type;
+                }
+                else
+                {
+                    argumentsExpressions[index] = Expression.Constant(input);
+                    inputTypes[index] = input.GetType();
+                }
+            }
+            return argumentsExpressions;
+        }
 
         protected virtual Expression GetExpressionWithSubProperty(ParameterExpression param, string objectToValidate)
         {
