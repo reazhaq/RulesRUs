@@ -28,6 +28,8 @@ namespace RuleEngineTests.Rules
         [InlineData("gaMe 2", false)]
         public void CallEqualsMethodOnName(string input1, bool expectedResult)
         {
+            // call Equals method on Name string object
+            // compiles to: Param_0.Name.Equals("Game 1", CurrentCultureIgnoreCase)
             var nameEqualsRule = new MethodCallRule<Game, bool>
             {
                 ObjectToCallMethodOn = "Name",
@@ -53,6 +55,8 @@ namespace RuleEngineTests.Rules
         [InlineData("gaMe 2", false)]
         public void CallEqualsMethodOnNameUsingConstantRule(string input1, bool expectedResult)
         {
+            // call Equals method on Name string object
+            // compiles to: Param_0.Name.Equals("Game 1", CurrentCultureIgnoreCase)
             var nameEqualsRule = new MethodCallRule<Game, bool>
             {
                 ObjectToCallMethodOn = "Name",
@@ -74,6 +78,8 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void CallAVoidMethod()
         {
+            // call FlipActive method on the game object
+            // compiles to: Param_0.FlipActive()
             var playerCountRule = new MethodVoidCallRule<Game>
             {
                 MethodToCall = "FlipActive"
@@ -92,6 +98,8 @@ namespace RuleEngineTests.Rules
         [InlineData(1000, false)]
         public void CheckToSeeIfPlayerExistsInAGame(int id, bool expectedResult)
         {
+            // call HasPlayer method on the game object
+            // compiles to: Param_0.HasPlayer(1000)
             var gameHasPlayerWithCertainId = new MethodCallRule<Game, bool>
             {
                 MethodToCall = "HasPlayer",
@@ -108,6 +116,8 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void CallAStringMethodOnDescriptionObject()
         {
+            // Description is a string - Call Contains method on Description
+            // compiles to: Param_0.Description.Contains("cool")
             var gameNameContainsKeyWrodCool = new MethodCallRule<Game, bool>
             {
                 MethodToCall = "Contains",
@@ -118,9 +128,11 @@ namespace RuleEngineTests.Rules
             var compileResult = gameNameContainsKeyWrodCool.Compile();
             compileResult.Should().BeTrue();
 
+            // check to see if _game1 description contains keyword "cool"
             var executeResult = gameNameContainsKeyWrodCool.Execute(_game1);
             executeResult.Should().BeFalse();
 
+            // check to see if _game2 description contains keyword "cool"
             executeResult = gameNameContainsKeyWrodCool.Execute(_game2);
             executeResult.Should().BeTrue();
         }
