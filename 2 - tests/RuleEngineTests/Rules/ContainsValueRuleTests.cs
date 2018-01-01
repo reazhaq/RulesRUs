@@ -52,6 +52,25 @@ namespace RuleEngineTests.Rules
             containsValue.Should().Be(expectedResult);
         }
 
+        [Theory]
+        [InlineData(1, true)]
+        [InlineData(2, true)]
+        [InlineData(7, false)]
+        public void ContainsValueTestForIntCollection(int valueToSearch, bool expectedResult)
+        {
+            var containsRule = new ContainsValueRule<int>
+            {
+                EqualityComparer = null,
+                CollectionToSearch = {1, 2, 3, 4, 5, 6}
+            };
+
+            var compileResult = containsRule.Compile();
+            compileResult.Should().BeTrue();
+
+            var containsValue = containsRule.ContainsValue(valueToSearch);
+            containsValue.Should().Be(expectedResult);
+        }
+
         [Fact]
         public void CreateComparerOnTheFlyUsingReflection()
         {

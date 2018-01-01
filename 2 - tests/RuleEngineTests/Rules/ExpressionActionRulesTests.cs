@@ -23,7 +23,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void UpdateGame1ScoreToNegative()
         {
-            var updateGameRankingRule = new ExpressionActionRules<Game>(g => ApplySomeRule(g));
+            var updateGameRankingRule = new ExpressionActionRule<Game>(g => ApplySomeRule(g));
             var compileResult = updateGameRankingRule.Compile();
             compileResult.Should().BeTrue();
             updateGameRankingRule.Execute(_game1);

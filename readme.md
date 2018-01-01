@@ -15,8 +15,25 @@ Constant rule is a simple Func; that returns a constant value.
 ```
 
 ## Contains Value Rule
+Got a list of values that you always check against; this rule can help - make sure to use desired equality comparer.
+```
+    var containsRule = new ContainsValueRule<string>
+    {
+        EqualityComparer = StringComparer.OrdinalIgnoreCase,
+        CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+    };
+
+    var compileResult = containsRule.Compile();
+    compileResult.Should().BeTrue();
+
+    var containsValue = containsRule.ContainsValue("ThReE");
+    containsValue.Should().BeTrue();
+```
 
 ## Expression Action Rule
+Action and Func gives you most freedom to create appropriate lambda and use it as rule; when needed
+```
+```
 
 ## Expression Func Rule
 
