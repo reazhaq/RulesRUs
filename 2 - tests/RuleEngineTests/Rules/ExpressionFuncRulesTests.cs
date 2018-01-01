@@ -35,6 +35,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void OneInOneOutParameterExpressionTest()
         {
+            // g => IIF(((g == null) OrElse (g.Players == null)), 0, g.Players.Count)
             var ruleReturningCountOfPlayers = new ExpressionFuncRules<Game, int>(
                                                 g => (g == null || g.Players == null) ? 0 : g.Players.Count);
             var compileResult = ruleReturningCountOfPlayers.Compile();

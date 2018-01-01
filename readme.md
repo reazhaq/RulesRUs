@@ -33,9 +33,15 @@ Got a list of values that you always check against; this rule can help - make su
 ## Expression Action Rule
 Action and Func gives you most freedom to create appropriate lambda and use it as rule; when needed
 ```
+    var updateGameRankingRule = new ExpressionActionRule<Game>(g => ApplySomeRule(g));
 ```
 
 ## Expression Func Rule
+```
+    // g => IIF(((g == null) OrElse (g.Players == null)), 0, g.Players.Count)
+    var ruleReturningCountOfPlayers = new ExpressionFuncRules<Game, int>(
+                                        g => (g == null || g.Players == null) ? 0 : g.Players.Count);
+```
 
 ## Method Call Rule
 

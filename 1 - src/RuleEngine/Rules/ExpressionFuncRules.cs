@@ -45,6 +45,7 @@ namespace RuleEngine.Rules
         public override bool Compile()
         {
 #if DEBUG
+            Debug.WriteLine($"ExpressionFuncRules<{typeof(T1)},{typeof(T2)}> RuleExpression: {RuleExpression}");
             RuleExpression.TraceNode();
 #endif
             CompiledDelegate = RuleExpression.Compile();
@@ -71,6 +72,7 @@ namespace RuleEngine.Rules
         public override bool Compile()
         {
 #if DEBUG
+            Debug.WriteLine($"ExpressionFuncRules<{typeof(T1)},{typeof(T2)},{typeof(T3)}> RuleExpression: {RuleExpression}");
             RuleExpression.TraceNode();
 #endif
             CompiledDelegate = RuleExpression.Compile();
