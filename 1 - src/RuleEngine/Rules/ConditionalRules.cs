@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
@@ -54,7 +55,7 @@ namespace RuleEngine.Rules
             var trueExpression = TrueRule.BuildExpression(parameters);
             var falseExpression = FalseRule.BuildExpression(parameters);
             var ifThenElseExpression = Expression.IfThenElse(
-                                        Expression.Invoke(conditionalExpression, parameters),
+                                        Expression.Invoke(conditionalExpression, parameters.Cast<Expression>()),
                                         Expression.Return(returnLabel, trueExpression),
                                         Expression.Return(returnLabel, falseExpression)
             );
