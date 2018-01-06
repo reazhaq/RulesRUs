@@ -28,8 +28,7 @@ namespace RuleEngine.Rules
         {
             var parameter = Expression.Parameter(typeof(T));
             var expression = BuildExpression(parameter);
-            if (expression == null || !(expression is Expression<Func<T, bool>>)) return false;
-
+            if (!(expression is Expression<Func<T, bool>>)) return false;
 #if DEBUG
             Debug.WriteLine($"expression = {expression}");
             expression.TraceNode();

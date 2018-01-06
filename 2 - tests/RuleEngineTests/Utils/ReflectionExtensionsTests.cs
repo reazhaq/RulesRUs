@@ -45,7 +45,7 @@ namespace RuleEngineTests.Utils
         {
             var list = new List<string> { "one", "two", "three" };
             var type = typeof(ListExtensions);
-            var parameters = new Type[] { typeof(string), typeof(IEqualityComparer<string>) };
+            var parameters = new[] { typeof(string), typeof(IEqualityComparer<string>) };
 
             var mi = type.GetMethodInfo("ContainsValue", parameters, new[] { typeof(string) });
             var result = mi.Invoke(null, new object[] {list, "one", StringComparer.OrdinalIgnoreCase});

@@ -47,6 +47,8 @@ namespace RuleEngine.RuleCompilers
         {
             var param = Expression.Parameter(typeof(T));
             var methodExpression = BuildExpression(param, methodVoidCallRuleToCompile);
+            if (methodExpression == null)
+                return null;
 #if DEBUG
             Debug.WriteLine($"{nameof(methodVoidCallRuleToCompile)} ready to compile: {methodExpression}");
             methodExpression.TraceNode();
