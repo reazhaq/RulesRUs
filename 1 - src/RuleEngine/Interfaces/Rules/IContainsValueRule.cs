@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace RuleEngine.Interfaces.Rules
+﻿namespace RuleEngine.Interfaces.Rules
 {
-    public interface IContainsValueRule<T>
+    public interface IContainsValueRule<in T>
     {
         bool ContainsValue(T valueToSearch);
     }

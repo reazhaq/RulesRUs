@@ -4,9 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using RuleEngine.Common;
-using RuleEngine.Interfaces.Compilers;
 using RuleEngine.Interfaces.Rules;
-using RuleEngine.RuleCompilers;
 using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
