@@ -40,7 +40,6 @@ namespace RuleEngineTests.Rules
             var compileResult = nameEqualsRule.Compile();
             compileResult.Should().BeTrue();
 
-
             var executeResult = nameEqualsRule.Execute(_game1);
             executeResult.Should().Be(expectedResult);
 
