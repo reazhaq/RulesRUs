@@ -18,7 +18,8 @@ namespace RuleEngineTests.Rules
         [Theory]
         [InlineData("one", "six-six-six")]
         [InlineData("tWo", "six-six-six")]
-        [InlineData("blah", null)]
+        [InlineData("blah", "blah")]
+        [InlineData("nine", "nine")]
         public void IfValueContainsReturnDiffValue(string searchValue, string expectedValue)
         {
             var valueReplacementIfBad = new ConditionalFuncRule<string, string>
@@ -26,10 +27,10 @@ namespace RuleEngineTests.Rules
                 ConditionRule = new ContainsValueRule<string>
                 {
                     EqualityComparer = StringComparer.OrdinalIgnoreCase,
-                    CollectionToSearch = {"one", "two", "three", "four", "five", "six"}
+                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
                 },
-                TrueRule = new ConstantRule<string> {Value = "six-six-six"},
-                FalseRule = new ConstantRule<string> {Value = null}
+                TrueRule = new ExpressionFuncRule<string,string>(s => "six-six-six"),
+                FalseRule = new ExpressionFuncRule<string,string>(s => s)
             };
 
             var compileResult = valueReplacementIfBad.Compile();
@@ -46,9 +47,9 @@ namespace RuleEngineTests.Rules
         {
             var evenOrOddOutput = new ConditionalActionRule<int>
             {
-                ConditionRule = new ExpressionFuncRules<int, bool>(i => i % 2 == 0),
-                TrueRule = new ExpressionActionRule<int>(i=>_testOutputHelper.WriteLine($"{i} is even")),
-                FalseRule = new ExpressionActionRule<int>(i=>_testOutputHelper.WriteLine($"{i} is odd"))
+                ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
+                TrueRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is even")),
+                FalseRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is odd"))
             };
 
             var compileResult = evenOrOddOutput.Compile();
@@ -64,9 +65,9 @@ namespace RuleEngineTests.Rules
         {
             var evenOrOddResult = new ConditionalFuncRule<int, string>
             {
-                ConditionRule = new ExpressionFuncRules<int, bool>(i => i % 2 == 0),
-                TrueRule = new ExpressionFuncRules<int, string>(i => string.Format($"{i} is even")),
-                FalseRule = new ExpressionFuncRules<int, string>(i => string.Format($"{i} is odd"))
+                ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
+                TrueRule = new ExpressionFuncRule<int, string>(i => string.Format($"{i} is even")),
+                FalseRule = new ExpressionFuncRule<int, string>(i => string.Format($"{i} is odd"))
             };
 
             var compileResult = evenOrOddResult.Compile();

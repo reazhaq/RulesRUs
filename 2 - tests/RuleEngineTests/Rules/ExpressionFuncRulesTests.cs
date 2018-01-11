@@ -25,7 +25,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void OneOutParameterExpressionTest()
         {
-            var ruleReturningAFixedValue = new ExpressionFuncRules<int>(() => int.MaxValue);
+            var ruleReturningAFixedValue = new ExpressionFuncRule<int>(() => int.MaxValue);
             var compileResult = ruleReturningAFixedValue.Compile();
             compileResult.Should().BeTrue();
             var executeResult = ruleReturningAFixedValue.Execute();
@@ -36,7 +36,7 @@ namespace RuleEngineTests.Rules
         public void OneInOneOutParameterExpressionTest()
         {
             // g => IIF(((g == null) OrElse (g.Players == null)), 0, g.Players.Count)
-            var ruleReturningCountOfPlayers = new ExpressionFuncRules<Game, int>(
+            var ruleReturningCountOfPlayers = new ExpressionFuncRule<Game, int>(
                                                 g => (g == null || g.Players == null) ? 0 : g.Players.Count);
             var compileResult = ruleReturningCountOfPlayers.Compile();
             compileResult.Should().BeTrue();
@@ -47,7 +47,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void TwoInOneOutParameterExpressionTest()
         {
-            var ruleReturningTotalCountOfPlayers = new ExpressionFuncRules<Game, Game, int>((g1, g2) =>
+            var ruleReturningTotalCountOfPlayers = new ExpressionFuncRule<Game, Game, int>((g1, g2) =>
                                                     ((g1 == null || g1.Players == null) ? 0 : g1.Players.Count) +
                                                         ((g2 == null || g2.Players == null) ? 0 : g2.Players.Count)
                                                 );
@@ -60,7 +60,7 @@ namespace RuleEngineTests.Rules
         [Fact]
         public void TwoInOneOutParameterExpressionTest2()
         {
-            var ruleFindCountriesNotInOther = new ExpressionFuncRules<Game, Game, IEnumerable<Player>>((g1, g2) =>
+            var ruleFindCountriesNotInOther = new ExpressionFuncRule<Game, Game, IEnumerable<Player>>((g1, g2) =>
                 g1.Players.Except(g2.Players, new PlayerCountryEqualityComparer())
             );
             var compileResult = ruleFindCountriesNotInOther.Compile();
