@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using FluentAssertions;
 using RuleEngine.Rules;
 using Xunit;
@@ -50,6 +51,26 @@ namespace RuleEngineTests.Rules
                 ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
                 TrueRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is even")),
                 FalseRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is odd"))
+            };
+
+            var compileResult = evenOrOddOutput.Compile();
+            compileResult.Should().BeTrue();
+
+            evenOrOddOutput.Execute(evenOddValue);
+        }
+
+        [Theory]
+        [InlineData(22)]
+        [InlineData(33)]
+        [InlineData(44)]
+        [InlineData(55)]
+        public void ConditionalOutputWithElseEmpty(int evenOddValue)
+        {
+            var evenOrOddOutput = new ConditionalActionRule<int>
+            {
+                ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
+                TrueRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is even")),
+                FalseRule = new ExpressionActionRule<int>(i => Expression.Empty())
             };
 
             var compileResult = evenOrOddOutput.Compile();
