@@ -31,8 +31,7 @@ namespace RuleEngine.Rules
 
         public override bool Compile()
         {
-            var parameter = Expression.Parameter(typeof(T));
-            var expression = BuildExpression(parameter);
+            var expression = BuildExpression(null);
 #if DEBUG
             Debug.WriteLine($"Expression for ConstantRule with value: {Value} is {expression}");
             expression.TraceNode();

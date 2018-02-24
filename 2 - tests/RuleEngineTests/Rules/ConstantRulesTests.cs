@@ -95,7 +95,7 @@ namespace RuleEngineTests.Rules
         }
 
         [Fact]
-        public void ContantRuleOfTypeIntThatReturnsStringWhenValueIsString()
+        public void ContantRuleOfTypeIntThatReturnsString()
         {
             var stringValue = "55";
             var ruleReturningString = new ConstantRule<int, string> {Value = stringValue};
@@ -104,6 +104,17 @@ namespace RuleEngineTests.Rules
 
             var value = ruleReturningString.Get(int.MinValue);
             value.Should().BeOfType<string>().And.Be(stringValue);
+        }
+
+        [Fact]
+        public void ConstantRuleOfTypeIntThatReturensNullableBool()
+        {
+            var rule = new ConstantRule<int, bool?> {Value = "null"};
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+
+            var value = rule.Get(int.MinValue);
+            value.Should().Be(default(bool?));
         }
     }
 }
