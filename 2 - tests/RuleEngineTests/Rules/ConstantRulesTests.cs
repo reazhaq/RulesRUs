@@ -6,11 +6,11 @@ using FluentAssertions;
 
 namespace RuleEngineTests.Rules
 {
-    public class ConstantRuleTests
+    public class ConstantRulesTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public ConstantRuleTests(ITestOutputHelper testOutputHelper)
+        public ConstantRulesTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
@@ -92,6 +92,18 @@ namespace RuleEngineTests.Rules
                 expectedTypedResult = Convert.ChangeType(expectedResult, underyingType);
 
             Assert.True(value?.Equals(expectedTypedResult) ?? expectedTypedResult == null);
+        }
+
+        [Fact]
+        public void ContantRuleOfTypeIntThatReturnsStringWhenValueIsString()
+        {
+            var stringValue = "55";
+            var ruleReturningString = new ConstantRule<int, string> {Value = stringValue};
+            var compileResult = ruleReturningString.Compile();
+            compileResult.Should().BeTrue();
+
+            var value = ruleReturningString.Get(int.MinValue);
+            value.Should().BeOfType<string>().And.Be(stringValue);
         }
     }
 }

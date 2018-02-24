@@ -22,6 +22,18 @@ namespace ExpressionTreeExperiment1
             //Test5();
 
             //Test6();
+            Test7();
+        }
+
+        private static void Test7()
+        {
+            Expression<Func<string, string >> Blah = x => "blah";
+            Blah.TraceNode();
+            Debug.WriteLine(Blah.Compile()("moo"));
+
+            Expression<Func<int, string>> blah2 = i => "blah2";
+            blah2.TraceNode();
+            Debug.WriteLine(blah2.Compile()(55));
         }
 
         private static void Test6()
