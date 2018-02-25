@@ -107,7 +107,7 @@ namespace RuleEngineTests.Rules
         }
 
         [Fact]
-        public void ConstantRuleOfTypeIntThatReturensNullableBool()
+        public void ConstantRuleOfTypeIntNullableBoolRetursNull()
         {
             var rule = new ConstantRule<int, bool?> {Value = "null"};
             var compileResult = rule.Compile();
@@ -115,6 +115,17 @@ namespace RuleEngineTests.Rules
 
             var value = rule.Get(int.MinValue);
             value.Should().Be(default(bool?));
+        }
+
+        [Fact]
+        public void ConstantRuleOfTypeIntNullableBoolReturnsFalse()
+        {
+            var rule = new ConstantRule<int, bool?> {Value = "false"};
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+
+            var value = rule.Get(int.MinValue);
+            value.Should().Be(false);
         }
     }
 }

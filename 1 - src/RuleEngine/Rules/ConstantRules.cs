@@ -81,7 +81,8 @@ namespace RuleEngine.Rules
             Debug.WriteLine($"Expression for ConstantRule with value: {Value} is {expression}");
             expression.TraceNode();
 #endif
-            CompiledDelegate = Expression.Lambda<Func<T1,T2>>(expression, parameter).Compile();
+            var expressionBody = Expression.Convert(expression, typeof(T2));
+            CompiledDelegate = Expression.Lambda<Func<T1, T2>>(expressionBody, parameter).Compile();
             return CompiledDelegate != null;
         }
 
