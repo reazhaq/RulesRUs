@@ -54,7 +54,7 @@ namespace RuleEngineTests.Rules
         [InlineData(typeof(float), "1.2", 1.2)]
         [InlineData(typeof(float?), "null", null)]
         [InlineData(typeof(float?), "12.34", 12.34)]
-        public void ConsttantRuleChangesStringAssignedValueToTypedLambda(Type constantType, string valueToUse, object expectedResult)
+        public void ConstantRuleChangesStringAssignedValueToTypedLambda(Type constantType, string valueToUse, object expectedResult)
         {
             var constantRuleGenericType = typeof(ConstantRule<>);
             var typesToUse = new[] {constantType};
@@ -126,6 +126,46 @@ namespace RuleEngineTests.Rules
 
             var value = rule.Get(int.MinValue);
             value.Should().Be(false);
+        }
+
+        [Theory]
+        [InlineData(typeof(int), typeof(string), 1, "six-six-six", "six-six-six")]
+        [InlineData(typeof(int?), typeof(bool?), null, null, null)]
+        [InlineData(typeof(bool), typeof(int), false, "666", 666)]
+        [InlineData(typeof(string), typeof(double?), "69", "123.45", 123.45)]
+        public void ConstantRuleTwoTypeReturnsSecondIgnoresParameter(Type type1, Type type2, object paramValue,
+            string valueToUse, object expectedResult)
+        {
+            var constantRuleGenericType = typeof(ConstantRule<,>);
+            var typesToUse = new[] {type1, type2};
+            var constantRuleOfTypeT1AndT2 = constantRuleGenericType.MakeGenericType(typesToUse);
+            var instanceOfConstantRule = Activator.CreateInstance(constantRuleOfTypeT1AndT2);
+            _testOutputHelper.WriteLine($"instanceOfConstantRule = {instanceOfConstantRule}");
+
+            var propertyInfo = instanceOfConstantRule.GetType().GetProperty("Value");
+            propertyInfo.Should().NotBeNull();
+            propertyInfo.SetValue(instanceOfConstantRule, Convert.ChangeType(valueToUse, propertyInfo.PropertyType));
+
+            var compileResult = instanceOfConstantRule.GetType().GetMethod("Compile").Invoke(instanceOfConstantRule, null);
+            compileResult.Should().NotBeNull().And.BeOfType<bool>().And.Be(true);
+            _testOutputHelper.WriteLine($"compileResult for {nameof(instanceOfConstantRule)} = {compileResult}");
+
+            var getResult = instanceOfConstantRule.GetType().GetMethod("Get").Invoke(instanceOfConstantRule, new[]{paramValue});
+            _testOutputHelper.WriteLine($"result from Get({paramValue}): {getResult ?? "nulll"}");
+
+            object expectedTypedResult;
+            var underyingType = Nullable.GetUnderlyingType(type2) ?? type2;
+            if (expectedResult == null)
+            {
+                if (type2.IsValueType && Nullable.GetUnderlyingType(type2) != null)
+                    expectedTypedResult = null;
+                else
+                    expectedTypedResult = Convert.ChangeType(null, type2);
+            }
+            else
+                expectedTypedResult = Convert.ChangeType(expectedResult, underyingType);
+
+            Assert.True(getResult?.Equals(expectedTypedResult) ?? expectedTypedResult == null);
         }
     }
 }

@@ -26,17 +26,20 @@ namespace RuleEngine.Rules
 
             tType = Nullable.GetUnderlyingType(tType) ?? tType;
             var valueToConvert = tType.IsEnum ? Enum.Parse(tType, Value) : Value;
-            return Expression.Constant(Convert.ChangeType(valueToConvert, tType));
+            var underlyingTypeValue = Expression.Constant(Convert.ChangeType(valueToConvert, tType));
+            return Expression.Convert(underlyingTypeValue, typeof(T));
+
         }
 
         public override bool Compile()
         {
-            var expression = BuildExpression(null);
+            var expressionBoday = BuildExpression(null);
 #if DEBUG
-            Debug.WriteLine($"Expression for ConstantRule with value: {Value} is {expression}");
-            expression.TraceNode();
+            Debug.WriteLine($"constantExpressionBody for Func<{typeof(T)}>: " +
+                            $"with Value: {Value} is{Environment.NewLine}{expressionBoday}");
+            expressionBoday.TraceNode();
 #endif
-            CompiledDelegate = Expression.Lambda<Func<T>>(Expression.Convert(expression, typeof(T))).Compile();
+            CompiledDelegate = Expression.Lambda<Func<T>>(expressionBoday).Compile();
             return CompiledDelegate != null;
         }
 
@@ -70,18 +73,19 @@ namespace RuleEngine.Rules
 
             tType = Nullable.GetUnderlyingType(tType) ?? tType;
             var valueToConvert = tType.IsEnum ? Enum.Parse(tType, Value) : Value;
-            return Expression.Constant(Convert.ChangeType(valueToConvert, tType));
+            var underlyingTypeValue = Expression.Constant(Convert.ChangeType(valueToConvert, tType));
+            return Expression.Convert(underlyingTypeValue, typeof(T2));
         }
 
         public override bool Compile()
         {
             var parameter = Expression.Parameter(typeof(T1));
-            var expression = BuildExpression(parameter);
+            var expressionBody = BuildExpression(parameter);
 #if DEBUG
-            Debug.WriteLine($"Expression for ConstantRule with value: {Value} is {expression}");
-            expression.TraceNode();
+            Debug.WriteLine($"constantExpressionBody for Func<{typeof(T1)},{typeof(T2)}>: " +
+                            $"with Value: {Value} is{Environment.NewLine}{expressionBody}");
+            expressionBody.TraceNode();
 #endif
-            var expressionBody = Expression.Convert(expression, typeof(T2));
             CompiledDelegate = Expression.Lambda<Func<T1, T2>>(expressionBody, parameter).Compile();
             return CompiledDelegate != null;
         }
