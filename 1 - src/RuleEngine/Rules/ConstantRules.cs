@@ -7,28 +7,40 @@ using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
+    public class ConstantRuleBase : Rule
+    {
+        public virtual string Value { get; set; }
+
+        protected ConstantExpression GetUnderlyingTypedValue(Type tType)
+        {
+            tType = Nullable.GetUnderlyingType(tType) ?? tType;
+            var valueToConvert = tType.IsEnum ? Enum.Parse(tType, Value) : Value;
+            return Expression.Constant(Convert.ChangeType(valueToConvert, tType));
+        }
+
+        protected ConstantExpression GetNullValueExpression<T>(Type tType)
+        {
+            if (!tType.IsValueType || Nullable.GetUnderlyingType(tType) != null)
+                return Expression.Constant(default(T), tType);
+
+            throw new RuleEngineException($"{typeof(T)} is not nullable and [null and/or empty string] can't be assigned");
+        }
+
+        public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
+        public override bool Compile() => throw new NotImplementedException();
+    }
     // creates a typed lambda that takes no paramter and returns a fixed value
-    public class ConstantRule<T> : Rule, IConstantRule<T>
+    public class ConstantRule<T> : ConstantRuleBase, IConstantRule<T>
     {
         private Func<T> CompiledDelegate { get; set; }
-        public string Value { get; set; }
 
         public override Expression BuildExpression(params ParameterExpression[] _)
         {
             var tType = typeof(T);
             if (string.IsNullOrEmpty(Value) || Value.Equals("null", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (!tType.IsValueType || Nullable.GetUnderlyingType(tType) != null)
-                    return Expression.Constant(default(T), tType);
+                return GetNullValueExpression<T>(tType);
 
-                throw new RuleEngineException($"{typeof(T)} is not nullable and [null and/or empty string] can't be assigned");
-            }
-
-            tType = Nullable.GetUnderlyingType(tType) ?? tType;
-            var valueToConvert = tType.IsEnum ? Enum.Parse(tType, Value) : Value;
-            var underlyingTypeValue = Expression.Constant(Convert.ChangeType(valueToConvert, tType));
-            return Expression.Convert(underlyingTypeValue, typeof(T));
-
+            return Expression.Convert(GetUnderlyingTypedValue(tType), typeof(T));
         }
 
         public override bool Compile()
@@ -45,17 +57,16 @@ namespace RuleEngine.Rules
 
         public T Get()
         {
-            if(CompiledDelegate == null)
+            if (CompiledDelegate == null)
                 throw new RuleEngineException("Rule has to be compiled before it can be executed");
 
             return CompiledDelegate();
         }
     }
-    
-    public class ConstantRule<T1, T2> : Rule, IConstantRule<T1, T2>
+
+    public class ConstantRule<T1, T2> : ConstantRuleBase, IConstantRule<T1, T2>
     {
         private Func<T1, T2> CompiledDelegate { get; set; }
-        public string Value { get; set; }
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
@@ -64,17 +75,9 @@ namespace RuleEngine.Rules
 
             var tType = typeof(T2);
             if (string.IsNullOrEmpty(Value) || Value.Equals("null", StringComparison.InvariantCultureIgnoreCase))
-            {
-                if (!tType.IsValueType || Nullable.GetUnderlyingType(tType) != null)
-                    return Expression.Constant(default(T2), tType);
+                return GetNullValueExpression<T2>(tType);
 
-                throw new RuleEngineException($"{typeof(T2)} is not nullable and [null and/or empty string] can't be assigned");
-            }
-
-            tType = Nullable.GetUnderlyingType(tType) ?? tType;
-            var valueToConvert = tType.IsEnum ? Enum.Parse(tType, Value) : Value;
-            var underlyingTypeValue = Expression.Constant(Convert.ChangeType(valueToConvert, tType));
-            return Expression.Convert(underlyingTypeValue, typeof(T2));
+            return Expression.Convert(GetUnderlyingTypedValue(tType), typeof(T2));
         }
 
         public override bool Compile()

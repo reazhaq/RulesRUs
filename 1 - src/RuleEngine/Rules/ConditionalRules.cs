@@ -14,15 +14,8 @@ namespace RuleEngine.Rules
         public Rule TrueRule;
         public Rule FalseRule;
 
-        public override Expression BuildExpression(params ParameterExpression[] parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool Compile()
-        {
-            throw new NotImplementedException();
-        }
+        public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
+        public override bool Compile() => throw new NotImplementedException();
     }
 
     // executes a rule if true or executes another rule if false

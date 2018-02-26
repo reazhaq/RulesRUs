@@ -16,15 +16,8 @@ namespace RuleEngine.Rules
         public string ObjectToCallMethodOn { get; set; }
         public List<object> Inputs { get; } = new List<object>();
 
-        public override Expression BuildExpression(params ParameterExpression[] parameters)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool Compile()
-        {
-            throw new NotImplementedException();
-        }
+        public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
+        public override bool Compile() => throw new NotImplementedException();
     }
 
     public class MethodVoidCallRule<T> : MethodCallBase, IMethodVoidCallRule<T>
