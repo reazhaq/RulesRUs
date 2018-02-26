@@ -79,8 +79,15 @@ namespace RuleEngine.Rules
             var returnLabel = Expression.Label(typeof(T2), "returnLable");
 
             var conditionalExpression = ConditionRule.BuildExpression(parameters);
+
             var trueExpression = TrueRule.BuildExpression(parameters);
+            if(!(trueExpression is LambdaExpression))
+                trueExpression = Expression.Lambda(trueExpression, parameters);
+
             var falseExpression = FalseRule.BuildExpression(parameters);
+            if(!(falseExpression is LambdaExpression))
+                falseExpression = Expression.Lambda(falseExpression, parameters);
+
             var ifThenElseExpression = Expression.IfThenElse(
                                         Expression.Invoke(conditionalExpression, parameters.Cast<Expression>()),
                                         Expression.Return(returnLabel, Expression.Invoke(trueExpression, parameters.Cast<Expression>())),

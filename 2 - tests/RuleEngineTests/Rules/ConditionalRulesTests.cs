@@ -98,27 +98,27 @@ namespace RuleEngineTests.Rules
             ruleResult.Should().BeEquivalentTo(expectedResult);
         }
 
-        //[Theory]
-        //[InlineData("one", "element is present in the collection")]
-        //[InlineData("nine", "element is not present in the collection")]
-        //public void ConditionalWithConstantRule(string valueToCheck, string expectedOutput)
-        //{
-        //    var containsTextRule = new ConditionalFuncRule<string, string>
-        //    {
-        //        ConditionRule = new ContainsValueRule<string>
-        //        {
-        //            EqualityComparer = StringComparer.OrdinalIgnoreCase,
-        //            CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
-        //        },
-        //        TrueRule = new ConstantRule<string, string> { Value = "element is present in the collection" },
-        //        FalseRule = new ConstantRule<string, string> { Value = "element is not present in the collection" }
-        //    };
+        [Theory]
+        [InlineData("one", "element is present in the collection")]
+        [InlineData("nine", "element is not present in the collection")]
+        public void ConditionalWithConstantRule(string valueToCheck, string expectedOutput)
+        {
+            var containsTextRule = new ConditionalFuncRule<string, string>
+            {
+                ConditionRule = new ContainsValueRule<string>
+                {
+                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+                },
+                TrueRule = new ConstantRule<string, string> { Value = "element is present in the collection" },
+                FalseRule = new ConstantRule<string, string> { Value = "element is not present in the collection" }
+            };
 
-        //    var compileResult = containsTextRule.Compile();
-        //    compileResult.Should().BeTrue();
+            var compileResult = containsTextRule.Compile();
+            compileResult.Should().BeTrue();
 
-        //    var ruleResult = containsTextRule.Execute(valueToCheck);
-        //    ruleResult.Should().BeEquivalentTo(expectedOutput);
-        //}
+            var ruleResult = containsTextRule.Execute(valueToCheck);
+            ruleResult.Should().BeEquivalentTo(expectedOutput);
+        }
     }
 }
