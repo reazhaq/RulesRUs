@@ -1,28 +1,24 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 - Solution Items", "0 - Solution Items", "{72F8F4FD-0CAB-45C9-8E37-4BE55BEA6717}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{ABDECE90-C6B3-4A19-8F80-553814BE49CE}"
 	ProjectSection(SolutionItems) = preProject
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - Src", "1 - Src", "{0548B483-1C20-41A2-8FC2-B1C81A126724}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{64290977-C140-466F-8586-B81D14D197E1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - Tests", "2 - Tests", "{C7E33946-9204-4A92-A430-EC28C7883B95}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{741D9194-A36C-4E2E-864F-83CDE4FA185B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Samples", "3 - Samples", "{0A09FFFC-5147-4075-8B0C-9E2C59000291}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zibrish", "zibrish", "{C0ADF9F5-38B4-4CEE-BEF1-C274485AAAB6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Experiments", "4 - Experiments", "{A7F9D167-0B41-4770-BEC0-F1DF0A2067B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionTreeExperiment1", "zibrish\ExpressionTreeExperiment1\ExpressionTreeExperiment1.csproj", "{7297FF0B-433B-4C34-BD1C-7084E4F404F5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionTreeExperiment1", "4 - experiments\ExpressionTreeExperiment1\ExpressionTreeExperiment1.csproj", "{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuleEngineTests", "src\RuleEngineTests\RuleEngineTests.csproj", "{064ADD13-0428-4162-BC3B-F0FB18D7648C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuleEngine", "1 - src\RuleEngine\RuleEngine.csproj", "{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuleEngineTests", "2 - tests\RuleEngineTests\RuleEngineTests.csproj", "{430AF151-A8B9-48AB-84B8-D01772831780}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample1PlaceOrder", "3 - samples\Sample1PlaceOrder\Sample1PlaceOrder.csproj", "{72450A44-DB04-4B00-90D4-6374A16B4793}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuleEngine", "src\RuleEngine\RuleEngine.csproj", "{7A1C597B-6239-4F47-9AD7-75C683D64F02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,31 +26,26 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56}.Release|Any CPU.Build.0 = Release|Any CPU
-		{430AF151-A8B9-48AB-84B8-D01772831780}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{430AF151-A8B9-48AB-84B8-D01772831780}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{430AF151-A8B9-48AB-84B8-D01772831780}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{430AF151-A8B9-48AB-84B8-D01772831780}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72450A44-DB04-4B00-90D4-6374A16B4793}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72450A44-DB04-4B00-90D4-6374A16B4793}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72450A44-DB04-4B00-90D4-6374A16B4793}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72450A44-DB04-4B00-90D4-6374A16B4793}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7297FF0B-433B-4C34-BD1C-7084E4F404F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7297FF0B-433B-4C34-BD1C-7084E4F404F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7297FF0B-433B-4C34-BD1C-7084E4F404F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7297FF0B-433B-4C34-BD1C-7084E4F404F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{064ADD13-0428-4162-BC3B-F0FB18D7648C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{064ADD13-0428-4162-BC3B-F0FB18D7648C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{064ADD13-0428-4162-BC3B-F0FB18D7648C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{064ADD13-0428-4162-BC3B-F0FB18D7648C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A1C597B-6239-4F47-9AD7-75C683D64F02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A1C597B-6239-4F47-9AD7-75C683D64F02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A1C597B-6239-4F47-9AD7-75C683D64F02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A1C597B-6239-4F47-9AD7-75C683D64F02}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{B08F2B9B-B7AC-4ACB-8A60-7A66012D1AE8} = {A7F9D167-0B41-4770-BEC0-F1DF0A2067B5}
-		{A0B1DC0D-47AF-478B-BB06-CC3852B63B56} = {0548B483-1C20-41A2-8FC2-B1C81A126724}
-		{430AF151-A8B9-48AB-84B8-D01772831780} = {C7E33946-9204-4A92-A430-EC28C7883B95}
-		{72450A44-DB04-4B00-90D4-6374A16B4793} = {0A09FFFC-5147-4075-8B0C-9E2C59000291}
+		{7297FF0B-433B-4C34-BD1C-7084E4F404F5} = {C0ADF9F5-38B4-4CEE-BEF1-C274485AAAB6}
+		{064ADD13-0428-4162-BC3B-F0FB18D7648C} = {741D9194-A36C-4E2E-864F-83CDE4FA185B}
+		{7A1C597B-6239-4F47-9AD7-75C683D64F02} = {64290977-C140-466F-8586-B81D14D197E1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E799544-0217-479E-A142-014AD9DD3982}
