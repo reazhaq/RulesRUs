@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
 using RuleEngine.Rules;
-using RuleEngineTests.Fixture;
-using RuleEngineTests.Model;
+using RuleEngine.Tests.Fixture;
+using RuleEngine.Tests.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleEngineTests.Rules
+namespace RuleEngine.Tests.Rules
 {
     public class ExpressionActionRulesTests : IClassFixture<ExpressionRulesFixture>
     {

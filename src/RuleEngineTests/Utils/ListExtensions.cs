@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace RuleEngineTests.Utils
+namespace RuleEngine.Tests.Utils
 {
     public static class ListExtensions
     {

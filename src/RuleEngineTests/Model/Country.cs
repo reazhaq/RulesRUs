@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Linq;
 
-namespace RuleEngineTests.Model
+namespace RuleEngine.Tests.Model
 {
     public class Country
     {

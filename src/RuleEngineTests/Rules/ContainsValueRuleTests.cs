@@ -4,7 +4,7 @@ using FluentAssertions;
 using RuleEngine.Rules;
 using Xunit;
 
-namespace RuleEngineTests.Rules
+namespace RuleEngine.Tests.Rules
 {
     public class ContainsValueRuleTests
     {

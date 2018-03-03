@@ -5,7 +5,7 @@ using RuleEngine.Rules;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleEngineTests.Rules
+namespace RuleEngine.Tests.Rules
 {
     public class ConditionalRulesTests
     {

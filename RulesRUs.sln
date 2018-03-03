@@ -16,7 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "zibrish", "zibrish", "{C0AD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionTreeExperiment1", "zibrish\ExpressionTreeExperiment1\ExpressionTreeExperiment1.csproj", "{7297FF0B-433B-4C34-BD1C-7084E4F404F5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuleEngineTests", "src\RuleEngineTests\RuleEngineTests.csproj", "{064ADD13-0428-4162-BC3B-F0FB18D7648C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuleEngine.Tests", "src\RuleEngineTests\RuleEngine.Tests.csproj", "{064ADD13-0428-4162-BC3B-F0FB18D7648C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuleEngine", "src\RuleEngine\RuleEngine.csproj", "{7A1C597B-6239-4F47-9AD7-75C683D64F02}"
 EndProject

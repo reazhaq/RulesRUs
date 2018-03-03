@@ -1,10 +1,10 @@
 ﻿using System;
+using FluentAssertions;
 using RuleEngine.Rules;
 using Xunit;
 using Xunit.Abstractions;
-using FluentAssertions;
 
-namespace RuleEngineTests.Rules
+namespace RuleEngine.Tests.Rules
 {
     public class ConstantRulesTests
     {

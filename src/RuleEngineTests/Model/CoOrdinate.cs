@@ -1,4 +1,4 @@
-﻿namespace RuleEngineTests.Model
+﻿namespace RuleEngine.Tests.Model
 {
     public class CoOrdinate
     {

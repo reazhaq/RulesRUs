@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
-using RuleEngineTests.Model;
+using RuleEngine.Tests.Model;
 
-namespace RuleEngineTests.Fixture
+namespace RuleEngine.Tests.Fixture
 {
     public class ValidationRulesFixture : IDisposable
     {

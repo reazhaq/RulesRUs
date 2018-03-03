@@ -4,7 +4,7 @@ using FluentAssertions;
 using RuleEngine.Utils;
 using Xunit;
 
-namespace RuleEngineTests.Utils
+namespace RuleEngine.Tests.Utils
 {
     public static class SomeStringExtension
     {

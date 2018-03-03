@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using RuleEngine.Rules;
-using RuleEngineTests.Model;
+using RuleEngine.Tests.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleEngineTests.Rules
+namespace RuleEngine.Tests.Rules
 {
     public class RegExRuleTests// : IClassFixture<ExpressionRulesFixture>
     {

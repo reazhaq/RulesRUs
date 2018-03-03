@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RuleEngineTests.Model
+namespace RuleEngine.Tests.Model
 {
     public class Player
     {
