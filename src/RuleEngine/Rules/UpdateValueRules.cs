@@ -8,10 +8,17 @@ using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
-    public class UpdateRule<T1, T2> : Rule, IUpdateRule<T1, T2>
+    public class UpdateValueRuleBase : Rule
+    {
+        public string ObjectToUpdate;
+
+        public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
+        public override bool Compile() => throw new NotImplementedException();
+    }
+
+    public class UpdateValueRule<T1, T2> : UpdateValueRuleBase, IUpdateValueRule<T1, T2>
     {
         private Action<T1, T2> CompiledDelegate { get; set; }
-        public string ObjectToUpdate;
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
@@ -46,4 +53,9 @@ namespace RuleEngine.Rules
             CompiledDelegate(targetObject, source);
         }
     }
+
+    //public class UpdateValueRule<T1,T2> : UpdateValueRuleBase
+    //{
+
+    //}
 }

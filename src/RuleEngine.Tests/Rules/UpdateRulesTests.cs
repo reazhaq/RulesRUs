@@ -11,7 +11,7 @@ namespace RuleEngine.Tests.Rules
         public void UpdatePropertyStingWithDifferentValue()
         {
             var game = new Game {Name = "game name"};
-            var nameChangeRule = new UpdateRule<Game, string>
+            var nameChangeRule = new UpdateValueRule<Game, string>
             {
                 ObjectToUpdate = "Name"
             };

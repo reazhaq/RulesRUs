@@ -26,7 +26,7 @@ namespace RuleEngine.RuleCompilers
             "IsMatch"
         };
 
-        protected virtual Expression[] GetArgumentsExpressions(ParameterExpression param, List<object> inputs, Type[] inputTypes)
+        public static Expression[] GetArgumentsExpressions(ParameterExpression param, List<object> inputs, Type[] inputTypes)
         {
             var argumentsExpressions = new Expression[inputs.Count];
             for (var index = 0; index < inputs.Count; index++)

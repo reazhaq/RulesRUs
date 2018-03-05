@@ -12,9 +12,7 @@ var configuration = Argument("configuration", "Release");
 //////////////////////////////////////////////////////////////////////
 
 // Define directories.
-var buildDir = Directory("./RulesRUs/bin") + Directory(configuration);
 var solution = "./RulesRUs.sln";
-var artifactsDir  = Directory("./artifacts/");
 var rootAbsoluteDir = MakeAbsolute(Directory("./")).FullPath;
 
 
@@ -25,7 +23,7 @@ var rootAbsoluteDir = MakeAbsolute(Directory("./")).FullPath;
 Task("Clean")
     .Does(() =>
 {
-    CleanDirectory(artifactsDir);
+    CleanDirectories("./src/**/bin/" + configuration);
 });
 
 Task("Restore-NuGet-Packages")
