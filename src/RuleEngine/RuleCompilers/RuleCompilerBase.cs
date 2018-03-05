@@ -46,7 +46,7 @@ namespace RuleEngine.RuleCompilers
             return argumentsExpressions;
         }
 
-        protected virtual Expression GetExpressionWithSubProperty(ParameterExpression param, string objectToValidate)
+        public static Expression GetExpressionWithSubProperty(ParameterExpression param, string objectToValidate)
         {
             if (string.IsNullOrEmpty(objectToValidate))
                 return param;
