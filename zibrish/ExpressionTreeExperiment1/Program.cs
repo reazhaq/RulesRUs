@@ -11,6 +11,19 @@ namespace ExpressionTreeExperiment1
 {
     class Program
     {
+        private static Expression GetExpressionWithSubProperty(ParameterExpression param, string objectToValidate)
+        {
+            if (string.IsNullOrEmpty(objectToValidate))
+                return param;
+
+            var partsAndPieces = objectToValidate.Split('.');
+            Expression bodyWithSubProperty = param;
+            foreach (var partsAndPiece in partsAndPieces)
+                bodyWithSubProperty = Expression.PropertyOrField(bodyWithSubProperty, partsAndPiece);
+
+            return bodyWithSubProperty;
+        }
+
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
@@ -24,6 +37,103 @@ namespace ExpressionTreeExperiment1
             //Test6();
             //Test7();
             //Test8();
+
+            //Test9();
+            Test10();
+        }
+
+        private static void Test10()
+        {
+            //FieldInfo field = typeof(Someclass).GetField("SomeStringMember");
+            ParameterExpression targetExp = Expression.Parameter(typeof(Someclass), "target");
+            ParameterExpression valueExp = Expression.Parameter(typeof(string), "value");
+
+            // Expression.Property can be used here as well
+            var fieldExp = GetExpressionWithSubProperty(targetExp, "SomeStringMember");
+            BinaryExpression assignExp = Expression.Assign(fieldExp, valueExp);
+            assignExp.TraceNode();
+
+            var setterLam = Expression.Lambda<Action<Someclass, string>>
+                (assignExp, targetExp, valueExp);//.Compile();
+            setterLam.TraceNode();
+
+            var setter = setterLam.Compile();
+
+            var subject = new Someclass {SomeStringMember = "one"};
+            setter(subject, "new value");
+            Debug.WriteLine(subject.SomeStringMember);
+
+            var s = Expression.Parameter(typeof(Someclass), "s");
+            var ss = GetExpressionWithSubProperty(s, "SomeStringMember");
+            var foo = Expression.Parameter(typeof(string), "foo");
+            var assign = Expression.Assign(ss, foo);
+            assign.TraceNode();
+            var lam = Expression.Lambda<Action<Someclass, string>>(assign, s, foo);
+            lam.TraceNode();
+            var com = lam.Compile();
+            var blah = new Someclass { SomeStringMember = "one" };
+            com(blah, "two");
+            Debug.WriteLine(blah.SomeStringMember);
+        }
+
+        private static void Test9()
+        {
+            var something = new Someclass { SomeStringMember = "foo" };
+
+            Expression<Func<string>> blah = () => something.SomeStringMember;
+            var blah2 = Expression.Assign(
+                blah.Body
+                , Expression.Constant("bar"));
+            blah2.TraceNode();
+            var blah3 = Expression.Lambda(blah2);
+            blah3.TraceNode();
+            var blah4 = blah3.Compile();
+            blah4.DynamicInvoke();
+
+            var expParamI = Expression.Parameter(typeof(int), "i");
+            var expParamJ = Expression.Parameter(typeof(int), "j");
+
+            var expAssinInt = Expression.Assign(expParamI, expParamJ);
+            Debug.WriteLine("------------------- expAssinInt -----------------");
+            expAssinInt.TraceNode();
+
+            var parameterExpressions = new[] { expParamI, expParamJ };
+
+            var expLamInt = Expression.Lambda<Action<int, int>>(expAssinInt, parameterExpressions);
+            Debug.WriteLine("------------------ expLamInt --------------------");
+            expLamInt.TraceNode();
+
+            var expComInt = expLamInt.Compile();
+            var oneI = 1;
+            expComInt(oneI, 2);
+            Debug.WriteLine($"{nameof(oneI)}: {oneI}");
+
+            var invExpI = Expression.Invoke(expLamInt, expParamI, expParamJ);
+            invExpI.TraceNode();
+
+            var invExpLam = Expression.Lambda(invExpI, expParamI, expParamJ);
+            var invExpLamCom = invExpLam.Compile();
+            invExpLamCom.DynamicInvoke(oneI, 2);
+            Debug.WriteLine($"{nameof(oneI)}: {oneI}");
+
+
+            //var expParamX = Expression.Parameter(typeof(string).MakeByRefType(), "strX");
+            var expParamX = Expression.Parameter(typeof(string), "strX");
+            var expParamY = Expression.Parameter(typeof(string), "strY");
+
+            var expAssign = Expression.Assign(expParamX, expParamY);
+            Debug.WriteLine("******************** expAssign ***************");
+            expAssign.TraceNode();
+
+            var expLam = Expression.Lambda<Action<string, string>>(expAssign, new[] { expParamX, expParamY });
+            Debug.WriteLine("*************************** expLam *****************");
+            expLam.TraceNode();
+
+            var expCom = expLam.Compile();
+            var one = "one";
+            Debug.WriteLine($"{nameof(one)}: {one}");
+            expCom(one, "two");
+            Debug.WriteLine($"{nameof(one)}: {one}");
         }
 
         //private static void Test8()
