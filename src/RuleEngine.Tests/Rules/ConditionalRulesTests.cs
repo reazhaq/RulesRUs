@@ -182,5 +182,35 @@ namespace RuleEngine.Tests.Rules
             conditionalIfThElRule.Execute(game);
             game.Name.Should().Be("false name");
         }
+
+        [Fact]
+        public void ConditionalRuleLookAtOneValueUpdateAnother()
+        {
+            var conditionalUpdate = new ConditionalIfThActionRule<Player>
+            {
+                ConditionRule = new ValidationRule<Player>
+                {
+                    ObjectToValidate = "Country.CountryCode",
+                    OperatorToUse = "Equal",
+                    ValueToValidateAgainst = new ConstantRule<string>{Value = "ab"}
+                },
+                TrueRule = new UpdateValueRule<Player>
+                {
+                    ObjectToUpdate = "CurrentCoOrdinates.X",
+                    SourceDataRule = new ConstantRule<int>{Value = "999"}
+                }
+            };
+
+            var compileResult = conditionalUpdate.Compile();
+            compileResult.Should().BeTrue();
+
+            var player = new Player
+            {
+                Country = new Country {CountryCode = "ab"},
+                CurrentCoOrdinates = new CoOrdinate {X = 1, Y = 1}
+            };
+            conditionalUpdate.Execute(player);
+            player.CurrentCoOrdinates.X.Should().Be(999);
+        }
     }
 }
