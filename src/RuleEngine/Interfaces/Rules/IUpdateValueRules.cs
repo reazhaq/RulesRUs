@@ -5,8 +5,8 @@
         void UpdateFieldOrPropertyValue(T1 targetObject, T2 source);
     }
 
-    //public interface IUpdateValueRule<in T>
-    //{
-    //    void UpdateFieldOrPropertyValue(T targetObject);
-    //}
+    public interface IUpdateValueRule<in T>
+    {
+        void UpdateFieldOrPropertyValue(T targetObject);
+    }
 }

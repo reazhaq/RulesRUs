@@ -16,6 +16,43 @@ namespace RuleEngine.Rules
         public override bool Compile() => throw new NotImplementedException();
     }
 
+    public class UpdateValueRule<T> : UpdateValueRuleBase, IUpdateValueRule<T>
+    {
+        private Action<T> CompiledDelegate { get; set; }
+        public Rule SourceDataRule;
+
+        public override Expression BuildExpression(params ParameterExpression[] parameters)
+        {
+            if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T))
+                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
+
+            var targetObject = parameters[0];
+            var targetExpression = RuleCompilerBase.GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
+            var sourceExpression = SourceDataRule.BuildExpression(targetObject);
+            return Expression.Assign(targetExpression, sourceExpression);
+        }
+
+        public override bool Compile()
+        {
+            var paramObjectToValidate = Expression.Parameter(typeof(T));
+            var expression = BuildExpression(paramObjectToValidate);
+#if DEBUG
+            Debug.WriteLine($"Expression for UpdateRule<{typeof(T)}>: {expression}");
+            expression.TraceNode();
+#endif
+            CompiledDelegate = Expression.Lambda<Action<T>>(expression, paramObjectToValidate).Compile();
+            return CompiledDelegate != null;
+        }
+
+        public void UpdateFieldOrPropertyValue(T targetObject)
+        {
+            if (CompiledDelegate == null)
+                throw new RuleEngineException("A Rule must be compiled first");
+
+            CompiledDelegate(targetObject);
+        }
+    }
+
     public class UpdateValueRule<T1, T2> : UpdateValueRuleBase, IUpdateValueRule<T1, T2>
     {
         private Action<T1, T2> CompiledDelegate { get; set; }
@@ -53,9 +90,4 @@ namespace RuleEngine.Rules
             CompiledDelegate(targetObject, source);
         }
     }
-
-    //public class UpdateValueRule<T1,T2> : UpdateValueRuleBase
-    //{
-
-    //}
 }
