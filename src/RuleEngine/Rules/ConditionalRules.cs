@@ -18,8 +18,7 @@ namespace RuleEngine.Rules
         public override bool Compile() => throw new NotImplementedException();
     }
 
-    // executes a rule if true or executes another rule if false
-    public class ConditionalActionRule<T> : ConditionalRuleBase, IConditionalActionRule<T>
+    public class ConditionalIfThActionRule<T> : ConditionalRuleBase, IConditionalActionRule<T>
     {
         private Action<T> CompiledDelegate { get; set; }
 
@@ -29,8 +28,68 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
             var conditionalExpression = ConditionRule.BuildExpression(parameters);
+            if (!(conditionalExpression is LambdaExpression))
+                conditionalExpression = Expression.Lambda(conditionalExpression, parameters);
+
             var trueExpression = TrueRule.BuildExpression(parameters);
+            if(!(trueExpression is LambdaExpression))
+                trueExpression = Expression.Lambda(trueExpression, parameters);
+
+#if DEBUG
+            Debug.WriteLine($"trueExpression: {trueExpression}");
+            trueExpression.TraceNode();
+            Debug.WriteLine($"conditionalExpression: {conditionalExpression}");
+            conditionalExpression.TraceNode();
+#endif
+
+            return Expression.IfThen(
+                    Expression.Invoke(conditionalExpression, parameters.Cast<Expression>()),
+                    Expression.Invoke(trueExpression, parameters.Cast<Expression>()));
+        }
+
+        public override bool Compile()
+        {
+            var parameter = Expression.Parameter(typeof(T));
+            var expression = BuildExpression(parameter);
+#if DEBUG
+            Debug.WriteLine($"Expression for ConditionalIfThActionRule: {expression}");
+            expression.TraceNode();
+#endif
+            CompiledDelegate = Expression.Lambda<Action<T>>(expression, parameter).Compile();
+            return CompiledDelegate != null;
+        }
+
+        public void Execute(T param)
+        {
+            if (CompiledDelegate == null)
+                throw new RuleEngineException("A Rule must be compiled first");
+
+            CompiledDelegate(param);
+        }
+    }
+
+    // executes a rule if true or executes another rule if false
+    public class ConditionalIfThElActionRule<T> : ConditionalRuleBase, IConditionalActionRule<T>
+    {
+        private Action<T> CompiledDelegate { get; set; }
+
+        public override Expression BuildExpression(params ParameterExpression[] parameters)
+        {
+            if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T))
+                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
+
+            var conditionalExpression = ConditionRule.BuildExpression(parameters);
+            if (!(conditionalExpression is LambdaExpression))
+                conditionalExpression = Expression.Lambda(conditionalExpression, parameters);
+
+            var trueExpression = TrueRule.BuildExpression(parameters);
+            if (!(trueExpression is LambdaExpression))
+                trueExpression = Expression.Lambda(trueExpression, parameters);
+
             var falseExpression = FalseRule.BuildExpression(parameters);
+            if (!(falseExpression is LambdaExpression))
+                falseExpression = Expression.Lambda(falseExpression, parameters);
+
 #if DEBUG
             Debug.WriteLine($"trueExpression: {trueExpression}");
             trueExpression.TraceNode();
@@ -50,7 +109,7 @@ namespace RuleEngine.Rules
             var parameter = Expression.Parameter(typeof(T));
             var expression = BuildExpression(parameter);
 #if DEBUG
-            Debug.WriteLine($"Expression for ConditionalRule: {expression}");
+            Debug.WriteLine($"Expression for ConditionalIfThElActionRule: {expression}");
             expression.TraceNode();
 #endif
             CompiledDelegate = Expression.Lambda<Action<T>>(expression, parameter).Compile();
@@ -112,7 +171,7 @@ namespace RuleEngine.Rules
             var parameter = Expression.Parameter(typeof(T1));
             var expression = BuildExpression(parameter);
 #if DEBUG
-            Debug.WriteLine($"Expression for ConditionalRule: {expression}");
+            Debug.WriteLine($"Expression for ConditionalIfThElFuncRule: {expression}");
             expression.TraceNode();
 #endif
             CompiledDelegate = Expression.Lambda<Func<T1, T2>>(expression, parameter).Compile();

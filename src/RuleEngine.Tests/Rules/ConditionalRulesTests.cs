@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using FluentAssertions;
 using RuleEngine.Rules;
+using RuleEngine.Tests.Model;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -46,7 +48,7 @@ namespace RuleEngine.Tests.Rules
         [InlineData(3)]
         public void ConditionalOutput(int evenOddValue)
         {
-            var evenOrOddOutput = new ConditionalActionRule<int>
+            var evenOrOddOutput = new ConditionalIfThElActionRule<int>
             {
                 ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
                 TrueRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is even")),
@@ -66,7 +68,7 @@ namespace RuleEngine.Tests.Rules
         [InlineData(55)]
         public void ConditionalOutputWithElseEmpty(int evenOddValue)
         {
-            var evenOrOddOutput = new ConditionalActionRule<int>
+            var evenOrOddOutput = new ConditionalIfThElActionRule<int>
             {
                 ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
                 TrueRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is even")),
@@ -119,6 +121,66 @@ namespace RuleEngine.Tests.Rules
 
             var ruleResult = containsTextRule.Execute(valueToCheck);
             ruleResult.Should().BeEquivalentTo(expectedOutput);
+        }
+
+        [Fact]
+        public void ConditionalRuleToUpdateName()
+        {
+            var conditionalUpdateValue = new ConditionalIfThActionRule<Game>
+            {
+                ConditionRule = new MethodCallRule<Game, bool>
+                {
+                    ObjectToCallMethodOn = "Name",
+                    MethodToCall = "Equals",
+                    Inputs = { "some name", StringComparison.CurrentCultureIgnoreCase }
+                },
+                TrueRule = new UpdateValueRule<Game>
+                {
+                    ObjectToUpdate = "Name",
+                    SourceDataRule = new ConstantRule<string> { Value = "updated name" }
+                }
+            };
+
+            var compileResult = conditionalUpdateValue.Compile();
+            compileResult.Should().BeTrue();
+
+            var game = new Game {Name = "some name"};
+            conditionalUpdateValue.Execute(game);
+            game.Name.Should().Be("updated name");
+        }
+
+        [Fact]
+        public void ConditionalRuleToUpdateNameToSomethingElse()
+        {
+            var conditionalIfThElRule = new ConditionalIfThElActionRule<Game>
+            {
+                ConditionRule = new MethodCallRule<Game, bool>
+                {
+                    ObjectToCallMethodOn = "Name",
+                    MethodToCall = "Equals",
+                    Inputs = { "some name", StringComparison.CurrentCultureIgnoreCase }
+                },
+                TrueRule = new UpdateValueRule<Game>
+                {
+                    ObjectToUpdate = "Name",
+                    SourceDataRule = new ConstantRule<string> { Value = "true name" }
+                },
+                FalseRule = new UpdateValueRule<Game>
+                {
+                    ObjectToUpdate = "Name",
+                    SourceDataRule = new ConstantRule<string> { Value = "false name" }
+                }
+            };
+
+            var compileResult = conditionalIfThElRule.Compile();
+            compileResult.Should().BeTrue();
+
+            var game = new Game {Name = "some name"};
+            conditionalIfThElRule.Execute(game);
+            game.Name.Should().Be("true name");
+
+            conditionalIfThElRule.Execute(game);
+            game.Name.Should().Be("false name");
         }
     }
 }
