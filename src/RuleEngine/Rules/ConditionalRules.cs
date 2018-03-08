@@ -47,22 +47,23 @@ namespace RuleEngine.Rules
             Debug.WriteLine(sb);
 #endif
 
-            return Expression.IfThen(
-                    Expression.Invoke(conditionalExpression, parameters.Cast<Expression>()),
-                    Expression.Invoke(trueExpression, parameters.Cast<Expression>()));
+            ExpressionForThisRule = Expression.IfThen(
+                                    Expression.Invoke(conditionalExpression, parameters.Cast<Expression>()),
+                                    Expression.Invoke(trueExpression, parameters.Cast<Expression>()));
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()
         {
             var parameter = Expression.Parameter(typeof(T));
-            var expression = BuildExpression(parameter);
+            ExpressionForThisRule = BuildExpression(parameter);
 #if DEBUG
-            Debug.WriteLine($"Expression for ConditionalIfThActionRule: {expression}");
+            Debug.WriteLine($"Expression for ConditionalIfThActionRule: {ExpressionForThisRule}");
             var sb = new StringBuilder();
-            expression.TraceNode(sb);
+            ExpressionForThisRule.TraceNode(sb);
             Debug.WriteLine(sb);
 #endif
-            CompiledDelegate = Expression.Lambda<Action<T>>(expression, parameter).Compile();
+            CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, parameter).Compile();
             return CompiledDelegate != null;
         }
 
@@ -112,22 +113,23 @@ namespace RuleEngine.Rules
             Debug.WriteLine(sb);
 #endif
 
-            return Expression.Condition(Expression.Invoke(conditionalExpression, parameters.Cast<Expression>()),
-                                        Expression.Invoke(trueExpression, parameters.Cast<Expression>()),
-                                        Expression.Invoke(falseExpression, parameters.Cast<Expression>()));
+            ExpressionForThisRule = Expression.Condition(Expression.Invoke(conditionalExpression, parameters.Cast<Expression>()),
+                                    Expression.Invoke(trueExpression, parameters.Cast<Expression>()),
+                                    Expression.Invoke(falseExpression, parameters.Cast<Expression>()));
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()
         {
             var parameter = Expression.Parameter(typeof(T));
-            var expression = BuildExpression(parameter);
+            ExpressionForThisRule = BuildExpression(parameter);
 #if DEBUG
-            Debug.WriteLine($"Expression for ConditionalIfThElActionRule: {expression}");
+            Debug.WriteLine($"Expression for ConditionalIfThElActionRule: {ExpressionForThisRule}");
             var sb = new StringBuilder();
-            expression.TraceNode(sb);
+            ExpressionForThisRule.TraceNode(sb);
             Debug.WriteLine(sb);
 #endif
-            CompiledDelegate = Expression.Lambda<Action<T>>(expression, parameter).Compile();
+            CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, parameter).Compile();
             return CompiledDelegate != null;
         }
 
@@ -186,20 +188,22 @@ namespace RuleEngine.Rules
             Debug.WriteLine(sb);
 #endif
 
-            return Expression.Block(ifThenElseExpression, Expression.Label(returnLabel, Expression.Constant(string.Empty)));
+            ExpressionForThisRule = Expression.Block(ifThenElseExpression,
+                                        Expression.Label(returnLabel, Expression.Constant(string.Empty)));
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()
         {
             var parameter = Expression.Parameter(typeof(T1));
-            var expression = BuildExpression(parameter);
+            ExpressionForThisRule = BuildExpression(parameter);
 #if DEBUG
-            Debug.WriteLine($"Expression for ConditionalIfThElFuncRule: {expression}");
+            Debug.WriteLine($"Expression for ConditionalIfThElFuncRule: {ExpressionForThisRule}");
             var sb = new StringBuilder();
-            expression.TraceNode(sb);
+            ExpressionForThisRule.TraceNode(sb);
             Debug.WriteLine(sb);
 #endif
-            CompiledDelegate = Expression.Lambda<Func<T1, T2>>(expression, parameter).Compile();
+            CompiledDelegate = Expression.Lambda<Func<T1, T2>>(ExpressionForThisRule, parameter).Compile();
             return CompiledDelegate != null;
         }
 

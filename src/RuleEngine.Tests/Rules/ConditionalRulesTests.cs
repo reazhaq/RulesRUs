@@ -38,8 +38,11 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = valueReplacementIfBad.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
+                                        $"{valueReplacementIfBad.ExpressionDebugView()}");
 
             searchValue = valueReplacementIfBad.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {searchValue}");
             searchValue.ShouldBeEquivalentTo(expectedValue);
         }
 
@@ -57,6 +60,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = evenOrOddOutput.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(evenOrOddOutput)}:{Environment.NewLine}" +
+                                        $"{evenOrOddOutput.ExpressionDebugView()}");
 
             evenOrOddOutput.Execute(evenOddValue);
         }
@@ -77,6 +82,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = evenOrOddOutput.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(evenOrOddOutput)}:{Environment.NewLine}" +
+                                        $"{evenOrOddOutput.ExpressionDebugView()}");
 
             evenOrOddOutput.Execute(evenOddValue);
         }
@@ -95,8 +102,11 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = evenOrOddResult.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(evenOrOddResult)}:{Environment.NewLine}" +
+                                        $"{evenOrOddResult.ExpressionDebugView()}");
 
             var ruleResult = evenOrOddResult.Execute(evenOddValue);
+            _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {ruleResult}");
             ruleResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -118,8 +128,11 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = containsTextRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(containsTextRule)}:{Environment.NewLine}" +
+                                        $"{containsTextRule.ExpressionDebugView()}");
 
             var ruleResult = containsTextRule.Execute(valueToCheck);
+            _testOutputHelper.WriteLine($"expected: {expectedOutput} - actual: {ruleResult}");
             ruleResult.Should().BeEquivalentTo(expectedOutput);
         }
 
@@ -143,9 +156,13 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = conditionalUpdateValue.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(conditionalUpdateValue)}:{Environment.NewLine}" +
+                                        $"{conditionalUpdateValue.ExpressionDebugView()}");
 
             var game = new Game {Name = "some name"};
+            _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
             conditionalUpdateValue.Execute(game);
+            _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
             game.Name.Should().Be("updated name");
         }
 
@@ -174,12 +191,17 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = conditionalIfThElRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(conditionalIfThElRule)}:{Environment.NewLine}" +
+                                        $"{conditionalIfThElRule.ExpressionDebugView()}");
 
             var game = new Game {Name = "some name"};
+            _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
             conditionalIfThElRule.Execute(game);
+            _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
             game.Name.Should().Be("true name");
 
             conditionalIfThElRule.Execute(game);
+            _testOutputHelper.WriteLine($"after after game.Name: {game.Name}");
             game.Name.Should().Be("false name");
         }
 
@@ -203,6 +225,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = conditionalUpdate.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(conditionalUpdate)}:{Environment.NewLine}" +
+                                        $"{conditionalUpdate.ExpressionDebugView()}");
 
             var player = new Player
             {
@@ -211,6 +235,7 @@ namespace RuleEngine.Tests.Rules
             };
             conditionalUpdate.Execute(player);
             player.CurrentCoOrdinates.X.Should().Be(999);
+            _testOutputHelper.WriteLine($"expected: 999 - actual: {player.CurrentCoOrdinates.X}");
         }
     }
 }
