@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Utils;
@@ -19,7 +20,9 @@ namespace RuleEngine.Rules
         {
 #if DEBUG
             Debug.WriteLine($"ExpressionFuncRules<{typeof(T)}> RuleExpression: {RuleExpression}");
-            RuleExpression.TraceNode();
+            var sb = new StringBuilder();
+            RuleExpression.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
@@ -46,7 +49,9 @@ namespace RuleEngine.Rules
         {
 #if DEBUG
             Debug.WriteLine($"ExpressionFuncRules<{typeof(T1)},{typeof(T2)}> RuleExpression: {RuleExpression}");
-            RuleExpression.TraceNode();
+            var sb = new StringBuilder();
+            RuleExpression.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
@@ -73,7 +78,9 @@ namespace RuleEngine.Rules
         {
 #if DEBUG
             Debug.WriteLine($"ExpressionFuncRules<{typeof(T1)},{typeof(T2)},{typeof(T3)}> RuleExpression: {RuleExpression}");
-            RuleExpression.TraceNode();
+            var sb = new StringBuilder();
+            RuleExpression.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;

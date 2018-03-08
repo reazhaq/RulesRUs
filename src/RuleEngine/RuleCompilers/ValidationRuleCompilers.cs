@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using RuleEngine.Interfaces.Compilers;
 using RuleEngine.Utils;
 
@@ -68,7 +69,9 @@ namespace RuleEngine.RuleCompilers
             if (binaryExpressionBody == null) return null;
 #if DEBUG
             Debug.WriteLine($"{nameof(binaryExpressionBody)} ready to compile: {binaryExpressionBody}");
-            binaryExpressionBody.TraceNode();
+            var sb = new StringBuilder();
+            binaryExpressionBody.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             return Expression.Lambda<Func<T, bool>>(binaryExpressionBody, funcParameter).Compile();
         }
@@ -99,7 +102,9 @@ namespace RuleEngine.RuleCompilers
             if (expressionBody == null) return null;
 #if DEBUG
             Debug.WriteLine($"{nameof(expressionBody)} ready to compile: {expressionBody}");
-            expressionBody.TraceNode();
+            var sb = new StringBuilder();
+            expressionBody.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             return Expression.Lambda<Func<T1, T2, bool>>(expressionBody, param1, param2).Compile();
         }

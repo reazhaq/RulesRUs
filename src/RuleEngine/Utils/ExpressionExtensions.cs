@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 
 namespace RuleEngine.Utils
 {
@@ -17,133 +19,143 @@ namespace RuleEngine.Utils
             return propertyInfo.GetValue(exp) as string;
         }
 
-        public static void TraceNode(this Expression expression, int level = 0)
+        public static void TraceNode(this Expression expression, StringBuilder stringBuilder, int level = 0)
         {
-            if (expression == null) return;
+            if (expression == null || stringBuilder == null) return;
             switch (expression)
             {
                 case BinaryExpression binaryExpression:
-                    binaryExpression.TraceNode(level);
+                    binaryExpression.TraceNode(stringBuilder, level);
                     break;
                 case ConstantExpression constantExpression:
-                    constantExpression.TraceNode(level);
+                    constantExpression.TraceNode(stringBuilder, level);
                     break;
                 case MemberExpression memberExpression:
-                    memberExpression.TraceNode(level);
+                    memberExpression.TraceNode(stringBuilder, level);
                     break;
                 case ParameterExpression parameterExpression:
-                    parameterExpression.TraceNode(level);
+                    parameterExpression.TraceNode(stringBuilder, level);
                     break;
                 case LambdaExpression lambdaExpression:
-                    lambdaExpression.TraceNode(level);
+                    lambdaExpression.TraceNode(stringBuilder, level);
                     break;
                 case Expression expression2:
                     var levelSpace = new string(' ', level * NumberOfSpaces);
-                    Debug.WriteLine($"|{levelSpace}|- Expression Type: {expression.GetType().Name}");
-                    Debug.WriteLine($"|{levelSpace}|- Expression.NodeType: {expression2.NodeType}");
-                    Debug.WriteLine($"|{levelSpace}|- Expression.DebugView: {expression2.GetDebugView()}");
+                    stringBuilder.Append($"|{levelSpace}|- Expression Type: {expression.GetType().Name}{Environment.NewLine}");
+                    stringBuilder.Append($"|{levelSpace}|- Expression.NodeType: {expression2.NodeType}{Environment.NewLine}");
+                    stringBuilder.Append($"|{levelSpace}|- Expression.DebugView: {expression2.GetDebugView()}{Environment.NewLine}");
                     break;
             }
         }
 
-        public static void TraceNode(this BinaryExpression binaryExpression, int level = 0)
+        public static void TraceNode(this BinaryExpression binaryExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- binaryExpression.NodeType: {binaryExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- binaryExpression.DebugView: {binaryExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- binaryExpression.NodeType: {binaryExpression.NodeType}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- binaryExpression.DebugView: {binaryExpression.GetDebugView()}{Environment.NewLine}");
 
             level++;
-            binaryExpression.Left?.TraceNode(level);
-            binaryExpression.Right?.TraceNode(level);
+            binaryExpression.Left?.TraceNode(stringBuilder, level);
+            binaryExpression.Right?.TraceNode(stringBuilder, level);
         }
 
-        public static void TraceNode(this BlockExpression blockExpression, int level = 0)
+        public static void TraceNode(this BlockExpression blockExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- blockExpression.NodeType: {blockExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- blockExpression.DebugView: {blockExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- blockExpression.NodeType: {blockExpression.NodeType}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- blockExpression.DebugView: {blockExpression.GetDebugView()}{Environment.NewLine}");
 
             level++;
-            Debug.WriteLine($"|{levelSpace}|- Variables count: {blockExpression.Variables.Count}");
+            stringBuilder.Append($"|{levelSpace}|- Variables count: {blockExpression.Variables.Count}{Environment.NewLine}");
             foreach (var blockExpressionVariable in blockExpression.Variables)
-                blockExpressionVariable.TraceNode(level);
+                blockExpressionVariable.TraceNode(stringBuilder, level);
 
-            Debug.WriteLine($"|{levelSpace}|- Expressions count: {blockExpression.Expressions.Count}");
+            stringBuilder.Append($"|{levelSpace}|- Expressions count: {blockExpression.Expressions.Count}{Environment.NewLine}");
             foreach (var blockExpressionExpression in blockExpression.Expressions)
-                blockExpressionExpression.TraceNode(level);
+                blockExpressionExpression.TraceNode(stringBuilder, level);
         }
 
-        public static void TraceNode(this ConditionalExpression conditionalExpression, int level = 0)
+        public static void TraceNode(this ConditionalExpression conditionalExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- conditionalExpression.NodeType: {conditionalExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- conditionalExpression.DebugView: {conditionalExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- conditionalExpression.NodeType: {conditionalExpression.NodeType}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- conditionalExpression.DebugView: {conditionalExpression.GetDebugView()}{Environment.NewLine}");
 
             level++;
-            Debug.WriteLine($"|{levelSpace}|- IfFalse:");
-            conditionalExpression.IfFalse.TraceNode(level);
-            Debug.WriteLine($"|{levelSpace}|- IfTrue:");
-            conditionalExpression.IfTrue.TraceNode(level);
+            stringBuilder.Append($"|{levelSpace}|- IfFalse:{Environment.NewLine}");
+            conditionalExpression.IfFalse.TraceNode(stringBuilder, level);
+            stringBuilder.Append($"|{levelSpace}|- IfTrue:{Environment.NewLine}");
+            conditionalExpression.IfTrue.TraceNode(stringBuilder, level);
         }
 
-        public static void TraceNode(this ConstantExpression constantExpression, int level = 0)
+        public static void TraceNode(this ConstantExpression constantExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- constantExpression.Value: {constantExpression.Value ?? "null"}");
-            Debug.WriteLine($"|{levelSpace}|- constantExpression.Type: {constantExpression.Type}");
-            Debug.WriteLine($"|{levelSpace}|- constantExpression.DebugView: {constantExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- constantExpression.Value: {constantExpression.Value ?? "null"}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- constantExpression.Type: {constantExpression.Type}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- constantExpression.DebugView: {constantExpression.GetDebugView()}{Environment.NewLine}");
         }
 
-        public static void TraceNode(this DynamicExpression dynamicExpression, int level = 0)
+        public static void TraceNode(this DynamicExpression dynamicExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- dynamicExpression.NodeType: {dynamicExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- dynamicExpression.DebugView: {dynamicExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- dynamicExpression.NodeType: {dynamicExpression.NodeType}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- dynamicExpression.DebugView: {dynamicExpression.GetDebugView()}{Environment.NewLine}");
         }
 
-        public static void TraceNode(this LambdaExpression lambdaExpression, int level = 0)
+        public static void TraceNode(this LambdaExpression lambdaExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- lambdaExpression.NodeType: {lambdaExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- lambdaExpression.DebugView: {lambdaExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- lambdaExpression.NodeType: {lambdaExpression.NodeType}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- lambdaExpression.DebugView: {lambdaExpression.GetDebugView()}{Environment.NewLine}");
 
             var nextLevel = level + 1;
-            Debug.WriteLine($"|{levelSpace}|- Parameters count: {lambdaExpression.Parameters.Count}");
+            stringBuilder.Append($"|{levelSpace}|- Parameters count: {lambdaExpression.Parameters.Count}");
             foreach (var lambdaExpressionParameter in lambdaExpression.Parameters)
-                lambdaExpressionParameter.TraceNode(nextLevel);
+                lambdaExpressionParameter.TraceNode(stringBuilder, nextLevel);
 
-            Debug.WriteLine("|");
-            Debug.WriteLine($"|{levelSpace}|- Body [{lambdaExpression.Body.NodeType}]");
-            lambdaExpression.Body?.TraceNode(nextLevel);
+            stringBuilder.Append("|");
+            stringBuilder.Append($"|{levelSpace}|- Body [{lambdaExpression.Body.NodeType}]{Environment.NewLine}");
+            lambdaExpression.Body?.TraceNode(stringBuilder, nextLevel);
         }
 
-        public static void TraceNode(this MemberExpression memberExpression, int level = 0)
+        public static void TraceNode(this MemberExpression memberExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- memberExpression.NodeType: {memberExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- memberExpression.DebugView: {memberExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- memberExpression.NodeType: {memberExpression.NodeType}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- memberExpression.DebugView: {memberExpression.GetDebugView()}{Environment.NewLine}");
         }
 
-        public static void TraceNode(this MethodCallExpression methodCallExpression, int level = 0)
+        public static void TraceNode(this MethodCallExpression methodCallExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- methodCallExpression.NodeType: {methodCallExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- methodCallExpression.DebugView: {methodCallExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- methodCallExpression.NodeType: {methodCallExpression.NodeType}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- methodCallExpression.DebugView: {methodCallExpression.GetDebugView()}{Environment.NewLine}");
         }
 
-        public static void TraceNode(this NewExpression newExpression, int level = 0)
+        public static void TraceNode(this NewExpression newExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- newExpression.NodeType: {newExpression.NodeType}");
-            Debug.WriteLine($"|{levelSpace}|- newExpression.DebugView: {newExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- newExpression.NodeType: {newExpression.NodeType}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- newExpression.DebugView: {newExpression.GetDebugView()}{Environment.NewLine}");
         }
 
-        public static void TraceNode(this ParameterExpression parameterExpression, int level = 0)
+        public static void TraceNode(this ParameterExpression parameterExpression, StringBuilder stringBuilder, int level = 0)
         {
+            if (stringBuilder == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            Debug.WriteLine($"|{levelSpace}|- parameterExpression.Name: {parameterExpression.Name ?? "null"}");
-            Debug.WriteLine($"|{levelSpace}|- parameterExpression.Type: {parameterExpression.Type}");
-            Debug.WriteLine($"|{levelSpace}|- parameterExpression.DebugView: {parameterExpression.GetDebugView()}");
+            stringBuilder.Append($"|{levelSpace}|- parameterExpression.Name: {parameterExpression.Name ?? "null"}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- parameterExpression.Type: {parameterExpression.Type}{Environment.NewLine}");
+            stringBuilder.Append($"|{levelSpace}|- parameterExpression.DebugView: {parameterExpression.GetDebugView()}{Environment.NewLine}");
         }
     }
 }

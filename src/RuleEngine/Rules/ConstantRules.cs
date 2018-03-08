@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Utils;
@@ -49,7 +50,9 @@ namespace RuleEngine.Rules
 #if DEBUG
             Debug.WriteLine($"constantExpressionBody for Func<{typeof(T)}>: " +
                             $"with Value: {Value} is{Environment.NewLine}{expressionBoday}");
-            expressionBoday.TraceNode();
+            var sb = new StringBuilder();
+            expressionBoday.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             CompiledDelegate = Expression.Lambda<Func<T>>(expressionBoday).Compile();
             return CompiledDelegate != null;
@@ -87,7 +90,9 @@ namespace RuleEngine.Rules
 #if DEBUG
             Debug.WriteLine($"constantExpressionBody for Func<{typeof(T1)},{typeof(T2)}>: " +
                             $"with Value: {Value} is{Environment.NewLine}{expressionBody}");
-            expressionBody.TraceNode();
+            var sb = new StringBuilder();
+            expressionBody.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             CompiledDelegate = Expression.Lambda<Func<T1, T2>>(expressionBody, parameter).Compile();
             return CompiledDelegate != null;

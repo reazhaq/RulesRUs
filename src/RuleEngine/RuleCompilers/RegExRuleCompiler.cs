@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Text.RegularExpressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Compilers;
@@ -43,7 +44,9 @@ namespace RuleEngine.RuleCompilers
             if (binaryExpressionBody == null) return null;
 #if DEBUG
             Debug.WriteLine($"{nameof(binaryExpressionBody)}: {binaryExpressionBody}");
-            binaryExpressionBody.TraceNode();
+            var sb = new StringBuilder();
+            binaryExpressionBody.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             return Expression.Lambda<Func<T, bool>>(binaryExpressionBody, funcParameter).Compile();
         }

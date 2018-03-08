@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Utils;
@@ -29,7 +30,9 @@ namespace RuleEngine.Rules
             if (!(expression is Expression<Func<T, bool>>)) return false;
 #if DEBUG
             Debug.WriteLine($"expression = {expression}");
-            expression.TraceNode();
+            var sb = new StringBuilder();
+            expression.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
 
             CompiledDelegate = (expression as Expression<Func<T, bool>>).Compile();

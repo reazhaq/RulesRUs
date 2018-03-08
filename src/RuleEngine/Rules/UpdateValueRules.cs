@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.RuleCompilers;
@@ -38,7 +39,9 @@ namespace RuleEngine.Rules
             var expression = BuildExpression(paramObjectToValidate);
 #if DEBUG
             Debug.WriteLine($"Expression for UpdateRule<{typeof(T)}>: {expression}");
-            expression.TraceNode();
+            var sb = new StringBuilder();
+            expression.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             CompiledDelegate = Expression.Lambda<Action<T>>(expression, paramObjectToValidate).Compile();
             return CompiledDelegate != null;
@@ -76,7 +79,9 @@ namespace RuleEngine.Rules
             var expression = BuildExpression(paramObjectToValidate, paramSourceValue);
 #if DEBUG
             Debug.WriteLine($"Expression for UpdateRule<{typeof(T1)},{typeof(T2)}>: {expression}");
-            expression.TraceNode();
+            var sb = new StringBuilder();
+            expression.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             CompiledDelegate = Expression.Lambda<Action<T1, T2>>(expression, paramObjectToValidate, paramSourceValue).Compile();
             return CompiledDelegate != null;

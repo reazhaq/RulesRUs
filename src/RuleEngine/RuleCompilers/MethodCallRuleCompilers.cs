@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Compilers;
 using RuleEngine.Rules;
@@ -49,7 +50,9 @@ namespace RuleEngine.RuleCompilers
                 return null;
 #if DEBUG
             Debug.WriteLine($"{nameof(methodVoidCallRuleToCompile)} ready to compile: {methodExpression}");
-            methodExpression.TraceNode();
+            var sb = new StringBuilder();
+            methodExpression.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             return Expression.Lambda<Action<T>>(methodExpression, param).Compile();
         }
@@ -81,7 +84,9 @@ namespace RuleEngine.RuleCompilers
                 return null;
 #if DEBUG
             Debug.WriteLine($"{nameof(methodCallExpression)} ready to compile: {methodCallExpression}");
-            methodCallExpression.TraceNode();
+            var sb = new StringBuilder();
+            methodCallExpression.TraceNode(sb);
+            Debug.WriteLine(sb);
 #endif
             return Expression.Lambda<Func<TTarget, TResult>>(methodCallExpression, funcParameter).Compile();
         }
