@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using RuleEngine.Rules;
 using RuleEngine.Tests.Fixture;
 using RuleEngine.Tests.Model;
@@ -29,6 +30,7 @@ namespace RuleEngine.Tests.Rules
             };
             var compileResult = numberShouldBe5Rule.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(numberShouldBe5Rule)}:{Environment.NewLine}{numberShouldBe5Rule.ExpressionDebugView()}");
 
             var numberShouldNotBe5Rule = new ValidationRule<int>
             {
@@ -38,6 +40,7 @@ namespace RuleEngine.Tests.Rules
             };
             compileResult = numberShouldNotBe5Rule.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(numberShouldNotBe5Rule)}:{Environment.NewLine}{numberShouldNotBe5Rule.ExpressionDebugView()}");
 
             var ruleExecuteResult = numberShouldBe5Rule.IsValid(5);
             ruleExecuteResult.Should().BeTrue();
@@ -70,6 +73,8 @@ namespace RuleEngine.Tests.Rules
             };
             var compileResult = checkForNotNullRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(checkForNotNullRule)}:{Environment.NewLine}{checkForNotNullRule.ExpressionDebugView()}");
+
 
             var checkForNullRule = new ValidationRule<Game>
             {
@@ -78,6 +83,8 @@ namespace RuleEngine.Tests.Rules
             };
             compileResult = checkForNullRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(checkForNullRule)}:{Environment.NewLine}{checkForNullRule.ExpressionDebugView()}");
+
 
             var ruleExecuteResult = checkForNotNullRule.IsValid(_game);
             ruleExecuteResult.Should().BeTrue();
@@ -109,6 +116,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = rankingLessThan100Rule.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(rankingLessThan100Rule)}:{Environment.NewLine}{rankingLessThan100Rule.ExpressionDebugView()}");
+
 
             var validationResult = rankingLessThan100Rule.IsValid(_game);
             validationResult.Should().BeTrue();
@@ -135,6 +144,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = nameLengthGreaterThan3Rule.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(nameLengthGreaterThan3Rule)}:{Environment.NewLine}{nameLengthGreaterThan3Rule.ExpressionDebugView()}");
+
 
             var validationResult = nameLengthGreaterThan3Rule.IsValid(_game);
             validationResult.Should().BeTrue();
@@ -179,6 +190,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = gameNotNullAndNameIsGreaterThan3CharsRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(gameNotNullAndNameIsGreaterThan3CharsRule)}:{Environment.NewLine}{gameNotNullAndNameIsGreaterThan3CharsRule.ExpressionDebugView()}");
+
 
             var validationResult = gameNotNullAndNameIsGreaterThan3CharsRule.IsValid(_game);
             validationResult.Should().BeTrue();
@@ -208,6 +221,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = gameNullRuleByUsingNotWithNotEqualToNullChild.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(gameNullRuleByUsingNotWithNotEqualToNullChild)}:{Environment.NewLine}{gameNullRuleByUsingNotWithNotEqualToNullChild.ExpressionDebugView()}");
+
 
             var validationResult = gameNullRuleByUsingNotWithNotEqualToNullChild.IsValid(_game);
             validationResult.Should().BeFalse();
@@ -251,6 +266,7 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = gameIsNullOrNameIsGreaterThan3CharsRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(gameIsNullOrNameIsGreaterThan3CharsRule)}:{Environment.NewLine}{gameIsNullOrNameIsGreaterThan3CharsRule.ExpressionDebugView()}");
 
             var validationResult = gameIsNullOrNameIsGreaterThan3CharsRule.IsValid(_game);
             validationResult.Should().BeTrue();
@@ -277,6 +293,7 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = twoPlayersScoreRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(twoPlayersScoreRule)}:{Environment.NewLine}{twoPlayersScoreRule.ExpressionDebugView()}");
 
             var validationResult = twoPlayersScoreRule.IsValid(_game.Players[0], _game.Players[1]);
             validationResult.Should().BeTrue();
