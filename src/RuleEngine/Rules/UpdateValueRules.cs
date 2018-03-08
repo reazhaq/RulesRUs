@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Text;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
-using RuleEngine.RuleCompilers;
 using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
@@ -28,7 +27,7 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
             var targetObject = parameters[0];
-            var targetExpression = RuleCompilerBase.GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
+            var targetExpression = GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
             var sourceExpression = SourceDataRule.BuildExpression(targetObject);
             return Expression.Assign(targetExpression, sourceExpression);
         }
@@ -68,7 +67,7 @@ namespace RuleEngine.Rules
             var targetObject = parameters[0];
             var sourceParam = parameters[1];
 
-            var targetExpression = RuleCompilerBase.GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
+            var targetExpression = GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
             return Expression.Assign(targetExpression, sourceParam);
         }
 
