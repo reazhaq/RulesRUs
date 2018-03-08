@@ -20,22 +20,19 @@ namespace RuleEngine.Rules
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
             Expression<Func<T, bool>> expression = s => CollectionToSearch.Contains(s, EqualityComparer);
+            ExpressionForThisRule = expression;
             return expression;
         }
 
         public override bool Compile()
         {
             var parameter = Expression.Parameter(typeof(T));
-            var expression = BuildExpression(parameter);
-            if (!(expression is Expression<Func<T, bool>>)) return false;
-#if DEBUG
-            Debug.WriteLine($"expression = {expression}");
-            var sb = new StringBuilder();
-            expression.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+            ExpressionForThisRule = BuildExpression(parameter);
+            if (!(ExpressionForThisRule is Expression<Func<T, bool>>)) return false;
 
-            CompiledDelegate = (expression as Expression<Func<T, bool>>).Compile();
+            Debug.WriteLine($"expression ={Environment.NewLine}{ExpressionDebugView()}");
+
+            CompiledDelegate = (ExpressionForThisRule as Expression<Func<T, bool>>)?.Compile();
             return CompiledDelegate != null;
         }
 
