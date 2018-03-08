@@ -21,8 +21,11 @@ namespace RuleEngine.Tests.Rules
             var ruleReturning55 = new ConstantRule<int>{Value = "55"};
             var compileResult = ruleReturning55.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(ruleReturning55)}:{Environment.NewLine}" +
+                                        $"{ruleReturning55.ExpressionDebugView()}");
 
             var value = ruleReturning55.Get();
+            _testOutputHelper.WriteLine($"expected: 55 - actual: {value}");
             value.Should().Be(55);
         }
 
@@ -32,8 +35,11 @@ namespace RuleEngine.Tests.Rules
             var ruleReturningDouble = new ConstantRule<double>{Value = "99.1"};
             var compileResult = ruleReturningDouble.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(ruleReturningDouble)}:{Environment.NewLine}" +
+                                        $"{ruleReturningDouble.ExpressionDebugView()}");
 
             var value = ruleReturningDouble.Get();
+            _testOutputHelper.WriteLine($"expected: 99.1 - actual: {value}");
             value.Should().Be(99.1);
         }
 
@@ -75,6 +81,8 @@ namespace RuleEngine.Tests.Rules
                 .And.BeOfType<bool>()
                 .And.Be(true);
             _testOutputHelper.WriteLine($"compileResult = {compileResult}");
+            _testOutputHelper.WriteLine(
+                $"{instanceOfConstantRuleOfTypeT.GetType().GetMethod("ExpressionDebugView").Invoke(instanceOfConstantRuleOfTypeT, null)}");
 
             var value = instanceOfConstantRuleOfTypeT.GetType().GetMethod("Get").Invoke(instanceOfConstantRuleOfTypeT, null);
             _testOutputHelper.WriteLine($"value = {value ?? "null"}");
@@ -101,6 +109,8 @@ namespace RuleEngine.Tests.Rules
             var ruleReturningString = new ConstantRule<int, string> {Value = stringValue};
             var compileResult = ruleReturningString.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(ruleReturningString)}:{Environment.NewLine}" +
+                                        $"{ruleReturningString.ExpressionDebugView()}");
 
             var value = ruleReturningString.Get(int.MinValue);
             value.Should().BeOfType<string>().And.Be(stringValue);
@@ -112,6 +122,8 @@ namespace RuleEngine.Tests.Rules
             var rule = new ConstantRule<int, bool?> {Value = "null"};
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
 
             var value = rule.Get(int.MinValue);
             value.Should().Be(default(bool?));
@@ -123,6 +135,8 @@ namespace RuleEngine.Tests.Rules
             var rule = new ConstantRule<int, bool?> {Value = "false"};
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
 
             var value = rule.Get(int.MinValue);
             value.Should().Be(false);
@@ -149,6 +163,8 @@ namespace RuleEngine.Tests.Rules
             var compileResult = instanceOfConstantRule.GetType().GetMethod("Compile").Invoke(instanceOfConstantRule, null);
             compileResult.Should().NotBeNull().And.BeOfType<bool>().And.Be(true);
             _testOutputHelper.WriteLine($"compileResult for {nameof(instanceOfConstantRule)} = {compileResult}");
+            _testOutputHelper.WriteLine(
+                $"{instanceOfConstantRule.GetType().GetMethod("ExpressionDebugView").Invoke(instanceOfConstantRule, null)}");
 
             var getResult = instanceOfConstantRule.GetType().GetMethod("Get").Invoke(instanceOfConstantRule, new[]{paramValue});
             _testOutputHelper.WriteLine($"result from Get({paramValue}): {getResult ?? "nulll"}");

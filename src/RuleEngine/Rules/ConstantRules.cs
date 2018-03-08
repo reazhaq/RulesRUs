@@ -41,20 +41,19 @@ namespace RuleEngine.Rules
             if (string.IsNullOrEmpty(Value) || Value.Equals("null", StringComparison.InvariantCultureIgnoreCase))
                 return GetNullValueExpression<T>(tType);
 
-            return Expression.Convert(GetUnderlyingTypedValue(tType), typeof(T));
+            ExpressionForThisRule = Expression.Convert(GetUnderlyingTypedValue(tType), typeof(T));
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()
         {
-            var expressionBoday = BuildExpression(null);
-#if DEBUG
+            ExpressionForThisRule = BuildExpression(null);
+
             Debug.WriteLine($"constantExpressionBody for Func<{typeof(T)}>: " +
-                            $"with Value: {Value} is{Environment.NewLine}{expressionBoday}");
-            var sb = new StringBuilder();
-            expressionBoday.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
-            CompiledDelegate = Expression.Lambda<Func<T>>(expressionBoday).Compile();
+                            $"with Value: {Value} is{Environment.NewLine}" +
+                            $"{ExpressionDebugView()}");
+
+            CompiledDelegate = Expression.Lambda<Func<T>>(ExpressionForThisRule).Compile();
             return CompiledDelegate != null;
         }
 
@@ -80,21 +79,20 @@ namespace RuleEngine.Rules
             if (string.IsNullOrEmpty(Value) || Value.Equals("null", StringComparison.InvariantCultureIgnoreCase))
                 return GetNullValueExpression<T2>(tType);
 
-            return Expression.Convert(GetUnderlyingTypedValue(tType), typeof(T2));
+            ExpressionForThisRule = Expression.Convert(GetUnderlyingTypedValue(tType), typeof(T2));
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()
         {
             var parameter = Expression.Parameter(typeof(T1));
-            var expressionBody = BuildExpression(parameter);
-#if DEBUG
+            ExpressionForThisRule = BuildExpression(parameter);
+
             Debug.WriteLine($"constantExpressionBody for Func<{typeof(T1)},{typeof(T2)}>: " +
-                            $"with Value: {Value} is{Environment.NewLine}{expressionBody}");
-            var sb = new StringBuilder();
-            expressionBody.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
-            CompiledDelegate = Expression.Lambda<Func<T1, T2>>(expressionBody, parameter).Compile();
+                            $"with Value: {Value} is{Environment.NewLine}" +
+                            $"{ExpressionDebugView()}");
+
+            CompiledDelegate = Expression.Lambda<Func<T1, T2>>(ExpressionForThisRule, parameter).Compile();
             return CompiledDelegate != null;
         }
 
