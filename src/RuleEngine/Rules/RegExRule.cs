@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text;
+using System.Text.RegularExpressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Compilers;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.RuleCompilers;
+using RuleEngine.Utils;
+using System.Linq;
 
 namespace RuleEngine.Rules
 {
     public class RegExRule<T> : Rule, IRegExRule<T>
     {
         private Func<T, bool> CompiledDelegate { get; set; }
-        private static readonly IRegExRuleCompiler<T> RegExRuleCompiler = new RegExRuleCompiler<T>();
 
         public string RegExToUse;
         public string OperatorToUse;
@@ -22,14 +25,33 @@ namespace RuleEngine.Rules
             if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T))
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
-            var expression = RegExRuleCompiler.BuildExpression(parameters[0], this);
-            Debug.WriteLine($"  {nameof(expression)}: {expression}");
-            return expression;
+            var param = parameters[0];
+
+            if(!RegularExpressionOperator.Contains(OperatorToUse))
+                throw new RuleEngineException($"Bad {OperatorToUse} for RegExRule"); //todo: update message
+
+            if (OperatorToUse == "IsMatch")
+            {
+                ExpressionForThisRule = GetExpressionWithSubPropertyForIsMatch(param);
+                return ExpressionForThisRule;
+            }
+
+            return null;
         }
 
         public override bool Compile()
         {
-            CompiledDelegate = RegExRuleCompiler.CompileRule(this);
+            var funcParameter = Expression.Parameter(typeof(T));
+            ExpressionForThisRule = BuildExpression(funcParameter);
+            if (ExpressionForThisRule == null) return false;
+#if DEBUG
+            Debug.WriteLine($"{nameof(ExpressionForThisRule)}: {ExpressionForThisRule}");
+            var sb = new StringBuilder();
+            ExpressionForThisRule.TraceNode(sb);
+            Debug.WriteLine(sb);
+#endif
+
+            CompiledDelegate = Expression.Lambda<Func<T, bool>>(ExpressionForThisRule, funcParameter).Compile();
             return CompiledDelegate != null;
         }
 
@@ -39,6 +61,16 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(targetObject);
+        }
+
+        private Expression GetExpressionWithSubPropertyForIsMatch(ParameterExpression parameterExpression)
+        {
+            var fieldOrProperty = GetExpressionWithSubProperty(parameterExpression, ObjectToValidate);
+            var isMatchMethod = typeof(Regex).GetMethod("IsMatch", new[] {typeof(string), typeof(string), typeof(RegexOptions)});
+
+            return Expression.Call(isMatchMethod, fieldOrProperty,
+                Expression.Constant(RegExToUse, typeof(string)),
+                Expression.Constant(RegexOptions.IgnoreCase, typeof(RegexOptions)));
         }
     }
 }
