@@ -19,6 +19,7 @@ namespace RuleEngine.Rules
 
         public virtual string ExpressionDebugView()
         {
+            if (ExpressionForThisRule == null) return null;
             var sb = new StringBuilder();
             ExpressionForThisRule.TraceNode(sb);
             return sb.ToString();

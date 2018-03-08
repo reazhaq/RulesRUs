@@ -1,12 +1,21 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using RuleEngine.Rules;
 using RuleEngine.Tests.Model;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace RuleEngine.Tests.Rules
 {
     public class UpdateRulesTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public UpdateRulesTests(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public void UpdatePropertyStingWithDifferentValue()
         {
@@ -18,9 +27,12 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = nameChangeRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}{nameChangeRule.ExpressionDebugView()}");
 
+            _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
             nameChangeRule.UpdateFieldOrPropertyValue(game, "new name");
             game.Name.Should().Be("new name");
+            _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
         }
 
         [Fact]
@@ -35,9 +47,12 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = nameChangeRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}{nameChangeRule.ExpressionDebugView()}");
 
+            _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
             nameChangeRule.UpdateFieldOrPropertyValue(game);
             game.Name.Should().Be("name from constant rule");
+            _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
         }
     }
 }

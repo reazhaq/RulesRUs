@@ -29,20 +29,23 @@ namespace RuleEngine.Rules
             var targetObject = parameters[0];
             var targetExpression = GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
             var sourceExpression = SourceDataRule.BuildExpression(targetObject);
-            return Expression.Assign(targetExpression, sourceExpression);
+            ExpressionForThisRule = Expression.Assign(targetExpression, sourceExpression);
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()
         {
             var paramObjectToValidate = Expression.Parameter(typeof(T));
-            var expression = BuildExpression(paramObjectToValidate);
+            ExpressionForThisRule = BuildExpression(paramObjectToValidate);
+            if (ExpressionForThisRule == null) return false;
+
 #if DEBUG
-            Debug.WriteLine($"Expression for UpdateRule<{typeof(T)}>: {expression}");
+            Debug.WriteLine($"Expression for UpdateRule<{typeof(T)}>: {ExpressionForThisRule}");
             var sb = new StringBuilder();
-            expression.TraceNode(sb);
+            ExpressionForThisRule.TraceNode(sb);
             Debug.WriteLine(sb);
 #endif
-            CompiledDelegate = Expression.Lambda<Action<T>>(expression, paramObjectToValidate).Compile();
+            CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, paramObjectToValidate).Compile();
             return CompiledDelegate != null;
         }
 
@@ -68,21 +71,24 @@ namespace RuleEngine.Rules
             var sourceParam = parameters[1];
 
             var targetExpression = GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
-            return Expression.Assign(targetExpression, sourceParam);
+            ExpressionForThisRule = Expression.Assign(targetExpression, sourceParam);
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()
         {
             var paramObjectToValidate = Expression.Parameter(typeof(T1));
             var paramSourceValue = Expression.Parameter(typeof(T2));
-            var expression = BuildExpression(paramObjectToValidate, paramSourceValue);
+            ExpressionForThisRule = BuildExpression(paramObjectToValidate, paramSourceValue);
+            if (ExpressionForThisRule == null) return false;
+
 #if DEBUG
-            Debug.WriteLine($"Expression for UpdateRule<{typeof(T1)},{typeof(T2)}>: {expression}");
+            Debug.WriteLine($"Expression for UpdateRule<{typeof(T1)},{typeof(T2)}>: {ExpressionForThisRule}");
             var sb = new StringBuilder();
-            expression.TraceNode(sb);
+            ExpressionForThisRule.TraceNode(sb);
             Debug.WriteLine(sb);
 #endif
-            CompiledDelegate = Expression.Lambda<Action<T1, T2>>(expression, paramObjectToValidate, paramSourceValue).Compile();
+            CompiledDelegate = Expression.Lambda<Action<T1, T2>>(ExpressionForThisRule, paramObjectToValidate, paramSourceValue).Compile();
             return CompiledDelegate != null;
         }
 
