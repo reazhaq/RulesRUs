@@ -42,12 +42,9 @@ namespace RuleEngine.Rules
             var funcParameter = Expression.Parameter(typeof(T));
             ExpressionForThisRule = BuildExpression(funcParameter);
             if (ExpressionForThisRule == null) return false;
-#if DEBUG
-            Debug.WriteLine($"{nameof(ExpressionForThisRule)}: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+
+            Debug.WriteLine($"{nameof(ExpressionForThisRule)}:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
 
             CompiledDelegate = Expression.Lambda<Func<T, bool>>(ExpressionForThisRule, funcParameter).Compile();
             return CompiledDelegate != null;

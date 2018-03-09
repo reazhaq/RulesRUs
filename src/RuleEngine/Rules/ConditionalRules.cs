@@ -33,7 +33,7 @@ namespace RuleEngine.Rules
                 conditionalExpression = Expression.Lambda(conditionalExpression, parameters);
 
             var trueExpression = TrueRule.BuildExpression(parameters);
-            if(!(trueExpression is LambdaExpression))
+            if (!(trueExpression is LambdaExpression))
                 trueExpression = Expression.Lambda(trueExpression, parameters);
 
 #if DEBUG
@@ -157,11 +157,11 @@ namespace RuleEngine.Rules
             var conditionalExpression = ConditionRule.BuildExpression(parameters);
 
             var trueExpression = TrueRule.BuildExpression(parameters);
-            if(!(trueExpression is LambdaExpression))
+            if (!(trueExpression is LambdaExpression))
                 trueExpression = Expression.Lambda(trueExpression, parameters);
 
             var falseExpression = FalseRule.BuildExpression(parameters);
-            if(!(falseExpression is LambdaExpression))
+            if (!(falseExpression is LambdaExpression))
                 falseExpression = Expression.Lambda(falseExpression, parameters);
 
             var ifThenElseExpression = Expression.IfThenElse(
@@ -169,24 +169,10 @@ namespace RuleEngine.Rules
                                         Expression.Return(returnLabel, Expression.Invoke(trueExpression, parameters.Cast<Expression>())),
                                         Expression.Return(returnLabel, Expression.Invoke(falseExpression, parameters.Cast<Expression>()))
             );
-#if DEBUG
-            Debug.WriteLine($"trueExpression: {trueExpression}");
-            var sb = new StringBuilder();
-            trueExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-            Debug.WriteLine($"falseExpression: {falseExpression}");
-            sb.Clear();
-            falseExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-            Debug.WriteLine($"conditionalExpression: {conditionalExpression}");
-            sb.Clear();
-            conditionalExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-            sb.Clear();
-            Debug.WriteLine($"ifThenElseExpression: {ifThenElseExpression}");
-            ifThenElseExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+
+            Debug.WriteLine($"trueExpression:{Environment.NewLine}{ExpressionDebugView()}");
+            Debug.WriteLine($"falseExpression:{Environment.NewLine}{ExpressionDebugView()}");
+            Debug.WriteLine($"conditionalExpression:{Environment.NewLine}{ExpressionDebugView()}");
 
             ExpressionForThisRule = Expression.Block(ifThenElseExpression,
                                         Expression.Label(returnLabel, Expression.Constant(string.Empty)));
@@ -197,12 +183,10 @@ namespace RuleEngine.Rules
         {
             var parameter = Expression.Parameter(typeof(T1));
             ExpressionForThisRule = BuildExpression(parameter);
-#if DEBUG
-            Debug.WriteLine($"Expression for ConditionalIfThElFuncRule: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+
+            Debug.WriteLine($"Expression for ConditionalIfThElFuncRule:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
+
             CompiledDelegate = Expression.Lambda<Func<T1, T2>>(ExpressionForThisRule, parameter).Compile();
             return CompiledDelegate != null;
         }

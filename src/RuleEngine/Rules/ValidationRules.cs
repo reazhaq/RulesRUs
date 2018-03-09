@@ -78,12 +78,10 @@ namespace RuleEngine.Rules
             var funcParameter = Expression.Parameter(typeof(T));
             ExpressionForThisRule = BuildExpression(funcParameter);
             if (ExpressionForThisRule == null) return false;
-#if DEBUG
-            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+
+            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
+
             CompiledDelegate = Expression.Lambda<Func<T, bool>>(ExpressionForThisRule, funcParameter).Compile();
             return CompiledDelegate != null;
         }
@@ -131,12 +129,9 @@ namespace RuleEngine.Rules
             var param2 = Expression.Parameter(typeof(T2));
             ExpressionForThisRule = BuildExpression(param1, param2);
             if (ExpressionForThisRule == null) return false;
-#if DEBUG
-            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+
+            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
 
             CompiledDelegate = Expression.Lambda<Func<T1, T2, bool>>(ExpressionForThisRule, param1, param2).Compile();
             return CompiledDelegate != null;

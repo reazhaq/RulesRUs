@@ -39,12 +39,9 @@ namespace RuleEngine.Rules
             ExpressionForThisRule = BuildExpression(paramObjectToValidate);
             if (ExpressionForThisRule == null) return false;
 
-#if DEBUG
-            Debug.WriteLine($"Expression for UpdateRule<{typeof(T)}>: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+            Debug.WriteLine($"Expression for UpdateRule<{typeof(T)}>:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}`");
+
             CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, paramObjectToValidate).Compile();
             return CompiledDelegate != null;
         }
@@ -82,12 +79,9 @@ namespace RuleEngine.Rules
             ExpressionForThisRule = BuildExpression(paramObjectToValidate, paramSourceValue);
             if (ExpressionForThisRule == null) return false;
 
-#if DEBUG
-            Debug.WriteLine($"Expression for UpdateRule<{typeof(T1)},{typeof(T2)}>: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+            Debug.WriteLine($"Expression for UpdateRule<{typeof(T1)},{typeof(T2)}>:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
+
             CompiledDelegate = Expression.Lambda<Action<T1, T2>>(ExpressionForThisRule, paramObjectToValidate, paramSourceValue).Compile();
             return CompiledDelegate != null;
         }

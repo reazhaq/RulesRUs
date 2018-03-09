@@ -62,12 +62,9 @@ namespace RuleEngine.Rules
             var param = Expression.Parameter(typeof(T));
             ExpressionForThisRule = BuildExpression(param);
             if (ExpressionForThisRule == null) return false;
-#if DEBUG
-            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+
+            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
 
             CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, param).Compile();
             return CompiledDelegate != null;
@@ -112,12 +109,8 @@ namespace RuleEngine.Rules
             ExpressionForThisRule = BuildExpression(funcParameter);
             if (ExpressionForThisRule == null) return false;
 
-#if DEBUG
-            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
 
             CompiledDelegate = Expression.Lambda<Func<TTarget, TResult>>(ExpressionForThisRule, funcParameter).Compile();
             return CompiledDelegate != null;
