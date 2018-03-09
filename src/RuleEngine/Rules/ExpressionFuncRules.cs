@@ -13,17 +13,14 @@ namespace RuleEngine.Rules
         private Func<T> CompiledDelegate { get; set; }
         public Expression<Func<T>> RuleExpression { get; }
 
-        public ExpressionFuncRule(Expression<Func<T>> ruleExpression) => RuleExpression = ruleExpression;
+        public ExpressionFuncRule(Expression<Func<T>> ruleExpression) =>ExpressionForThisRule= RuleExpression = ruleExpression;
         public override Expression BuildExpression(params ParameterExpression[] _) => RuleExpression;
 
         public override bool Compile()
         {
-#if DEBUG
-            Debug.WriteLine($"ExpressionFuncRules<{typeof(T)}> RuleExpression: {RuleExpression}");
-            var sb = new StringBuilder();
-            RuleExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+            Debug.WriteLine($"ExpressionFuncRules<{typeof(T)}> RuleExpression:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
+
             CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
         }
@@ -42,17 +39,14 @@ namespace RuleEngine.Rules
         private Func<T1, T2> CompiledDelegate { get; set; }
         public Expression<Func<T1, T2>> RuleExpression { get; }
 
-        public ExpressionFuncRule(Expression<Func<T1, T2>> ruleExpression) => RuleExpression = ruleExpression;
+        public ExpressionFuncRule(Expression<Func<T1, T2>> ruleExpression) =>ExpressionForThisRule= RuleExpression = ruleExpression;
         public override Expression BuildExpression(params ParameterExpression[] _) => RuleExpression;
 
         public override bool Compile()
         {
-#if DEBUG
-            Debug.WriteLine($"ExpressionFuncRules<{typeof(T1)},{typeof(T2)}> RuleExpression: {RuleExpression}");
-            var sb = new StringBuilder();
-            RuleExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+            Debug.WriteLine($"ExpressionFuncRules<{typeof(T1)},{typeof(T2)}> RuleExpression:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
+
             CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
         }
@@ -71,17 +65,14 @@ namespace RuleEngine.Rules
         private Func<T1, T2, T3> CompiledDelegate { get; set; }
         public Expression<Func<T1, T2, T3>> RuleExpression { get; }
 
-        public ExpressionFuncRule(Expression<Func<T1, T2, T3>> ruleExpression) => RuleExpression = ruleExpression;
+        public ExpressionFuncRule(Expression<Func<T1, T2, T3>> ruleExpression) =>ExpressionForThisRule= RuleExpression = ruleExpression;
         public override Expression BuildExpression(params ParameterExpression[] _) => RuleExpression;
 
         public override bool Compile()
         {
-#if DEBUG
-            Debug.WriteLine($"ExpressionFuncRules<{typeof(T1)},{typeof(T2)},{typeof(T3)}> RuleExpression: {RuleExpression}");
-            var sb = new StringBuilder();
-            RuleExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+            Debug.WriteLine($"ExpressionFuncRules<{typeof(T1)},{typeof(T2)},{typeof(T3)}> RuleExpression:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
+
             CompiledDelegate = RuleExpression.Compile();
             return CompiledDelegate != null;
         }

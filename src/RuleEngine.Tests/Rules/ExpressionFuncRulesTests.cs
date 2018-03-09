@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using RuleEngine.Rules;
@@ -28,6 +29,9 @@ namespace RuleEngine.Tests.Rules
             var ruleReturningAFixedValue = new ExpressionFuncRule<int>(() => int.MaxValue);
             var compileResult = ruleReturningAFixedValue.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(ruleReturningAFixedValue)}:{Environment.NewLine}" +
+                                         $"{ruleReturningAFixedValue.ExpressionDebugView()}");
+
             var executeResult = ruleReturningAFixedValue.Execute();
             executeResult.Should().BeOfType(typeof(int)).And.Be(int.MaxValue);
         }
@@ -40,6 +44,9 @@ namespace RuleEngine.Tests.Rules
                                                 g => (g == null || g.Players == null) ? 0 : g.Players.Count);
             var compileResult = ruleReturningCountOfPlayers.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(ruleReturningCountOfPlayers)}:{Environment.NewLine}" +
+                                         $"{ruleReturningCountOfPlayers.ExpressionDebugView()}");
+
             var executeResult = ruleReturningCountOfPlayers.Execute(_game1);
             executeResult.Should().BeOfType(typeof(int)).And.Be(_game1.Players.Count);
         }
@@ -53,6 +60,9 @@ namespace RuleEngine.Tests.Rules
                                                 );
             var compileResult = ruleReturningTotalCountOfPlayers.Compile();
             compileResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(ruleReturningTotalCountOfPlayers)}:{Environment.NewLine}" +
+                                         $"{ruleReturningTotalCountOfPlayers.ExpressionDebugView()}");
+
             var executeResult = ruleReturningTotalCountOfPlayers.Execute(_game1, _game2);
             executeResult.Should().BeOfType(typeof(int)).And.Be(_game1.Players.Count + _game2.Players.Count);
         }
@@ -64,6 +74,9 @@ namespace RuleEngine.Tests.Rules
                 g1.Players.Except(g2.Players, new PlayerCountryEqualityComparer())
             );
             var compileResult = ruleFindCountriesNotInOther.Compile();
+            _testOutcomeHelper.WriteLine($"{nameof(ruleFindCountriesNotInOther)}:{Environment.NewLine}" +
+                                         $"{ruleFindCountriesNotInOther.ExpressionDebugView()}");
+
             compileResult.Should().BeTrue();
             var executeResult = ruleFindCountriesNotInOther.Execute(_game1, _game2).ToList();
             executeResult.Should().BeOfType(typeof(List<Player>));
