@@ -49,3 +49,5 @@ Action and Func gives you most freedom to create appropriate lambda and use it a
 
 ## Validation Rule
 
+# Thanks to everyone
+Started playing with Expression Tree and had some sample/example code going for sometime.  Some of the ideas for rule engine came from [MicroRuleEngine](https://github.com/runxc1/MicroRuleEngine); and [AutoMapper](https://github.com/AutoMapper/AutoMapper) source code.  Thanks to many more blogs, example codes, etc. thought I would just glue my experiments together.  Hope this helps...
