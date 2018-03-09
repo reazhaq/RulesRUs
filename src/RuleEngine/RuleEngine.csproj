@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Reaz</Authors>
+    <Company>Bluebonnet Software</Company>
+    <Description>Run simple expression tree based rules.</Description>
+    <PackageLicenseUrl>https://github.com/reazhaq/RulesRUs/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/reazhaq/RulesRUs</RepositoryUrl>
   </PropertyGroup>
 
 </Project>
