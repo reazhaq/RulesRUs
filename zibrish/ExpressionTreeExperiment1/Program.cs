@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using RuleEngine.Utils;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using RuleEngine.Rules;
 
 namespace ExpressionTreeExperiment1
@@ -51,11 +52,15 @@ namespace ExpressionTreeExperiment1
             // Expression.Property can be used here as well
             var fieldExp = GetExpressionWithSubProperty(targetExp, "SomeStringMember");
             BinaryExpression assignExp = Expression.Assign(fieldExp, valueExp);
-            assignExp.TraceNode();
+            var sb = new StringBuilder();
+            assignExp.TraceNode(sb);
+            Debug.WriteLine(sb);
 
             var setterLam = Expression.Lambda<Action<Someclass, string>>
                 (assignExp, targetExp, valueExp);//.Compile();
-            setterLam.TraceNode();
+            sb.Clear();
+            setterLam.TraceNode(sb);
+            Debug.WriteLine(sb);
 
             var setter = setterLam.Compile();
 
@@ -67,9 +72,13 @@ namespace ExpressionTreeExperiment1
             var ss = GetExpressionWithSubProperty(s, "SomeStringMember");
             var foo = Expression.Parameter(typeof(string), "foo");
             var assign = Expression.Assign(ss, foo);
-            assign.TraceNode();
+            sb.Clear();
+            assign.TraceNode(sb);
+            Debug.WriteLine(sb);
             var lam = Expression.Lambda<Action<Someclass, string>>(assign, s, foo);
-            lam.TraceNode();
+            sb.Clear();
+            lam.TraceNode(sb);
+            Debug.WriteLine(sb);
             var com = lam.Compile();
             var blah = new Someclass { SomeStringMember = "one" };
             com(blah, "two");
@@ -84,9 +93,13 @@ namespace ExpressionTreeExperiment1
             var blah2 = Expression.Assign(
                 blah.Body
                 , Expression.Constant("bar"));
-            blah2.TraceNode();
+            var sb = new StringBuilder();
+            blah2.TraceNode(sb);
+            Debug.WriteLine(sb);
             var blah3 = Expression.Lambda(blah2);
-            blah3.TraceNode();
+            sb.Clear();
+            blah3.TraceNode(sb);
+            Debug.WriteLine(sb);
             var blah4 = blah3.Compile();
             blah4.DynamicInvoke();
 
@@ -95,13 +108,17 @@ namespace ExpressionTreeExperiment1
 
             var expAssinInt = Expression.Assign(expParamI, expParamJ);
             Debug.WriteLine("------------------- expAssinInt -----------------");
-            expAssinInt.TraceNode();
+            sb.Clear();
+            expAssinInt.TraceNode(sb);
+            Debug.WriteLine(sb);
 
             var parameterExpressions = new[] { expParamI, expParamJ };
 
             var expLamInt = Expression.Lambda<Action<int, int>>(expAssinInt, parameterExpressions);
             Debug.WriteLine("------------------ expLamInt --------------------");
-            expLamInt.TraceNode();
+            sb.Clear();
+            expLamInt.TraceNode(sb);
+            Debug.WriteLine(sb);
 
             var expComInt = expLamInt.Compile();
             var oneI = 1;
@@ -109,7 +126,9 @@ namespace ExpressionTreeExperiment1
             Debug.WriteLine($"{nameof(oneI)}: {oneI}");
 
             var invExpI = Expression.Invoke(expLamInt, expParamI, expParamJ);
-            invExpI.TraceNode();
+            sb.Clear();
+            invExpI.TraceNode(sb);
+            Debug.WriteLine(sb);
 
             var invExpLam = Expression.Lambda(invExpI, expParamI, expParamJ);
             var invExpLamCom = invExpLam.Compile();
@@ -123,11 +142,15 @@ namespace ExpressionTreeExperiment1
 
             var expAssign = Expression.Assign(expParamX, expParamY);
             Debug.WriteLine("******************** expAssign ***************");
-            expAssign.TraceNode();
+            sb.Clear();
+            expAssign.TraceNode(sb);
+            Debug.WriteLine(sb);
 
             var expLam = Expression.Lambda<Action<string, string>>(expAssign, new[] { expParamX, expParamY });
             Debug.WriteLine("*************************** expLam *****************");
-            expLam.TraceNode();
+            sb.Clear();
+            expLam.TraceNode(sb);
+            Debug.WriteLine(sb);
 
             var expCom = expLam.Compile();
             var one = "one";

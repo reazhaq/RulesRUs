@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using RuleEngine.Rules;
 using RuleEngine.Tests.Model;
 using Xunit;
@@ -31,6 +32,7 @@ namespace RuleEngine.Tests.Rules
 
             var compileRuleResult = alphaRule.Compile();
             compileRuleResult.Should().BeTrue();
+            _testOutcomeHelper.WriteLine($"{nameof(alphaRule)}:{Environment.NewLine}{alphaRule.ExpressionDebugView()}");
 
             var game = new Game {Name = nameToUse};
 

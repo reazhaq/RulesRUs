@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using System.Text;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
-using RuleEngine.RuleCompilers;
 using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
@@ -27,20 +27,22 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
             var targetObject = parameters[0];
-            var targetExpression = RuleCompilerBase.GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
+            var targetExpression = GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
             var sourceExpression = SourceDataRule.BuildExpression(targetObject);
-            return Expression.Assign(targetExpression, sourceExpression);
+            ExpressionForThisRule = Expression.Assign(targetExpression, sourceExpression);
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()
         {
             var paramObjectToValidate = Expression.Parameter(typeof(T));
-            var expression = BuildExpression(paramObjectToValidate);
-#if DEBUG
-            Debug.WriteLine($"Expression for UpdateRule<{typeof(T)}>: {expression}");
-            expression.TraceNode();
-#endif
-            CompiledDelegate = Expression.Lambda<Action<T>>(expression, paramObjectToValidate).Compile();
+            ExpressionForThisRule = BuildExpression(paramObjectToValidate);
+            if (ExpressionForThisRule == null) return false;
+
+            Debug.WriteLine($"Expression for UpdateRule<{typeof(T)}>:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}`");
+
+            CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, paramObjectToValidate).Compile();
             return CompiledDelegate != null;
         }
 
@@ -65,20 +67,22 @@ namespace RuleEngine.Rules
             var targetObject = parameters[0];
             var sourceParam = parameters[1];
 
-            var targetExpression = RuleCompilerBase.GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
-            return Expression.Assign(targetExpression, sourceParam);
+            var targetExpression = GetExpressionWithSubProperty(targetObject, ObjectToUpdate);
+            ExpressionForThisRule = Expression.Assign(targetExpression, sourceParam);
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()
         {
             var paramObjectToValidate = Expression.Parameter(typeof(T1));
             var paramSourceValue = Expression.Parameter(typeof(T2));
-            var expression = BuildExpression(paramObjectToValidate, paramSourceValue);
-#if DEBUG
-            Debug.WriteLine($"Expression for UpdateRule<{typeof(T1)},{typeof(T2)}>: {expression}");
-            expression.TraceNode();
-#endif
-            CompiledDelegate = Expression.Lambda<Action<T1, T2>>(expression, paramObjectToValidate, paramSourceValue).Compile();
+            ExpressionForThisRule = BuildExpression(paramObjectToValidate, paramSourceValue);
+            if (ExpressionForThisRule == null) return false;
+
+            Debug.WriteLine($"Expression for UpdateRule<{typeof(T1)},{typeof(T2)}>:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
+
+            CompiledDelegate = Expression.Lambda<Action<T1, T2>>(ExpressionForThisRule, paramObjectToValidate, paramSourceValue).Compile();
             return CompiledDelegate != null;
         }
 

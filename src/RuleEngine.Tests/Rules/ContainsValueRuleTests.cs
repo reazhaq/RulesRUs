@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using FluentAssertions;
 using RuleEngine.Rules;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace RuleEngine.Tests.Rules
 {
     public class ContainsValueRuleTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public ContainsValueRuleTests(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Theory]
         [InlineData("one", true)]
         [InlineData("Two", true)]
@@ -25,8 +33,11 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = containsRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(containsRule)}:{Environment.NewLine}" +
+                                        $"{containsRule.ExpressionDebugView()}");
 
             var containsValue = containsRule.ContainsValue(valueToSearch);
+            _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {containsValue}");
             containsValue.Should().Be(expectedResult);
         }
 
@@ -47,8 +58,11 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = containsRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(containsRule)}:{Environment.NewLine}" +
+                                        $"{containsRule.ExpressionDebugView()}");
 
             var containsValue = containsRule.ContainsValue(valueToSearch);
+            _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {containsValue}");
             containsValue.Should().Be(expectedResult);
         }
 
@@ -66,8 +80,11 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = containsRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(containsRule)}:{Environment.NewLine}" +
+                                        $"{containsRule.ExpressionDebugView()}");
 
             var containsValue = containsRule.ContainsValue(valueToSearch);
+            _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {containsValue}");
             containsValue.Should().Be(expectedResult);
         }
 
@@ -89,6 +106,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = containsRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(containsRule)}:{Environment.NewLine}" +
+                                        $"{containsRule.ExpressionDebugView()}");
 
             var a1 = containsRule.ContainsValue("One");
             a1.Should().BeTrue();
