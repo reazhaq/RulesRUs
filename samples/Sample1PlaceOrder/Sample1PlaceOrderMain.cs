@@ -139,6 +139,8 @@ namespace Sample1PlaceOrder
 
             Console.WriteLine("Errors found:");
             Console.WriteLine(JsonConvert.SerializeObject(ruleErrors, Formatting.Indented));
+            Console.WriteLine("hit any key to end");
+            Console.ReadKey();
         }
     }
 }
