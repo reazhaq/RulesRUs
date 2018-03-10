@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ExpressionTreeExperiment1
+﻿namespace ExpressionTreeExperiment1
 {
     public class Someclass
     {

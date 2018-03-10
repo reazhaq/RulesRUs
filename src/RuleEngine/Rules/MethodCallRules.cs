@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Utils;
