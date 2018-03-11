@@ -1,10 +1,11 @@
 ﻿using System;
 using FluentAssertions;
 using RuleEngine.Rules;
+using RuleFactory.Factory;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleFactory.Tests
+namespace RuleFactory.Tests.Factory
 {
     public class ConstantRuleFactoriesTests
     {

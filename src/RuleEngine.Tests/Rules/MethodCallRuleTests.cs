@@ -10,7 +10,7 @@ namespace RuleEngine.Tests.Rules
 {
     public class MethodCallRuleTests : IClassFixture<ExpressionRulesFixture>
     {
-        private readonly ITestOutputHelper _testOutcomeHelper;
+        private readonly ITestOutputHelper _testOutputHelper;
         private readonly Game _game1;
         private readonly Game _game2;
 
@@ -18,7 +18,7 @@ namespace RuleEngine.Tests.Rules
         {
             _game1 = expressionRuleFixture.Game1;
             _game2 = expressionRuleFixture.Game2;
-            _testOutcomeHelper = testOutcomeHelper;
+            _testOutputHelper = testOutcomeHelper;
         }
 
         [Theory]
@@ -39,7 +39,7 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = nameEqualsRule.Compile();
             compileResult.Should().BeTrue();
-            _testOutcomeHelper.WriteLine($"{nameof(nameEqualsRule)}:{Environment.NewLine}{nameEqualsRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(nameEqualsRule)}:{Environment.NewLine}{nameEqualsRule.ExpressionDebugView()}");
 
             var executeResult = nameEqualsRule.Execute(_game1);
             executeResult.Should().Be(expectedResult);
@@ -66,7 +66,7 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = nameEqualsRule.Compile();
             compileResult.Should().BeTrue();
-            _testOutcomeHelper.WriteLine($"{nameof(nameEqualsRule)}:{Environment.NewLine}{nameEqualsRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(nameEqualsRule)}:{Environment.NewLine}{nameEqualsRule.ExpressionDebugView()}");
 
             var executeResult = nameEqualsRule.Execute(_game1);
             executeResult.Should().Be(expectedResult);
@@ -87,7 +87,7 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = playerCountRule.Compile();
             compileResult.Should().BeTrue();
-            _testOutcomeHelper.WriteLine($"{nameof(playerCountRule)}:{Environment.NewLine}{playerCountRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(playerCountRule)}:{Environment.NewLine}{playerCountRule.ExpressionDebugView()}");
 
             var currentActiveState = _game1.Active;
             playerCountRule.Execute(_game1);
@@ -109,7 +109,7 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = gameHasPlayerWithCertainId.Compile();
             compileResult.Should().BeTrue();
-            _testOutcomeHelper.WriteLine($"{nameof(gameHasPlayerWithCertainId)}:{Environment.NewLine}{gameHasPlayerWithCertainId.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(gameHasPlayerWithCertainId)}:{Environment.NewLine}{gameHasPlayerWithCertainId.ExpressionDebugView()}");
 
             var executeResult = gameHasPlayerWithCertainId.Execute(_game1);
             executeResult.Should().Be(expectedResult);
@@ -129,7 +129,7 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = gameNameContainsKeyWrodCool.Compile();
             compileResult.Should().BeTrue();
-            _testOutcomeHelper.WriteLine($"{nameof(gameNameContainsKeyWrodCool)}:{Environment.NewLine}{gameNameContainsKeyWrodCool.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(gameNameContainsKeyWrodCool)}:{Environment.NewLine}{gameNameContainsKeyWrodCool.ExpressionDebugView()}");
 
             // check to see if _game1 description contains keyword "cool"
             var executeResult = gameNameContainsKeyWrodCool.Execute(_game1);

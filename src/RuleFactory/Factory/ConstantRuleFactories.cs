@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using RuleEngine.Rules;
 
-namespace RuleFactory
+namespace RuleFactory.Factory
 {
     public static class ConstantRuleFactories
     {
@@ -29,7 +29,6 @@ namespace RuleFactory
         public static Rule CreateConstantRuleFromPrimitiveTypeAndString(string typeName, string value)
         {
             var targetType = Type.GetType(typeName);
-            if (targetType != typeof(string) && !targetType.IsPrimitive) return null;
 
             switch (targetType)
             {
@@ -96,6 +95,9 @@ namespace RuleFactory
                     return CreateConstantRule<float>(value);
                 case Type singleNType when singleNType == typeof(float?):
                     return CreateConstantRule<float?>(value);
+                //StringComparison
+                case Type strComType when strComType==typeof(StringComparison):
+                    return CreateConstantRule<StringComparison>(value);
             }
 
             return null;

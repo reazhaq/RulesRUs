@@ -12,6 +12,7 @@ namespace RuleEngine.Rules
     public class MethodCallBase : Rule
     {
         public string MethodToCall;
+        // MethodClassName needed for extension methods...
         public string MethodClassName { get; set; }
         public string ObjectToCallMethodOn { get; set; }
         public List<object> Inputs { get; } = new List<object>();

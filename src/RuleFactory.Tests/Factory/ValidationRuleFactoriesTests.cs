@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
-using RuleEngine.Tests.Model;
+using RuleFactory.Factory;
+using RuleFactory.Tests.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleFactory.Tests
+namespace RuleFactory.Tests.Factory
 {
     public class ValidationRuleFactoriesTests
     {

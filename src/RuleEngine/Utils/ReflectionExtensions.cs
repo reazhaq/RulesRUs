@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -31,6 +32,13 @@ namespace RuleEngine.Utils
             }
 
             return null;
+        }
+
+        public static IEqualityComparer<T> GetEqualityComparerProperty<T>(string className, string comparerProp)
+        {
+            var type = Type.GetType(className);
+            var comparerPropInfo = type.GetProperty(comparerProp);
+            return (IEqualityComparer<T>) comparerPropInfo.GetValue(null);
         }
     }
 }

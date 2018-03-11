@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using RuleEngine.Rules;
+using RuleFactory.Factory;
 
 namespace RuleFactory
 {

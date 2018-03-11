@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
 using RuleEngine.Rules;
 
-namespace RuleFactory
+namespace RuleFactory.Factory
 {
-    public class ValidationRuleFactories
+    public static class ValidationRuleFactories
     {
         public static ValidationRule<T> CreateValidationRule<T>(IDictionary<string, string> propValueDictionary)
         {
