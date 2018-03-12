@@ -16,7 +16,7 @@ namespace RuleEngine.Rules
         public string OperatorToUse;
         public string ObjectToValidate { get; set; }
 
-        public IList<Rule> ChildrenRules { get; } = new List<Rule>();
+        public List<Rule> ChildrenRules { get; } = new List<Rule>();
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {

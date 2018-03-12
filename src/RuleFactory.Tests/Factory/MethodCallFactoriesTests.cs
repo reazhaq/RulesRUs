@@ -20,17 +20,19 @@ namespace RuleFactory.Tests.Factory
         [Fact]
         public void CreateMethodCallRule()
         {
-            IDictionary<string, string> propValueDictionary = new Dictionary<string, string>
-            {
-                {"MethodToCall", "Equals"},
-                {"ObjectToCallMethodOn", "Name"}
-            };
-            IList<object> inputs = new List<object>
+            var inputs = new List<object>
             {
                 "Some Name",
-                ConstantRuleFactories.CreateConstantRuleFromPrimitiveTypeAndString("System.StringComparison", "CurrentCultureIgnoreCase")
+                ConstantRuleFactories.CreateConstantRuleFromPrimitiveTypeAndString("System.StringComparison",
+                    "CurrentCultureIgnoreCase")
             };
-            var rule = MethodCallFactories.CreateMethodCallRule<Game, bool>(propValueDictionary, inputs);
+            var propValueDictionary = new Dictionary<string, object>
+            {
+                {"MethodToCall", "Equals"},
+                {"ObjectToCallMethodOn", "Name"},
+                {"Inputs", inputs}
+            };
+            var rule = MethodCallFactories.CreateMethodCallRule<Game, bool>(propValueDictionary);
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");

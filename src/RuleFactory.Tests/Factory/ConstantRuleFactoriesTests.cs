@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using RuleEngine.Rules;
 using RuleFactory.Factory;
@@ -19,12 +20,17 @@ namespace RuleFactory.Tests.Factory
         [Fact]
         public void StringConstantRuleCreatedUsingFactory()
         {
-            var rule = ConstantRuleFactories.CreateConstantRule<string>("one");
+            var propValueDictionary = new Dictionary<string, string>
+            {
+                {"TypeName", "System.String"},
+                {"Value", "one"}
+            };
+            var rule = ConstantRuleFactories.CreateConstantRule(propValueDictionary);
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"expression:{Environment.NewLine}{rule.ExpressionDebugView()}");
 
-            var result = rule.Get();
+            var result = (rule as ConstantRule<string>)?.Get();
             _testOutputHelper.WriteLine($"expected: one - actual: {result}");
             result.Should().BeOfType<string>().And.Be("one");
         }

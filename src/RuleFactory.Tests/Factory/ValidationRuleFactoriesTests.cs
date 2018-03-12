@@ -19,13 +19,16 @@ namespace RuleFactory.Tests.Factory
         [Fact]
         public void CreateValidationRuleForGame()
         {
-            IDictionary<string, string> propValueDictionary = new Dictionary<string, string>
+            var propValueDictionary = new Dictionary<string, object>
             {
-                {"OperatorToUse","GreaterThan"},{"ObjectToValidate","Name.Length"}
+                {"OperatorToUse", "GreaterThan"},
+                {"ObjectToValidate", "Name.Length"},
+                {
+                    "ValueToValidateAgainst",
+                    ConstantRuleFactories.CreateConstantRuleFromPrimitiveTypeAndString("System.Int32", "3")
+                }
             };
             var rule = ValidationRuleFactories.CreateValidationRule<Game>(propValueDictionary);
-            rule.ValueToValidateAgainst =
-                ConstantRuleFactories.CreateConstantRuleFromPrimitiveTypeAndString("System.Int32", "3");
 
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
