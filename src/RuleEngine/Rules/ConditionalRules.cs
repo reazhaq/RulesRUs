@@ -92,8 +92,9 @@ namespace RuleEngine.Rules
         public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
         {
             if (propValueDictionary == null) return;
-            propValueDictionary.Add("RuleType", $"ConditionalIfThActionRule<{typeof(T).Name}>");
             base.WriteRuleValuesToDictionary(propValueDictionary);
+            propValueDictionary.Add("RuleType", "ConditionalIfThActionRule");
+            propValueDictionary.Add("BoundingTypes", new List<string>{typeof(T).ToString()});
         }
     }
 
@@ -148,8 +149,9 @@ namespace RuleEngine.Rules
         public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
         {
             if (propValueDictionary == null) return;
-            propValueDictionary.Add("RuleType", $"ConditionalIfThElActionRule<{typeof(T).Name}>");
             base.WriteRuleValuesToDictionary(propValueDictionary);
+            propValueDictionary.Add("RuleType", "ConditionalIfThElActionRule");
+            propValueDictionary.Add("BoundingTypes", new List<string>{typeof(T).ToString()});
         }
     }
 
@@ -213,8 +215,10 @@ namespace RuleEngine.Rules
         public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
         {
             if (propValueDictionary == null) return;
-            propValueDictionary.Add("RuleType", $"ConditionalFuncRule<{typeof(T1).Name},{typeof(T2).Name}>");
             base.WriteRuleValuesToDictionary(propValueDictionary);
+            propValueDictionary.Add("RuleType", "ConditionalFuncRule");
+            propValueDictionary.Add("BoundingTypes", new List<string>{typeof(T1).ToString(),typeof(T2).ToString()});
+
         }
     }
 }

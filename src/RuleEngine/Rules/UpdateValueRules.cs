@@ -65,10 +65,15 @@ namespace RuleEngine.Rules
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
 
-            propValueDictionary.Add("RuleType", $"UpdateValueRule<{typeof(T).Name}>");
-            var subDictionary = new Dictionary<string,object>();
-            propValueDictionary.Add(nameof(SourceDataRule), subDictionary);
-            SourceDataRule.WriteRuleValuesToDictionary(subDictionary);
+            propValueDictionary.Add("RuleType", "UpdateValueRule");
+            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T).ToString() });
+
+            if(SourceDataRule!=null)
+            {
+                var subDictionary = new Dictionary<string, object>();
+                propValueDictionary.Add(nameof(SourceDataRule), subDictionary);
+                SourceDataRule.WriteRuleValuesToDictionary(subDictionary);
+            }
         }
     }
 
@@ -116,7 +121,8 @@ namespace RuleEngine.Rules
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
 
-            propValueDictionary.Add("RuleType", $"UpdateValueRule<{typeof(T1).Name},{typeof(T2).Name}>");
+            propValueDictionary.Add("RuleType", "UpdateValueRule");
+            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T1).ToString(), typeof(T2).ToString() });
         }
     }
 }

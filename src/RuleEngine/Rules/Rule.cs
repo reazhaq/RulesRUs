@@ -30,7 +30,7 @@ namespace RuleEngine.Rules
         public virtual void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
         {
             if(propValueDictionary==null) return;
-            //propValueDictionary.Add("RuleType", GetType().Name);
+
             propValueDictionary.Add("Id", Id);
             if (!string.IsNullOrEmpty(Name))
                 propValueDictionary.Add("Name", Name);

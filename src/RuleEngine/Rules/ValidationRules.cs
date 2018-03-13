@@ -97,7 +97,8 @@ namespace RuleEngine.Rules
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
 
-            propValueDictionary.Add("RuleType", $"ValidationRule<{typeof(T).Name}>");
+            propValueDictionary.Add("RuleType", "ValidationRule");
+            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T).ToString() });
             if (ValueToValidateAgainst != null)
             {
                 var ruleDictionary = new Dictionary<string, object>();
@@ -108,7 +109,7 @@ namespace RuleEngine.Rules
             if (!string.IsNullOrEmpty(OperatorToUse))
                 propValueDictionary.Add(nameof(OperatorToUse), OperatorToUse);
 
-            if(!string.IsNullOrEmpty(ObjectToValidate))
+            if (!string.IsNullOrEmpty(ObjectToValidate))
                 propValueDictionary.Add(nameof(ObjectToValidate), ObjectToValidate);
         }
     }
@@ -168,15 +169,16 @@ namespace RuleEngine.Rules
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
 
-            propValueDictionary.Add("RuleType", $"ValidationRule<{typeof(T1).Name},{typeof(T2).Name}>");
+            propValueDictionary.Add("RuleType", "ValidationRule");
+            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T1).ToString(), typeof(T2).ToString() });
 
             if (!string.IsNullOrEmpty(OperatorToUse))
                 propValueDictionary.Add(nameof(OperatorToUse), OperatorToUse);
 
-            if(!string.IsNullOrEmpty(ObjectToValidate1))
+            if (!string.IsNullOrEmpty(ObjectToValidate1))
                 propValueDictionary.Add(nameof(ObjectToValidate1), ObjectToValidate1);
 
-            if(!string.IsNullOrEmpty(ObjectToValidate2))
+            if (!string.IsNullOrEmpty(ObjectToValidate2))
                 propValueDictionary.Add(nameof(ObjectToValidate2), ObjectToValidate2);
         }
     }
