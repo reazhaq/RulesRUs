@@ -33,27 +33,5 @@ namespace RuleFactory.Factory
 
             return instance;
         }
-
-        //public static void WriteRuleValues<T>(ValidationRule<T> rule, IDictionary<string, object> propValueDictionary)
-        //{
-        //    if (rule == null || propValueDictionary == null) return;
-
-        //    RuleFactories.WriteRuleValues(rule, propValueDictionary);
-        //    if (!string.IsNullOrEmpty("OperatorToUse"))
-        //        propValueDictionary.Add("OperatorToUse", rule.OperatorToUse);
-        //    if (!string.IsNullOrEmpty("ObjectToValidate"))
-        //        propValueDictionary.Add("ObjectToValidate", rule.ObjectToValidate);
-        //    if (rule.ValueToValidateAgainst != null)
-        //        RuleFactories.WriteRuleValues(rule.ValueToValidateAgainst, propValueDictionary);
-        //    if (rule.ChildrenRules != null && rule.ChildrenRules.Any())
-        //    {
-        //        var childrenPropValueDictionary = new Dictionary<string, object>();
-        //        propValueDictionary.Add("ChildrenRules", childrenPropValueDictionary);
-        //        foreach (var item in rule.ChildrenRules.Select((r,i)=>new {i,r}))
-        //        {
-        //            childrenPropValueDictionary.Add(item.i.ToString(), RuleFactory.ConvertRuleToDictionary<T>(item.r));
-        //        }
-        //    }
-        //}
     }
 }

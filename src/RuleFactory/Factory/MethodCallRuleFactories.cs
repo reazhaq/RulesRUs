@@ -26,30 +26,5 @@ namespace RuleFactory.Factory
 
             return instance;
         }
-
-        //public static void WriteRuleValues<T>(MethodCallRule<T, bool> methodCallRule, IDictionary<string, object> propValueDictionary)
-        //{
-        //    if (methodCallRule == null || propValueDictionary == null) return;
-        //    RuleFactories.WriteRuleValues(methodCallRule, propValueDictionary);
-
-        //    if (!string.IsNullOrEmpty(methodCallRule.MethodToCall))
-        //        propValueDictionary.Add("MethodToCall", methodCallRule.MethodToCall);
-        //    if (!string.IsNullOrEmpty(methodCallRule.MethodClassName))
-        //        propValueDictionary.Add("MethodClassName", methodCallRule.MethodClassName);
-        //    if(!string.IsNullOrEmpty(methodCallRule.ObjectToCallMethodOn))
-        //        propValueDictionary.Add("ObjectToCallMethodOn", methodCallRule.ObjectToCallMethodOn);
-        //    if (methodCallRule.Inputs != null)
-        //    {
-        //        var inputDictionary = new Dictionary<string,object>();
-        //        propValueDictionary.Add("Inputs", inputDictionary);
-        //        foreach (var item in methodCallRule.Inputs.Select((value, i)=>new {i,value}))
-        //        {
-        //            inputDictionary.Add(item.i.ToString(),
-        //                item.value is Rule
-        //                    ? RuleFactory.ConvertRuleToDictionary<object>(item.value as Rule)
-        //                    : item.value);
-        //        }
-        //    }
-        //}
     }
 }

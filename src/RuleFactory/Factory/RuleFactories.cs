@@ -25,26 +25,5 @@ namespace RuleFactory.Factory
                 };
             }
         }
-
-        //public static void WriteRuleValues(Rule rule, IDictionary<string, object> propValueDictionary)
-        //{
-        //    if (rule == null || propValueDictionary == null) return;
-
-        //    propValueDictionary.Add("Id", rule.Id);
-        //    if(!string.IsNullOrEmpty(rule.Name))
-        //        propValueDictionary.Add("Name", rule.Name);
-        //    if(!string.IsNullOrEmpty(rule.Description))
-        //        propValueDictionary.Add("Description", rule.Description);
-
-        //    if (rule.RuleError != null)
-        //    {
-        //        propValueDictionary.Add("RuleError",
-        //            new Dictionary<string, string>
-        //            {
-        //                {"Code", rule.RuleError.Code},
-        //                {"Message", rule.RuleError.Message}
-        //            });
-        //    }
-        //}
     }
 }

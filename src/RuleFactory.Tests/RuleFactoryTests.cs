@@ -77,28 +77,5 @@ namespace RuleFactory.Tests
             (rule2 as ConditionalIfThActionRule<Game>)?.Execute(game);
             game.Name.Should().Be("updated name");
         }
-
-
-        //[Fact]
-        //public void Test1()
-        //{
-        //    var conditionalUpdateValue = new ConditionalIfThActionRule<Game>
-        //    {
-        //        ConditionRule = new MethodCallRule<Game, bool>
-        //        {
-        //            ObjectToCallMethodOn = "Name",
-        //            MethodToCall = "Equals",
-        //            Inputs = { "some name", StringComparison.CurrentCultureIgnoreCase }
-        //        },
-        //        TrueRule = new UpdateValueRule<Game>
-        //        {
-        //            ObjectToUpdate = "Name",
-        //            SourceDataRule = new ConstantRule<string> { Value = "updated name" }
-        //        }
-        //    };
-
-        //    var ruleDic = RuleFactory.ConvertRuleToDictionary<Game>(conditionalUpdateValue);
-        //    _testOutputHelper.WriteLine(JsonConvert.SerializeObject(ruleDic, Formatting.Indented));
-        //}
     }
 }

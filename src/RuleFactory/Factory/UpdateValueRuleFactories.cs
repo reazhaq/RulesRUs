@@ -22,15 +22,5 @@ namespace RuleFactory.Factory
 
             return instance;
         }
-
-        //public static void WriteRuleValues<T>(UpdateValueRule<T> updateValueRule, Dictionary<string, object> propValueDictionary)
-        //{
-        //    if (updateValueRule == null || propValueDictionary == null) return;
-        //    if (!string.IsNullOrEmpty("ObjectToUpdate"))
-        //        propValueDictionary.Add("ObjectToUpdate", updateValueRule.ObjectToUpdate);
-        //    if (updateValueRule.SourceDataRule != null)
-        //        propValueDictionary.Add("SourceDataRule",
-        //            RuleFactory.ConvertRuleToDictionary<T>(updateValueRule.SourceDataRule));
-        //}
     }
 }
