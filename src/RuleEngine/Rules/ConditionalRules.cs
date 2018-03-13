@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -17,6 +18,32 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
         public override bool Compile() => throw new NotImplementedException();
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+            if (ConditionRule != null)
+            {
+                var conditionDictionary = new Dictionary<string,object>();
+                propValueDictionary.Add("ConditionRule", conditionDictionary);
+                ConditionRule.WriteRuleValuesToDictionary(conditionDictionary);
+            }
+
+            if (TrueRule != null)
+            {
+                var trueDictionary = new Dictionary<string,object>();
+                propValueDictionary.Add("TrueRule", trueDictionary);
+                TrueRule.WriteRuleValuesToDictionary(trueDictionary);
+            }
+
+            if (FalseRule != null)
+            {
+                var falseDictionary = new Dictionary<string,object>();
+                propValueDictionary.Add("FalseRule", falseDictionary);
+                FalseRule.WriteRuleValuesToDictionary(falseDictionary);
+            }
+        }
     }
 
     public class ConditionalIfThActionRule<T> : ConditionalRuleBase, IConditionalActionRule<T>

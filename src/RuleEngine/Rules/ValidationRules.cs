@@ -91,6 +91,24 @@ namespace RuleEngine.Rules
 
             return CompiledDelegate(targetObject);
         }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+            if (ValueToValidateAgainst != null)
+            {
+                var ruleDictionary = new Dictionary<string, object>();
+                propValueDictionary.Add($"{ValueToValidateAgainst.GetType()}", ruleDictionary);
+                ValueToValidateAgainst.WriteRuleValuesToDictionary(ruleDictionary);
+            }
+
+            if (!string.IsNullOrEmpty(OperatorToUse))
+                propValueDictionary.Add(nameof(OperatorToUse), OperatorToUse);
+
+            if(!string.IsNullOrEmpty(ObjectToValidate))
+                propValueDictionary.Add(nameof(ObjectToValidate), ObjectToValidate);
+        }
     }
 
     public class ValidationRule<T1, T2> : Rule, IValidationRule<T1, T2>

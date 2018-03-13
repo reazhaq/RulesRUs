@@ -92,5 +92,11 @@ namespace RuleFactory.Factory
 
             return null;
         }
+
+        //public static void WriteRuleValues<T>(ConstantRule<T> constantRule, Dictionary<string, object> propValueDictionary)
+        //{
+        //    propValueDictionary.Add("TypeName", constantRule.Value.GetType());
+        //    propValueDictionary.Add("Value", constantRule.Value);
+        //}
     }
 }

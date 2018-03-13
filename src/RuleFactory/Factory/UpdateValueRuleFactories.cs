@@ -9,6 +9,7 @@ namespace RuleFactory.Factory
         {
             if (propValueDictionary == null) return null;
             var instance = new UpdateValueRule<T>();
+            RuleFactories.ReadRuleValues(instance, propValueDictionary);
 
             if (propValueDictionary.ContainsKey("ObjectToUpdate"))
                 instance.ObjectToUpdate = propValueDictionary["ObjectToUpdate"].ToString();
@@ -18,5 +19,15 @@ namespace RuleFactory.Factory
 
             return instance;
         }
+
+        //public static void WriteRuleValues<T>(UpdateValueRule<T> updateValueRule, Dictionary<string, object> propValueDictionary)
+        //{
+        //    if (updateValueRule == null || propValueDictionary == null) return;
+        //    if (!string.IsNullOrEmpty("ObjectToUpdate"))
+        //        propValueDictionary.Add("ObjectToUpdate", updateValueRule.ObjectToUpdate);
+        //    if (updateValueRule.SourceDataRule != null)
+        //        propValueDictionary.Add("SourceDataRule",
+        //            RuleFactory.ConvertRuleToDictionary<T>(updateValueRule.SourceDataRule));
+        //}
     }
 }

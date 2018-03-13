@@ -32,7 +32,7 @@ namespace RuleFactory.Tests.Factory
                 {"ObjectToCallMethodOn", "Name"},
                 {"Inputs", inputs}
             };
-            var rule = MethodCallFactories.CreateMethodCallRule<Game, bool>(propValueDictionary);
+            var rule = MethodCallRuleFactories.CreateMethodCallRule<Game, bool>(propValueDictionary);
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");

@@ -33,7 +33,7 @@ namespace RuleFactory.Tests.Factory
                 {"ObjectToCallMethodOn", "Name"},
                 {"Inputs", inputs}
             };
-            var conditionRule = MethodCallFactories.CreateMethodCallRule<Game, bool>(propValueDictionaryForMethod);
+            var conditionRule = MethodCallRuleFactories.CreateMethodCallRule<Game, bool>(propValueDictionaryForMethod);
 
             var propValueDictionaryForTrue = new Dictionary<string, object>
             {

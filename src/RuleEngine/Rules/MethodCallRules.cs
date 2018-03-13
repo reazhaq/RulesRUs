@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using RuleEngine.Common;
@@ -30,6 +31,32 @@ namespace RuleEngine.Rules
             if (type == null) throw new RuleEngineException($"can't find class named: {methodClassName}");
 
             return type.GetMethodInfo(methodToCall, inputTypes);
+        }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+            if (!string.IsNullOrEmpty(MethodToCall))
+                propValueDictionary.Add(nameof(MethodToCall), MethodToCall);
+            if(!string.IsNullOrEmpty(MethodClassName))
+                propValueDictionary.Add(nameof(MethodClassName), MethodClassName);
+            if(!string.IsNullOrEmpty(ObjectToCallMethodOn))
+                propValueDictionary.Add(nameof(ObjectToCallMethodOn), ObjectToCallMethodOn);
+
+            var inputDictionary = new Dictionary<string,object>();
+            propValueDictionary.Add("Inputs", inputDictionary);
+            foreach (var item in Inputs.Select((value, i) => new { i, value }))
+            {
+                if (item.value is Rule rule)
+                {
+                    var ruleDictionary = new Dictionary<string, object>();
+                    propValueDictionary.Add($"{rule.GetType()}_{item.i}", ruleDictionary);
+                    rule.WriteRuleValuesToDictionary(ruleDictionary);
+                }
+                else
+                    inputDictionary.Add(item.i.ToString(), item.value);
+            }
         }
     }
 
