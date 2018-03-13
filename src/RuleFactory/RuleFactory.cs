@@ -30,11 +30,6 @@ namespace RuleFactory
                     case "UpdateValueRule" when boundingTypes?.Count==1:
                         return UpdateValueRuleFactories.CreateUpdateValueRule<T>(propValueDictionary);
                 }
-
-                if (ruleType.Equals("ValidationRule"))
-                    return ValidationRuleFactories.CreateValidationRule<T>(propValueDictionary);
-
-
             }
 
             return null;

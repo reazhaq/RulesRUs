@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using Newtonsoft.Json;
 using RuleEngine.Rules;
 using RuleFactory.Factory;
 using Xunit;
@@ -47,6 +48,22 @@ namespace RuleFactory.Tests.Factory
             var result = (rule as ConstantRule<string>)?.Get();
             _testOutputHelper.WriteLine($"expected: two - actual: {result}");
             result.Should().BeOfType<string>().And.Be("two");
+        }
+
+        [Fact]
+        public void ConstantStringStringComparison()
+        {
+            var rule = new ConstantRule<StringComparison> {Value = "CurrentCultureIgnoreCase"};
+            var propValueDictionary = new Dictionary<string, object>();
+            rule.WriteRuleValuesToDictionary(propValueDictionary);
+            _testOutputHelper.WriteLine(JsonConvert.SerializeObject(propValueDictionary, Formatting.Indented));
+
+            var newRule = RuleFactory.CreateRuleFromDictionary<object>(propValueDictionary);
+            newRule.Compile();
+            _testOutputHelper.WriteLine($"{newRule.ExpressionDebugView()}");
+
+            var foo = ((ConstantRule<StringComparison>) newRule).Get();
+            _testOutputHelper.WriteLine($"{foo.ToString()}");
         }
     }
 }

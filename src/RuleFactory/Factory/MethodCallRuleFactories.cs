@@ -22,7 +22,20 @@ namespace RuleFactory.Factory
             if (propValueDictionary.ContainsKey("ObjectToCallMethodOn"))
                 instance.ObjectToCallMethodOn = propValueDictionary["ObjectToCallMethodOn"].ToString();
             if (propValueDictionary.ContainsKey("Inputs"))
-                instance.Inputs.AddRange((IEnumerable<object>) propValueDictionary["Inputs"]);
+            {
+                var inputs = (List<object>) propValueDictionary["Inputs"];
+                foreach (var input in inputs)
+                {
+                    if (input is IDictionary<string, object> objects)
+                    {
+                        instance.Inputs.Add(RuleFactory.CreateRuleFromDictionary<TTarget>(objects));
+                    }
+                    else
+                    {
+                        instance.Inputs.Add(input);
+                    }
+                }
+            }
 
             return instance;
         }

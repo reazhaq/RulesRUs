@@ -31,7 +31,17 @@ namespace RuleFactory.Tests.Factory
                         {"RuleType", "MethodCallRule"},
                         {"BoundingTypes", new List<string>{"RuleFactory.Tests.Model.Game","System.Boolean"}},
                         {"ObjectToCallMethodOn", "Name"},
-                        {"Inputs", new List<object>{"Some Name", StringComparison.CurrentCultureIgnoreCase}}
+                        {"Inputs", new List<object>
+                        {
+                            "Some Name",
+                            new Dictionary<string,object>
+                            {
+                                {"Id", 0},
+                                {"RuleType", "ConstantRule"},
+                                {"BoundingTypes", new List<string>{"System.StringComparison"}},
+                                {"Value", "CurrentCultureIgnoreCase"}
+                            }
+                        }}
                     }
                 },
                 {"TrueRule",
