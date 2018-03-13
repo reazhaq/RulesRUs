@@ -37,6 +37,7 @@ namespace RuleEngine.Rules
         {
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
+
             if (!string.IsNullOrEmpty(MethodToCall))
                 propValueDictionary.Add(nameof(MethodToCall), MethodToCall);
             if(!string.IsNullOrEmpty(MethodClassName))
@@ -104,6 +105,13 @@ namespace RuleEngine.Rules
 
             CompiledDelegate(param);
         }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+            propValueDictionary.Add("RuleType", $"MethodVoidCallRule<{typeof(T).Name}>");
+        }
     }
 
     public class MethodCallRule<TTarget, TResult> : MethodCallBase, IMethodCallRule<TTarget, TResult>
@@ -149,6 +157,13 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(target);
+        }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+            propValueDictionary.Add("RuleType", $"MethodVoidCallRule<{typeof(TTarget).Name},{typeof(TResult)}>");
         }
     }
 }

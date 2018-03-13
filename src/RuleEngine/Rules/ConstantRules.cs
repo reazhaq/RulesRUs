@@ -69,7 +69,8 @@ namespace RuleEngine.Rules
         {
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
-            propValueDictionary.Add("ConstantRule", "ConstantRule_1");
+            propValueDictionary.Add("RuleType", $"ConstantRule<{typeof(T).Name}>");
+            //propValueDictionary.Add("ConstantRule", "ConstantRule_1");
             propValueDictionary.Add("TypeName", typeof(T).Name);
             propValueDictionary.Add("Value", Value);
         }
@@ -117,7 +118,8 @@ namespace RuleEngine.Rules
         {
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
-            propValueDictionary.Add("ConstantRule", "ConstantRule_2");
+            propValueDictionary.Add("RuleType", $"ConstantRule<{typeof(T1).Name},{typeof(T2).Name}>");
+            //propValueDictionary.Add("ConstantRule", "ConstantRule_2");
             propValueDictionary.Add("Type1Name", typeof(T1));
             propValueDictionary.Add("Type2Name", typeof(T2));
             propValueDictionary.Add("Value", Value);

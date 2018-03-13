@@ -88,6 +88,13 @@ namespace RuleEngine.Rules
 
             CompiledDelegate(param);
         }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            propValueDictionary.Add("RuleType", $"ConditionalIfThActionRule<{typeof(T).Name}>");
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+        }
     }
 
     // executes a rule if true or executes another rule if false
@@ -136,6 +143,13 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             CompiledDelegate(param);
+        }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            propValueDictionary.Add("RuleType", $"ConditionalIfThElActionRule<{typeof(T).Name}>");
+            base.WriteRuleValuesToDictionary(propValueDictionary);
         }
     }
 
@@ -194,6 +208,13 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(param1);
+        }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            propValueDictionary.Add("RuleType", $"ConditionalFuncRule<{typeof(T1).Name},{typeof(T2).Name}>");
+            base.WriteRuleValuesToDictionary(propValueDictionary);
         }
     }
 }

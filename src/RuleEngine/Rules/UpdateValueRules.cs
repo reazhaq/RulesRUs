@@ -65,6 +65,7 @@ namespace RuleEngine.Rules
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
 
+            propValueDictionary.Add("RuleType", $"UpdateValueRule<{typeof(T).Name}>");
             var subDictionary = new Dictionary<string,object>();
             propValueDictionary.Add(nameof(SourceDataRule), subDictionary);
             SourceDataRule.WriteRuleValuesToDictionary(subDictionary);
@@ -108,6 +109,14 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             CompiledDelegate(targetObject, source);
+        }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+
+            propValueDictionary.Add("RuleType", $"UpdateValueRule<{typeof(T1).Name},{typeof(T2).Name}>");
         }
     }
 }

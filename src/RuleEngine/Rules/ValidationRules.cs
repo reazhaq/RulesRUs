@@ -96,6 +96,8 @@ namespace RuleEngine.Rules
         {
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
+
+            propValueDictionary.Add("RuleType", $"ValidationRule<{typeof(T).Name}>");
             if (ValueToValidateAgainst != null)
             {
                 var ruleDictionary = new Dictionary<string, object>();
@@ -159,6 +161,23 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(param1, param2);
+        }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+
+            propValueDictionary.Add("RuleType", $"ValidationRule<{typeof(T1).Name},{typeof(T2).Name}>");
+
+            if (!string.IsNullOrEmpty(OperatorToUse))
+                propValueDictionary.Add(nameof(OperatorToUse), OperatorToUse);
+
+            if(!string.IsNullOrEmpty(ObjectToValidate1))
+                propValueDictionary.Add(nameof(ObjectToValidate1), ObjectToValidate1);
+
+            if(!string.IsNullOrEmpty(ObjectToValidate2))
+                propValueDictionary.Add(nameof(ObjectToValidate2), ObjectToValidate2);
         }
     }
 }

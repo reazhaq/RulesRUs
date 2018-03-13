@@ -72,6 +72,7 @@ namespace RuleEngine.Rules
             if (propValueDictionary == null) return;
             base.WriteRuleValuesToDictionary(propValueDictionary);
 
+            propValueDictionary.Add("RuleType", $"RegExRule<{typeof(T).Name}>");
             if(!string.IsNullOrEmpty(RegExToUse))
                 propValueDictionary.Add(nameof(RegExToUse), RegExToUse);
             if(!string.IsNullOrEmpty(OperatorToUse))

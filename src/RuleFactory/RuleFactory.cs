@@ -7,18 +7,18 @@ namespace RuleFactory
 {
     public static class RuleFactory
     {
-        public static Rule CreateRule(string ruleType, IDictionary<string, string> propValueDictionary)
-        {
-            if (string.IsNullOrEmpty(ruleType) || propValueDictionary == null) return null;
+        //public static Rule CreateRule(string ruleType, IDictionary<string, string> propValueDictionary)
+        //{
+        //    if (string.IsNullOrEmpty(ruleType) || propValueDictionary == null) return null;
 
-            switch (ruleType.ToLower())
-            {
-                case "constant_rule_1":
-                    return ConstantRuleFactories.CreateConstantRule(propValueDictionary);
-            }
+        //    switch (ruleType.ToLower())
+        //    {
+        //        case "ConstantRule_1":
+        //            return ConstantRuleFactories.CreateConstantRule(propValueDictionary);
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         //public static IDictionary<string, object> ConvertRuleToDictionary<T>(Rule rule)
         //{
