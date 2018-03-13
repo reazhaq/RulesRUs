@@ -20,12 +20,13 @@ namespace RuleFactory.Tests.Factory
         [Fact]
         public void StringConstantRuleCreatedUsingFactory()
         {
-            var propValueDictionary = new Dictionary<string, string>
+            var propValueDictionary = new Dictionary<string, object>
             {
-                {"TypeName", "System.String"},
+                {"RuleType", "ConstantRule"},
+                {"BoundingTypes", new List<string>{"System.String"}},
                 {"Value", "one"}
             };
-            var rule = ConstantRuleFactories.CreateConstantRule(propValueDictionary);
+            var rule = RuleFactory.CreateRuleFromDictionary<string>(propValueDictionary);
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"expression:{Environment.NewLine}{rule.ExpressionDebugView()}");

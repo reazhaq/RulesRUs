@@ -19,14 +19,17 @@ namespace RuleFactory.Factory
             if (propValueDictionary.ContainsKey("ObjectToValidate"))
                 instance.ObjectToValidate = propValueDictionary["ObjectToValidate"].ToString();
             if (propValueDictionary.ContainsKey("ValueToValidateAgainst"))
-                instance.ValueToValidateAgainst = (Rule)propValueDictionary["ValueToValidateAgainst"];
+            {
+                var valueRule = (IDictionary<string, object>) propValueDictionary["ValueToValidateAgainst"];
+                instance.ValueToValidateAgainst = RuleFactory.CreateRuleFromDictionary<T>(valueRule);
+            }
 
-            //instance.ChildrenRules.AddRange((IEnumerable<Rule>)propValueDictionary["ChildrenRules"]);
-            //if (propValueDictionary.ContainsKey("ChildrenRules"))
-            //{
-            //    var childrenPropValueDictionary = (IDictionary<string, object>) propValueDictionary["ChildrenRules"];
-            //    // todo......
-            //}
+            if (propValueDictionary.ContainsKey("ChildrenRules"))
+            {
+                var childrenRules = (List<IDictionary<string, object>>) propValueDictionary["ChildrenRules"];
+                foreach (var childrenRule in childrenRules)
+                    instance.ChildrenRules.Add(RuleFactory.CreateRuleFromDictionary<T>(childrenRule));
+            }
 
             return instance;
         }

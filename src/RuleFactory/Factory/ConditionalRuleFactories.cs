@@ -13,10 +13,15 @@ namespace RuleFactory.Factory
             RuleFactories.ReadRuleValues(instance, propValueDictionary);
 
             if (propValueDictionary.ContainsKey("ConditionRule"))
-                instance.ConditionRule = (Rule) propValueDictionary["ConditionRule"];
+            {
+                var conditionRuleDic = (IDictionary<string, object>) propValueDictionary["ConditionRule"];
+                instance.ConditionRule = RuleFactory.CreateRuleFromDictionary<T>(conditionRuleDic);
+            }
             if (propValueDictionary.ContainsKey("TrueRule"))
-                instance.TrueRule = (Rule) propValueDictionary["TrueRule"];
-
+            {
+                var trueRuleDic = (IDictionary<string, object>) propValueDictionary["TrueRule"];
+                instance.TrueRule = RuleFactory.CreateRuleFromDictionary<T>(trueRuleDic);
+            }
             return instance;
         }
 

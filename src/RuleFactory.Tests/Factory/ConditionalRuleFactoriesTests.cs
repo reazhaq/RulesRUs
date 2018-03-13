@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using Newtonsoft.Json;
 using RuleEngine.Rules;
 using RuleFactory.Factory;
 using RuleFactory.Tests.Model;
@@ -21,35 +22,38 @@ namespace RuleFactory.Tests.Factory
         [Fact]
         public void CreateConditionalIfThActionRule()
         {
-            var inputs = new List<object>
-            {
-                "Some Name",
-                ConstantRuleFactories.CreateConstantRuleFromPrimitiveTypeAndString("System.StringComparison",
-                    "CurrentCultureIgnoreCase")
-            };
-            var propValueDictionaryForMethod = new Dictionary<string, object>
-            {
-                {"MethodToCall", "Equals"},
-                {"ObjectToCallMethodOn", "Name"},
-                {"Inputs", inputs}
-            };
-            var conditionRule = MethodCallRuleFactories.CreateMethodCallRule<Game, bool>(propValueDictionaryForMethod);
-
-            var propValueDictionaryForTrue = new Dictionary<string, object>
-            {
-                {"ObjectToUpdate", "Name"},
-                {
-                    "SourceDataRule",
-                    ConstantRuleFactories.CreateConstantRuleFromPrimitiveTypeAndString("System.String", "updated name")
-                }
-            };
-            var trueRule = UpdateValueRuleFactories.CreateUpdateValueRule<Game>(propValueDictionaryForTrue);
-
             var propValueDictionary = new Dictionary<string, object>
             {
-                {"ConditionRule", conditionRule},
-                {"TrueRule", trueRule}
+                {"ConditionRule",
+                    new Dictionary<string, object>
+                    {
+                        {"MethodToCall", "Equals"},
+                        {"RuleType", "MethodCallRule"},
+                        {"BoundingTypes", new List<string>{"RuleFactory.Tests.Model.Game","System.Boolean"}},
+                        {"ObjectToCallMethodOn", "Name"},
+                        {"Inputs", new List<object>{"Some Name", StringComparison.CurrentCultureIgnoreCase}}
+                    }
+                },
+                {"TrueRule",
+                    new Dictionary<string, object>
+                    {
+                        {"RuleType", "UpdateValueRule"},
+                        {"BoundingTypes", new List<string>{"RuleFactory.Tests.Model.Game"}},
+                        {"ObjectToUpdate", "Name"},
+                        {
+                            "SourceDataRule",
+                            new Dictionary<string,object>
+                            {
+                                {"Id", 0},
+                                {"RuleType", "ConstantRule"},
+                                {"BoundingTypes", new List<string>{"System.String"}},
+                                {"Value", "updated name"}
+                            }
+                        }
+                    }
+                }
             };
+            _testOutputHelper.WriteLine(JsonConvert.SerializeObject(propValueDictionary, Formatting.Indented));
 
             var rule = ConditionalRuleFactories.CreateConditionalIfThActionRule<Game>(propValueDictionary);
             var compileResult = rule.Compile();
@@ -57,7 +61,7 @@ namespace RuleFactory.Tests.Factory
             _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
                                         $"{rule.ExpressionDebugView()}");
 
-            var game = new Game {Name = "some name"};
+            var game = new Game { Name = "some name" };
             _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
             rule.Execute(game);
             _testOutputHelper.WriteLine($"after game.Name: {game.Name}");

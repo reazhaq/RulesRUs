@@ -15,7 +15,10 @@ namespace RuleFactory.Factory
                 instance.ObjectToUpdate = propValueDictionary["ObjectToUpdate"].ToString();
 
             if (propValueDictionary.ContainsKey("SourceDataRule"))
-                instance.SourceDataRule = (Rule) propValueDictionary["SourceDataRule"];
+            {
+                var sourceRuleDic = (IDictionary<string,object>) propValueDictionary["SourceDataRule"];
+                instance.SourceDataRule = RuleFactory.CreateRuleFromDictionary<T>(sourceRuleDic);
+            }
 
             return instance;
         }

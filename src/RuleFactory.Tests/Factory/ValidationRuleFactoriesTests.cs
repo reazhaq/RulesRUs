@@ -25,22 +25,28 @@ namespace RuleFactory.Tests.Factory
                 {"ObjectToValidate", "Name.Length"},
                 {
                     "ValueToValidateAgainst",
-                    ConstantRuleFactories.CreateConstantRuleFromPrimitiveTypeAndString("System.Int32", "3")
+                    new Dictionary<string,object>{
+                        {"Id", 0},
+                        {"RuleType", "ConstantRule"},
+                        {"BoundingTypes", new List<string>{"System.Int32"}},
+                        {"Value", "3"}
+                    }
                 }
             };
+
             var rule = ValidationRuleFactories.CreateValidationRule<Game>(propValueDictionary);
 
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");
 
-            var game = new Game { Name = "blah" };
+                var game = new Game { Name = "blah" };
             var result = rule.IsValid(game);
             result.Should().BeTrue();
 
             game.Name = "foo";
-            result = rule.IsValid(game);
-            result.Should().BeFalse();
+                result = rule.IsValid(game);
+                result.Should().BeFalse();
         }
     }
 }

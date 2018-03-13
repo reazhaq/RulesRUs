@@ -6,14 +6,14 @@ namespace RuleFactory.Factory
 {
     public static class ConstantRuleFactories
     {
-        public static Rule CreateConstantRule(IDictionary<string, string> propValueDictionary)
-        {
-            if (propValueDictionary == null) return null;
-            if (propValueDictionary.ContainsKey("TypeName") && propValueDictionary.ContainsKey("Value"))
-                return CreateConstantRuleFromPrimitiveTypeAndString(propValueDictionary["TypeName"], propValueDictionary["Value"]);
+        //public static Rule CreateConstantRule(IDictionary<string, string> propValueDictionary)
+        //{
+        //    if (propValueDictionary == null) return null;
+        //    if (propValueDictionary.ContainsKey("TypeName") && propValueDictionary.ContainsKey("Value"))
+        //        return CreateConstantRuleFromPrimitiveTypeAndString(propValueDictionary["TypeName"], propValueDictionary["Value"]);
 
-            return null;
-        }
+        //    return null;
+        //}
 
         // for most common types that make sense for constant rules
         public static Rule CreateConstantRuleFromPrimitiveTypeAndString(string typeName, string value)

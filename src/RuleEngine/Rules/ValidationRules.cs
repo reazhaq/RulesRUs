@@ -111,6 +111,18 @@ namespace RuleEngine.Rules
 
             if (!string.IsNullOrEmpty(ObjectToValidate))
                 propValueDictionary.Add(nameof(ObjectToValidate), ObjectToValidate);
+
+            if (ChildrenRules.Any())
+            {
+                var children = new List<IDictionary<string, object>>(ChildrenRules.Count);
+                foreach (var childrenRule in ChildrenRules)
+                {
+                    var ruleDic = new Dictionary<string, object>();
+                    childrenRule.WriteRuleValuesToDictionary(ruleDic);
+                    children.Add(ruleDic);
+                }
+                propValueDictionary.Add("ChildrenRules", children);
+            }
         }
     }
 
