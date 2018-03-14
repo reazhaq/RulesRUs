@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -17,6 +18,32 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
         public override bool Compile() => throw new NotImplementedException();
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+            if (ConditionRule != null)
+            {
+                var conditionDictionary = new Dictionary<string,object>();
+                propValueDictionary.Add("ConditionRule", conditionDictionary);
+                ConditionRule.WriteRuleValuesToDictionary(conditionDictionary);
+            }
+
+            if (TrueRule != null)
+            {
+                var trueDictionary = new Dictionary<string,object>();
+                propValueDictionary.Add("TrueRule", trueDictionary);
+                TrueRule.WriteRuleValuesToDictionary(trueDictionary);
+            }
+
+            if (FalseRule != null)
+            {
+                var falseDictionary = new Dictionary<string,object>();
+                propValueDictionary.Add("FalseRule", falseDictionary);
+                FalseRule.WriteRuleValuesToDictionary(falseDictionary);
+            }
+        }
     }
 
     public class ConditionalIfThActionRule<T> : ConditionalRuleBase, IConditionalActionRule<T>
@@ -36,17 +63,6 @@ namespace RuleEngine.Rules
             if (!(trueExpression is LambdaExpression))
                 trueExpression = Expression.Lambda(trueExpression, parameters);
 
-#if DEBUG
-            Debug.WriteLine($"trueExpression: {trueExpression}");
-            var sb = new StringBuilder();
-            trueExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-            sb.Clear();
-            Debug.WriteLine($"conditionalExpression: {conditionalExpression}");
-            conditionalExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
-
             ExpressionForThisRule = Expression.IfThen(
                                     Expression.Invoke(conditionalExpression, parameters.Cast<Expression>()),
                                     Expression.Invoke(trueExpression, parameters.Cast<Expression>()));
@@ -57,12 +73,10 @@ namespace RuleEngine.Rules
         {
             var parameter = Expression.Parameter(typeof(T));
             ExpressionForThisRule = BuildExpression(parameter);
-#if DEBUG
-            Debug.WriteLine($"Expression for ConditionalIfThActionRule: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+
+            Debug.WriteLine($"Expression for ConditionalIfThActionRule: {Environment.NewLine}" +
+                            $"{ExpressionDebugView()}");
+
             CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, parameter).Compile();
             return CompiledDelegate != null;
         }
@@ -73,6 +87,14 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             CompiledDelegate(param);
+        }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+            propValueDictionary.Add("RuleType", "ConditionalIfThActionRule");
+            propValueDictionary.Add("BoundingTypes", new List<string>{typeof(T).ToString()});
         }
     }
 
@@ -98,21 +120,6 @@ namespace RuleEngine.Rules
             if (!(falseExpression is LambdaExpression))
                 falseExpression = Expression.Lambda(falseExpression, parameters);
 
-#if DEBUG
-            Debug.WriteLine($"trueExpression: {trueExpression}");
-            var sb = new StringBuilder();
-            trueExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-            Debug.WriteLine($"falseExpression: {falseExpression}");
-            sb.Clear();
-            falseExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-            Debug.WriteLine($"conditionalExpression: {conditionalExpression}");
-            sb.Clear();
-            conditionalExpression.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
-
             ExpressionForThisRule = Expression.Condition(Expression.Invoke(conditionalExpression, parameters.Cast<Expression>()),
                                     Expression.Invoke(trueExpression, parameters.Cast<Expression>()),
                                     Expression.Invoke(falseExpression, parameters.Cast<Expression>()));
@@ -123,12 +130,10 @@ namespace RuleEngine.Rules
         {
             var parameter = Expression.Parameter(typeof(T));
             ExpressionForThisRule = BuildExpression(parameter);
-#if DEBUG
-            Debug.WriteLine($"Expression for ConditionalIfThElActionRule: {ExpressionForThisRule}");
-            var sb = new StringBuilder();
-            ExpressionForThisRule.TraceNode(sb);
-            Debug.WriteLine(sb);
-#endif
+
+            Debug.WriteLine($"Expression for ConditionalIfThElActionRule:{Environment.NewLine}" +
+                            $"{ExpressionDebugView()}");
+
             CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, parameter).Compile();
             return CompiledDelegate != null;
         }
@@ -139,6 +144,14 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             CompiledDelegate(param);
+        }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+            propValueDictionary.Add("RuleType", "ConditionalIfThElActionRule");
+            propValueDictionary.Add("BoundingTypes", new List<string>{typeof(T).ToString()});
         }
     }
 
@@ -197,6 +210,15 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(param1);
+        }
+
+        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        {
+            if (propValueDictionary == null) return;
+            base.WriteRuleValuesToDictionary(propValueDictionary);
+            propValueDictionary.Add("RuleType", "ConditionalFuncRule");
+            propValueDictionary.Add("BoundingTypes", new List<string>{typeof(T1).ToString(),typeof(T2).ToString()});
+
         }
     }
 }
