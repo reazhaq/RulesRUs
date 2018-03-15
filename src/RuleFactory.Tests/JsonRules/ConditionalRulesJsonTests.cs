@@ -26,7 +26,8 @@ namespace RuleFactory.Tests.JsonRules
             {
                 ConditionRule = new ContainsValueRule<string>
                 {
-                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                    EqualityComparerClassName = "System.StringComparer",
+                    EqualityComparerPropertyName = "OrdinalIgnoreCase",
                     CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
                 },
                 TrueRule = new ConstantRule<string, string> { Value = "element is present in the collection" },

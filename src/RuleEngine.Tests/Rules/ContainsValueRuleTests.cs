@@ -91,16 +91,10 @@ namespace RuleEngine.Tests.Rules
         [Fact]
         public void CreateComparerOnTheFlyUsingReflection()
         {
-            var className = "System.StringComparer";
-            var comparerProp = "OrdinalIgnoreCase";
-
-            var type = Type.GetType(className);
-            var comparerPropInfo = type.GetProperty(comparerProp);
-            var comparer = (IEqualityComparer<string>) comparerPropInfo.GetValue(null);
-
             var containsRule = new ContainsValueRule<string>
             {
-                EqualityComparer = comparer,
+                EqualityComparerClassName = "System.StringComparer",
+                EqualityComparerPropertyName = "OrdinalIgnoreCase",
                 CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
             };
 

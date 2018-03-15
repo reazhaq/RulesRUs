@@ -5,6 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
+using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
@@ -13,10 +14,18 @@ namespace RuleEngine.Rules
         private Func<T, bool> CompiledDelegate { get; set; }
 
         public List<T> CollectionToSearch = new List<T>();
+
+        public string EqualityComparerClassName { get; set; }
+        public string EqualityComparerPropertyName { get;set; }
         public IEqualityComparer<T> EqualityComparer { get; set; } = EqualityComparer<T>.Default;
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
+            if (!string.IsNullOrEmpty(EqualityComparerClassName) && !string.IsNullOrEmpty(EqualityComparerPropertyName))
+                EqualityComparer =
+                    ReflectionExtensions.GetEqualityComparerProperty<T>(EqualityComparerClassName,
+                        EqualityComparerPropertyName);
+
             Expression<Func<T, bool>> expression = s => CollectionToSearch.Contains(s, EqualityComparer);
             ExpressionForThisRule = expression;
             return expression;
