@@ -9,11 +9,11 @@ namespace RuleEngine.Tests.Rules
 {
     public class RegExRuleTests// : IClassFixture<ExpressionRulesFixture>
     {
-        private readonly ITestOutputHelper _testOutcomeHelper;
+        private readonly ITestOutputHelper _testOutputHelper;
 
-        public RegExRuleTests(ITestOutputHelper testOutcomeHelper)
+        public RegExRuleTests(ITestOutputHelper testOutputHelper)
         {
-            _testOutcomeHelper = testOutcomeHelper;
+            _testOutputHelper = testOutputHelper;
         }
 
         [Theory]
@@ -32,12 +32,12 @@ namespace RuleEngine.Tests.Rules
 
             var compileRuleResult = alphaRule.Compile();
             compileRuleResult.Should().BeTrue();
-            _testOutcomeHelper.WriteLine($"{nameof(alphaRule)}:{Environment.NewLine}{alphaRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(alphaRule)}:{Environment.NewLine}{alphaRule.ExpressionDebugView()}");
 
             var game = new Game {Name = nameToUse};
 
             var executeResult = alphaRule.IsMatch(game);
-            _testOutcomeHelper.WriteLine($"executeResult={executeResult}; expectedResult={expectedResult} for nameToUse={nameToUse}");
+            _testOutputHelper.WriteLine($"executeResult={executeResult}; expectedResult={expectedResult} for nameToUse={nameToUse}");
             executeResult.Should().Be(expectedResult);
         }
     }

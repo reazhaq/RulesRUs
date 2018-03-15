@@ -14,11 +14,11 @@ namespace RuleEngine.Tests.Rules
         private readonly Game _game1;
         private readonly Game _game2;
 
-        public MethodCallRuleTests(ExpressionRulesFixture expressionRuleFixture, ITestOutputHelper testOutcomeHelper)
+        public MethodCallRuleTests(ExpressionRulesFixture expressionRuleFixture, ITestOutputHelper testOutputHelper)
         {
             _game1 = expressionRuleFixture.Game1;
             _game2 = expressionRuleFixture.Game2;
-            _testOutputHelper = testOutcomeHelper;
+            _testOutputHelper = testOutputHelper;
         }
 
         [Theory]
