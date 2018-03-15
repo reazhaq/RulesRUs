@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Sample2PlaceOrderRulesFromJsonFile": {
+      "commandName": "Project",
+      "commandLineArgs": "-o"
+    }
+  }
+}
