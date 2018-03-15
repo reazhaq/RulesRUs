@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Newtonsoft.Json;
@@ -13,11 +14,14 @@ namespace RuleFactory
         {
             var jo = new JObject();
             var valueType = value.GetType();
-            jo.Add("RuleType", valueType.Name);
+            if(typeof(Rule).IsAssignableFrom(valueType))
+            {
+                jo.Add("RuleType", valueType.Name);
 
-            var genericTypeArguments = valueType.GenericTypeArguments;
-            if (genericTypeArguments != null)
-                jo.Add("BoundingTypes", string.Join(",", genericTypeArguments.Select(t => t.ToString())));
+                var genericTypeArguments = valueType.GenericTypeArguments;
+                if (genericTypeArguments != null)
+                    jo.Add("BoundingTypes", string.Join(",", genericTypeArguments.Select(t => t.ToString())));
+            }
 
             foreach (var prop in valueType.GetProperties())
             {
@@ -44,14 +48,15 @@ namespace RuleFactory
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             var jsonObject = JObject.Load(reader);
+            Debug.WriteLine($"***** jsonObject: {jsonObject}");
+
             var target = GetRuleObject(objectType, jsonObject);
- 
+
             // populate the properties of the object
             serializer.Populate(jsonObject.CreateReader(), target);
- 
+
             // return the object
             return target;
-
         }
 
         private Rule GetRuleObject(Type objectType, JObject jsonObject)

@@ -20,9 +20,22 @@ namespace RuleFactory
                 case "UpdateValueRule`1":
                 case "UpdateValueRule`2":
                     return CreateUpdateValueRule(boundingTypes);
+                case "MethodVoidCallRule`1":
+                case "MethodCallRule`2":
+                    return CreateMethodVoidCallRule(boundingTypes);
             }
 
             return null;
+        }
+
+        private static Rule CreateMethodVoidCallRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length < 1 || boundingTypes.Length > 2) return null;
+
+            return (boundingTypes.Length == 1
+                ? CreateRule(typeof(MethodVoidCallRule<>), new[] {ReflectionExtensions.GetTypeFor(boundingTypes[0])})
+                : CreateRule(typeof(MethodCallRule<,>),
+                    new[] {ReflectionExtensions.GetTypeFor(boundingTypes[0]), ReflectionExtensions.GetTypeFor(boundingTypes[1])}));
         }
 
         public static Rule CreateConstantRule(string[] boundingTypes)

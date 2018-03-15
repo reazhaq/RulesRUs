@@ -45,7 +45,7 @@ namespace RuleEngine.Rules
             "IsMatch"
         };
 
-        public static Expression[] GetArgumentsExpressions(ParameterExpression param, List<object> inputs, Type[] inputTypes)
+        public static Expression[] GetArgumentsExpressions(ParameterExpression param, List<Rule> inputs, Type[] inputTypes)
         {
             var argumentsExpressions = new Expression[inputs.Count];
             for (var index = 0; index < inputs.Count; index++)

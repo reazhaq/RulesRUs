@@ -20,34 +20,7 @@ namespace RuleEngine.Tests.Rules
             _game2 = expressionRuleFixture.Game2;
             _testOutputHelper = testOutputHelper;
         }
-
-        [Theory]
-        [InlineData("Game 1", true)]
-        [InlineData("game 1", true)]
-        [InlineData("game 2", false)]
-        [InlineData("gaMe 2", false)]
-        public void CallEqualsMethodOnName(string input1, bool expectedResult)
-        {
-            // call Equals method on Name string object
-            // compiles to: Param_0.Name.Equals("Game 1", CurrentCultureIgnoreCase)
-            var nameEqualsRule = new MethodCallRule<Game, bool>
-            {
-                ObjectToCallMethodOn = "Name",
-                MethodToCall = "Equals",
-                Inputs = { input1, StringComparison.CurrentCultureIgnoreCase }
-            };
-
-            var compileResult = nameEqualsRule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(nameEqualsRule)}:{Environment.NewLine}{nameEqualsRule.ExpressionDebugView()}");
-
-            var executeResult = nameEqualsRule.Execute(_game1);
-            executeResult.Should().Be(expectedResult);
-
-            executeResult = nameEqualsRule.Execute(_game2);
-            executeResult.Should().Be(!expectedResult);
-        }
-
+        
         [Theory]
         [InlineData("Game 1", true)]
         [InlineData("game 1", true)]
@@ -61,7 +34,9 @@ namespace RuleEngine.Tests.Rules
             {
                 ObjectToCallMethodOn = "Name",
                 MethodToCall = "Equals",
-                Inputs = { new ConstantRule<string> { Value = input1 }, new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" } }
+                Inputs = { new ConstantRule<string> { Value = input1 },
+                    new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
+                }
             };
 
             var compileResult = nameEqualsRule.Compile();
@@ -104,7 +79,7 @@ namespace RuleEngine.Tests.Rules
             var gameHasPlayerWithCertainId = new MethodCallRule<Game, bool>
             {
                 MethodToCall = "HasPlayer",
-                Inputs = {id}
+                Inputs = {new ConstantRule<int>{Value = id.ToString()}}
             };
 
             var compileResult = gameHasPlayerWithCertainId.Compile();

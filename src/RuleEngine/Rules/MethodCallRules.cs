@@ -15,7 +15,7 @@ namespace RuleEngine.Rules
         // MethodClassName needed for extension methods...
         public string MethodClassName { get; set; }
         public string ObjectToCallMethodOn { get; set; }
-        public List<object> Inputs { get; } = new List<object>();
+        public List<Rule> Inputs { get; } = new List<Rule>();
 
         public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
         public override bool Compile() => throw new NotImplementedException();
