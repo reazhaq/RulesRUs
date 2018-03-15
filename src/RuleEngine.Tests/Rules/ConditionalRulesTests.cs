@@ -42,7 +42,7 @@ namespace RuleEngine.Tests.Rules
 
             searchValue = valueReplacementIfBad.Execute(searchValue);
             _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {searchValue}");
-            searchValue.ShouldBeEquivalentTo(expectedValue);
+            searchValue.Should().Be(expectedValue);
         }
 
         [Theory]
