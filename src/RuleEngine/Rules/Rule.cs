@@ -27,31 +27,9 @@ namespace RuleEngine.Rules
         public abstract Expression BuildExpression(params ParameterExpression[] parameters);
         public abstract bool Compile();
 
-        //public virtual void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        //{
-        //    if(propValueDictionary==null) return;
-
-        //    propValueDictionary.Add("Id", Id);
-        //    if (!string.IsNullOrEmpty(Name))
-        //        propValueDictionary.Add("Name", Name);
-        //    if (!string.IsNullOrEmpty(Description))
-        //        propValueDictionary.Add("Description", Description);
-        //    if (RuleError != null)
-        //    {
-        //        propValueDictionary.Add("RuleError",
-        //            new Dictionary<string, string>
-        //            {
-        //                {"Code", RuleError.Code},
-        //                {"Message", RuleError.Message}
-        //            });
-        //    }
-
-        //}
-
         protected readonly ExpressionType[] LogicalOperatorsToBindChildrenRules =
         {
             ExpressionType.Not,
-            //ExpressionType.And, ExpressionType.Or,
             ExpressionType.AndAlso,ExpressionType.OrElse
         };
 
