@@ -34,6 +34,21 @@ namespace RuleEngine.Utils
             return null;
         }
 
+        public static Type GetTypeFor(string typeName)
+        {
+            var thisType = Type.GetType(typeName);
+            if (thisType != null) return thisType;
+
+            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                thisType = a.GetType(typeName);
+                if (thisType != null)
+                    return thisType;
+            }
+
+            return null;
+        }
+
         public static IEqualityComparer<T> GetEqualityComparerProperty<T>(string className, string comparerProp)
         {
             var type = Type.GetType(className);

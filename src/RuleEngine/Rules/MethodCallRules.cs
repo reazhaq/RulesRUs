@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using RuleEngine.Common;
@@ -33,34 +32,34 @@ namespace RuleEngine.Rules
             return type.GetMethodInfo(methodToCall, inputTypes);
         }
 
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
+        //public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        //{
+        //    if (propValueDictionary == null) return;
+        //    base.WriteRuleValuesToDictionary(propValueDictionary);
 
-            if (!string.IsNullOrEmpty(MethodToCall))
-                propValueDictionary.Add(nameof(MethodToCall), MethodToCall);
-            if (!string.IsNullOrEmpty(MethodClassName))
-                propValueDictionary.Add(nameof(MethodClassName), MethodClassName);
-            if (!string.IsNullOrEmpty(ObjectToCallMethodOn))
-                propValueDictionary.Add(nameof(ObjectToCallMethodOn), ObjectToCallMethodOn);
+        //    if (!string.IsNullOrEmpty(MethodToCall))
+        //        propValueDictionary.Add(nameof(MethodToCall), MethodToCall);
+        //    if (!string.IsNullOrEmpty(MethodClassName))
+        //        propValueDictionary.Add(nameof(MethodClassName), MethodClassName);
+        //    if (!string.IsNullOrEmpty(ObjectToCallMethodOn))
+        //        propValueDictionary.Add(nameof(ObjectToCallMethodOn), ObjectToCallMethodOn);
 
-            var inputs = new List<object>(Inputs.Capacity);
-            foreach (var input in Inputs)
-            {
-                if (input is Rule rule)
-                {
-                    var ruleDictionary = new Dictionary<string, object>();
-                    rule.WriteRuleValuesToDictionary(ruleDictionary);
-                    inputs.Add(ruleDictionary);
-                }
-                else
-                {
-                    inputs.Add(input);
-                }
-            }
-            propValueDictionary.Add(nameof(Inputs), inputs);
-        }
+        //    var inputs = new List<object>(Inputs.Capacity);
+        //    foreach (var input in Inputs)
+        //    {
+        //        if (input is Rule rule)
+        //        {
+        //            var ruleDictionary = new Dictionary<string, object>();
+        //            rule.WriteRuleValuesToDictionary(ruleDictionary);
+        //            inputs.Add(ruleDictionary);
+        //        }
+        //        else
+        //        {
+        //            inputs.Add(input);
+        //        }
+        //    }
+        //    propValueDictionary.Add(nameof(Inputs), inputs);
+        //}
     }
 
     public class MethodVoidCallRule<T> : MethodCallBase, IMethodVoidCallRule<T>
@@ -108,13 +107,13 @@ namespace RuleEngine.Rules
             CompiledDelegate(param);
         }
 
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
-            propValueDictionary.Add("RuleType", "MethodVoidCallRule");
-            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T).ToString() });
-        }
+        //public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        //{
+        //    if (propValueDictionary == null) return;
+        //    base.WriteRuleValuesToDictionary(propValueDictionary);
+        //    propValueDictionary.Add("RuleType", "MethodVoidCallRule");
+        //    propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T).ToString() });
+        //}
     }
 
     public class MethodCallRule<T1, T2> : MethodCallBase, IMethodCallRule<T1, T2>
@@ -162,12 +161,12 @@ namespace RuleEngine.Rules
             return CompiledDelegate(target);
         }
 
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
-            propValueDictionary.Add("RuleType", "MethodCallRule");
-            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T1).ToString(), typeof(T2).ToString() });
-        }
+        //public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        //{
+        //    if (propValueDictionary == null) return;
+        //    base.WriteRuleValuesToDictionary(propValueDictionary);
+        //    propValueDictionary.Add("RuleType", "MethodCallRule");
+        //    propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T1).ToString(), typeof(T2).ToString() });
+        //}
     }
 }

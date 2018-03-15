@@ -92,38 +92,38 @@ namespace RuleEngine.Rules
             return CompiledDelegate(targetObject);
         }
 
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
+        //public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        //{
+        //    if (propValueDictionary == null) return;
+        //    base.WriteRuleValuesToDictionary(propValueDictionary);
 
-            propValueDictionary.Add("RuleType", "ValidationRule");
-            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T).ToString() });
-            if (ValueToValidateAgainst != null)
-            {
-                var ruleDictionary = new Dictionary<string, object>();
-                propValueDictionary.Add($"{ValueToValidateAgainst.GetType()}", ruleDictionary);
-                ValueToValidateAgainst.WriteRuleValuesToDictionary(ruleDictionary);
-            }
+        //    propValueDictionary.Add("RuleType", "ValidationRule");
+        //    propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T).ToString() });
+        //    if (ValueToValidateAgainst != null)
+        //    {
+        //        var ruleDictionary = new Dictionary<string, object>();
+        //        propValueDictionary.Add($"{ValueToValidateAgainst.GetType()}", ruleDictionary);
+        //        ValueToValidateAgainst.WriteRuleValuesToDictionary(ruleDictionary);
+        //    }
 
-            if (!string.IsNullOrEmpty(OperatorToUse))
-                propValueDictionary.Add(nameof(OperatorToUse), OperatorToUse);
+        //    if (!string.IsNullOrEmpty(OperatorToUse))
+        //        propValueDictionary.Add(nameof(OperatorToUse), OperatorToUse);
 
-            if (!string.IsNullOrEmpty(ObjectToValidate))
-                propValueDictionary.Add(nameof(ObjectToValidate), ObjectToValidate);
+        //    if (!string.IsNullOrEmpty(ObjectToValidate))
+        //        propValueDictionary.Add(nameof(ObjectToValidate), ObjectToValidate);
 
-            if (ChildrenRules.Any())
-            {
-                var children = new List<IDictionary<string, object>>(ChildrenRules.Count);
-                foreach (var childrenRule in ChildrenRules)
-                {
-                    var ruleDic = new Dictionary<string, object>();
-                    childrenRule.WriteRuleValuesToDictionary(ruleDic);
-                    children.Add(ruleDic);
-                }
-                propValueDictionary.Add("ChildrenRules", children);
-            }
-        }
+        //    if (ChildrenRules.Any())
+        //    {
+        //        var children = new List<IDictionary<string, object>>(ChildrenRules.Count);
+        //        foreach (var childrenRule in ChildrenRules)
+        //        {
+        //            var ruleDic = new Dictionary<string, object>();
+        //            childrenRule.WriteRuleValuesToDictionary(ruleDic);
+        //            children.Add(ruleDic);
+        //        }
+        //        propValueDictionary.Add("ChildrenRules", children);
+        //    }
+        //}
     }
 
     public class ValidationRule<T1, T2> : Rule, IValidationRule<T1, T2>
@@ -176,22 +176,22 @@ namespace RuleEngine.Rules
             return CompiledDelegate(param1, param2);
         }
 
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
+        //public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
+        //{
+        //    if (propValueDictionary == null) return;
+        //    base.WriteRuleValuesToDictionary(propValueDictionary);
 
-            propValueDictionary.Add("RuleType", "ValidationRule");
-            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T1).ToString(), typeof(T2).ToString() });
+        //    propValueDictionary.Add("RuleType", "ValidationRule");
+        //    propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T1).ToString(), typeof(T2).ToString() });
 
-            if (!string.IsNullOrEmpty(OperatorToUse))
-                propValueDictionary.Add(nameof(OperatorToUse), OperatorToUse);
+        //    if (!string.IsNullOrEmpty(OperatorToUse))
+        //        propValueDictionary.Add(nameof(OperatorToUse), OperatorToUse);
 
-            if (!string.IsNullOrEmpty(ObjectToValidate1))
-                propValueDictionary.Add(nameof(ObjectToValidate1), ObjectToValidate1);
+        //    if (!string.IsNullOrEmpty(ObjectToValidate1))
+        //        propValueDictionary.Add(nameof(ObjectToValidate1), ObjectToValidate1);
 
-            if (!string.IsNullOrEmpty(ObjectToValidate2))
-                propValueDictionary.Add(nameof(ObjectToValidate2), ObjectToValidate2);
-        }
+        //    if (!string.IsNullOrEmpty(ObjectToValidate2))
+        //        propValueDictionary.Add(nameof(ObjectToValidate2), ObjectToValidate2);
+        //}
     }
 }

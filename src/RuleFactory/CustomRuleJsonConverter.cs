@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RuleEngine.Rules;
@@ -14,7 +13,7 @@ namespace RuleFactory
         {
             var jo = new JObject();
             var valueType = value.GetType();
-            jo.Add("RuleType", valueType.ToString());
+            jo.Add("RuleType", valueType.Name);
 
             var genericTypeArguments = valueType.GenericTypeArguments;
             if (genericTypeArguments != null)
@@ -44,7 +43,27 @@ namespace RuleFactory
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            throw new NotImplementedException();
+            var jsonObject = JObject.Load(reader);
+            var target = GetRuleObject(objectType, jsonObject);
+ 
+            // populate the properties of the object
+            serializer.Populate(jsonObject.CreateReader(), target);
+ 
+            // return the object
+            return target;
+
+        }
+
+        private Rule GetRuleObject(Type objectType, JObject jsonObject)
+        {
+            Debug.WriteLine($"***** objectType: {objectType}");
+            Debug.WriteLine($"********* jsonObject: {jsonObject}");
+            var ruleType = jsonObject["RuleType"].ToObject<string>();
+            Debug.WriteLine($"******* ruleType: {ruleType}");
+            var boundingTypes = jsonObject["BoundingTypes"].ToObject<string>();
+            Debug.WriteLine($"***** boundingTypes: {boundingTypes}");
+            
+            return RuleFactory.CreateRule(ruleType, boundingTypes.Split(','));
         }
 
         public override bool CanConvert(Type objectType)
