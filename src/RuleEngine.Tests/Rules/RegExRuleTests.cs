@@ -7,7 +7,7 @@ using Xunit.Abstractions;
 
 namespace RuleEngine.Tests.Rules
 {
-    public class RegExRuleTests// : IClassFixture<ExpressionRulesFixture>
+    public class RegExRuleTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
 

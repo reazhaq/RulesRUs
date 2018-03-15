@@ -31,9 +31,20 @@ namespace RuleFactory
                     return CreateConditionalFunctionRule(boundingTypes);
                 case "ContainsValueRule`1":
                     return CreateContainsValueRule(boundingTypes);
+                case "RegExRule`1":
+                    return CreateRegExRule(boundingTypes);
+                default:
+                    break;
             }
 
             return null;
+        }
+
+        private static Rule CreateRegExRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length != 1) return null;
+            return CreateRule(typeof(RegExRule<>),
+                new[] { ReflectionExtensions.GetTypeFor(boundingTypes[0]) });
         }
 
         private static Rule CreateContainsValueRule(string[] boundingTypes)
