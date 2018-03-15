@@ -2,7 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Reaz</Authors>
+    <Company>Bluebonnet Software</Company>
+    <Description>Rule factory to create expression tree based rules.</Description>
+    <PackageLicenseUrl>https://github.com/reazhaq/RulesRUs/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl></PackageProjectUrl>
+    <RepositoryUrl>https://github.com/reazhaq/RulesRUs</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RuleEngine\RuleEngine.csproj" />

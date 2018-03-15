@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Text.RegularExpressions;
@@ -65,22 +64,6 @@ namespace RuleEngine.Rules
             return Expression.Call(isMatchMethod, fieldOrProperty,
                 Expression.Constant(RegExToUse, typeof(string)),
                 Expression.Constant(RegexOptions.IgnoreCase, typeof(RegexOptions)));
-        }
-
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
-
-            propValueDictionary.Add("RuleType", "RegExRule");
-            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T).ToString() });
-
-            if (!string.IsNullOrEmpty(RegExToUse))
-                propValueDictionary.Add(nameof(RegExToUse), RegExToUse);
-            if (!string.IsNullOrEmpty(OperatorToUse))
-                propValueDictionary.Add(nameof(OperatorToUse), OperatorToUse);
-            if (!string.IsNullOrEmpty(ObjectToValidate))
-                propValueDictionary.Add(nameof(ObjectToValidate), ObjectToValidate);
         }
     }
 }

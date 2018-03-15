@@ -42,7 +42,7 @@ namespace RuleEngine.Tests.Rules
 
             searchValue = valueReplacementIfBad.Execute(searchValue);
             _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {searchValue}");
-            searchValue.ShouldBeEquivalentTo(expectedValue);
+            searchValue.Should().Be(expectedValue);
         }
 
         [Theory]
@@ -144,7 +144,9 @@ namespace RuleEngine.Tests.Rules
                 {
                     ObjectToCallMethodOn = "Name",
                     MethodToCall = "Equals",
-                    Inputs = { "some name", StringComparison.CurrentCultureIgnoreCase }
+                    Inputs = { new ConstantRule<string> { Value = "some name" }, 
+                            new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
+                    }
                 },
                 TrueRule = new UpdateValueRule<Game>
                 {
@@ -158,7 +160,7 @@ namespace RuleEngine.Tests.Rules
             _testOutputHelper.WriteLine($"{nameof(conditionalUpdateValue)}:{Environment.NewLine}" +
                                         $"{conditionalUpdateValue.ExpressionDebugView()}");
 
-            var game = new Game {Name = "some name"};
+            var game = new Game { Name = "some name" };
             _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
             conditionalUpdateValue.Execute(game);
             _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
@@ -174,7 +176,9 @@ namespace RuleEngine.Tests.Rules
                 {
                     ObjectToCallMethodOn = "Name",
                     MethodToCall = "Equals",
-                    Inputs = { "some name", StringComparison.CurrentCultureIgnoreCase }
+                    Inputs = { new ConstantRule<string> { Value = "some name" }, 
+                        new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
+                    }
                 },
                 TrueRule = new UpdateValueRule<Game>
                 {
@@ -193,7 +197,7 @@ namespace RuleEngine.Tests.Rules
             _testOutputHelper.WriteLine($"{nameof(conditionalIfThElRule)}:{Environment.NewLine}" +
                                         $"{conditionalIfThElRule.ExpressionDebugView()}");
 
-            var game = new Game {Name = "some name"};
+            var game = new Game { Name = "some name" };
             _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
             conditionalIfThElRule.Execute(game);
             _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
@@ -213,12 +217,12 @@ namespace RuleEngine.Tests.Rules
                 {
                     ObjectToValidate = "Country.CountryCode",
                     OperatorToUse = "Equal",
-                    ValueToValidateAgainst = new ConstantRule<string>{Value = "ab"}
+                    ValueToValidateAgainst = new ConstantRule<string> { Value = "ab" }
                 },
                 TrueRule = new UpdateValueRule<Player>
                 {
                     ObjectToUpdate = "CurrentCoOrdinates.X",
-                    SourceDataRule = new ConstantRule<int>{Value = "999"}
+                    SourceDataRule = new ConstantRule<int> { Value = "999" }
                 }
             };
 
@@ -229,8 +233,8 @@ namespace RuleEngine.Tests.Rules
 
             var player = new Player
             {
-                Country = new Country {CountryCode = "ab"},
-                CurrentCoOrdinates = new CoOrdinate {X = 1, Y = 1}
+                Country = new Country { CountryCode = "ab" },
+                CurrentCoOrdinates = new CoOrdinate { X = 1, Y = 1 }
             };
             conditionalUpdate.Execute(player);
             player.CurrentCoOrdinates.X.Should().Be(999);

@@ -12,15 +12,15 @@ namespace RuleEngine.Tests.Rules
 {
     public class ExpressionFuncRulesTests : IClassFixture<ExpressionRulesFixture>
     {
-        private readonly ITestOutputHelper _testOutcomeHelper;
+        private readonly ITestOutputHelper _testOutputHelper;
         private readonly Game _game1;
         private readonly Game _game2;
 
-        public ExpressionFuncRulesTests(ExpressionRulesFixture expressionRuleFixture, ITestOutputHelper testOutcomeHelper)
+        public ExpressionFuncRulesTests(ExpressionRulesFixture expressionRuleFixture, ITestOutputHelper testOutputHelper)
         {
             _game1 = expressionRuleFixture.Game1;
             _game2 = expressionRuleFixture.Game2;
-            _testOutcomeHelper = testOutcomeHelper;
+            _testOutputHelper = testOutputHelper;
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace RuleEngine.Tests.Rules
             var ruleReturningAFixedValue = new ExpressionFuncRule<int>(() => int.MaxValue);
             var compileResult = ruleReturningAFixedValue.Compile();
             compileResult.Should().BeTrue();
-            _testOutcomeHelper.WriteLine($"{nameof(ruleReturningAFixedValue)}:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"{nameof(ruleReturningAFixedValue)}:{Environment.NewLine}" +
                                          $"{ruleReturningAFixedValue.ExpressionDebugView()}");
 
             var executeResult = ruleReturningAFixedValue.Execute();
@@ -44,7 +44,7 @@ namespace RuleEngine.Tests.Rules
                                                 g => (g == null || g.Players == null) ? 0 : g.Players.Count);
             var compileResult = ruleReturningCountOfPlayers.Compile();
             compileResult.Should().BeTrue();
-            _testOutcomeHelper.WriteLine($"{nameof(ruleReturningCountOfPlayers)}:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"{nameof(ruleReturningCountOfPlayers)}:{Environment.NewLine}" +
                                          $"{ruleReturningCountOfPlayers.ExpressionDebugView()}");
 
             var executeResult = ruleReturningCountOfPlayers.Execute(_game1);
@@ -60,7 +60,7 @@ namespace RuleEngine.Tests.Rules
                                                 );
             var compileResult = ruleReturningTotalCountOfPlayers.Compile();
             compileResult.Should().BeTrue();
-            _testOutcomeHelper.WriteLine($"{nameof(ruleReturningTotalCountOfPlayers)}:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"{nameof(ruleReturningTotalCountOfPlayers)}:{Environment.NewLine}" +
                                          $"{ruleReturningTotalCountOfPlayers.ExpressionDebugView()}");
 
             var executeResult = ruleReturningTotalCountOfPlayers.Execute(_game1, _game2);
@@ -74,18 +74,18 @@ namespace RuleEngine.Tests.Rules
                 g1.Players.Except(g2.Players, new PlayerCountryEqualityComparer())
             );
             var compileResult = ruleFindCountriesNotInOther.Compile();
-            _testOutcomeHelper.WriteLine($"{nameof(ruleFindCountriesNotInOther)}:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"{nameof(ruleFindCountriesNotInOther)}:{Environment.NewLine}" +
                                          $"{ruleFindCountriesNotInOther.ExpressionDebugView()}");
 
             compileResult.Should().BeTrue();
             var executeResult = ruleFindCountriesNotInOther.Execute(_game1, _game2).ToList();
             executeResult.Should().BeOfType(typeof(List<Player>));
-            _testOutcomeHelper.WriteLine(".............g1.except(g2)....");
-            executeResult.ForEach(p => _testOutcomeHelper.WriteLine($"country: {p.Country.CountryCode}"));
+            _testOutputHelper.WriteLine(".............g1.except(g2)....");
+            executeResult.ForEach(p => _testOutputHelper.WriteLine($"country: {p.Country.CountryCode}"));
 
             executeResult = ruleFindCountriesNotInOther.Execute(_game2, _game1).ToList();
-            _testOutcomeHelper.WriteLine(".............g2.except(g1)....");
-            executeResult.ForEach(p => _testOutcomeHelper.WriteLine($"country: {p.Country.CountryCode}"));
+            _testOutputHelper.WriteLine(".............g2.except(g1)....");
+            executeResult.ForEach(p => _testOutputHelper.WriteLine($"country: {p.Country.CountryCode}"));
         }
     }
 }

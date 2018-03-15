@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using RuleEngine.Common;
@@ -13,13 +12,6 @@ namespace RuleEngine.Rules
 
         public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
         public override bool Compile() => throw new NotImplementedException();
-
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
-            propValueDictionary.Add(nameof(ObjectToUpdate), ObjectToUpdate);
-        }
     }
 
     public class UpdateValueRule<T> : UpdateValueRuleBase, IUpdateValueRule<T>
@@ -58,22 +50,6 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             CompiledDelegate(targetObject);
-        }
-
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
-
-            propValueDictionary.Add("RuleType", "UpdateValueRule");
-            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T).ToString() });
-
-            if(SourceDataRule!=null)
-            {
-                var subDictionary = new Dictionary<string, object>();
-                propValueDictionary.Add(nameof(SourceDataRule), subDictionary);
-                SourceDataRule.WriteRuleValuesToDictionary(subDictionary);
-            }
         }
     }
 
@@ -114,15 +90,6 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             CompiledDelegate(targetObject, source);
-        }
-
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
-
-            propValueDictionary.Add("RuleType", "UpdateValueRule");
-            propValueDictionary.Add("BoundingTypes", new List<string> { typeof(T1).ToString(), typeof(T2).ToString() });
         }
     }
 }

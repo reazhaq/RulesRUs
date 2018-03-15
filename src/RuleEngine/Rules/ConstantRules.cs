@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using RuleEngine.Common;
@@ -64,16 +63,6 @@ namespace RuleEngine.Rules
 
             return CompiledDelegate();
         }
-
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
-            propValueDictionary.Add("RuleType", "ConstantRule");
-            propValueDictionary.Add("BoundingTypes", new List<string>{typeof(T).ToString()});
-
-            propValueDictionary.Add("Value", Value);
-        }
     }
 
     public class ConstantRule<T1, T2> : ConstantRuleBase, IConstantRule<T1, T2>
@@ -112,16 +101,6 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("Rule has to be compiled before it can be executed");
 
             return CompiledDelegate(param);
-        }
-
-        public override void WriteRuleValuesToDictionary(IDictionary<string, object> propValueDictionary)
-        {
-            if (propValueDictionary == null) return;
-            base.WriteRuleValuesToDictionary(propValueDictionary);
-            propValueDictionary.Add("RuleType", "ConstantRule");
-            propValueDictionary.Add("BoundingTypes", new List<string>{typeof(T1).ToString(),typeof(T2).ToString()});
-
-            propValueDictionary.Add("Value", Value);
         }
     }
 }

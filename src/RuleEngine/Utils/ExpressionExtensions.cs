@@ -7,7 +7,6 @@ namespace RuleEngine.Utils
 {
     public static class ExpressionExtensions
     {
-        static ExpressionExtensions(){}
         private const int NumberOfSpaces = 2;
         public static string GetDebugView(this Expression exp)
         {

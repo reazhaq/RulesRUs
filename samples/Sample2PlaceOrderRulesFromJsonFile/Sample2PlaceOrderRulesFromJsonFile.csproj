@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\RuleEngine\RuleEngine.csproj" />
+    <ProjectReference Include="..\..\src\RuleFactory\RuleFactory.csproj" />
   </ItemGroup>
 
 </Project>
