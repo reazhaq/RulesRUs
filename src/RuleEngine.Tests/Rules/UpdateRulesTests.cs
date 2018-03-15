@@ -27,7 +27,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = nameChangeRule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}{nameChangeRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}" +
+                                        $"{nameChangeRule.ExpressionDebugView()}");
 
             _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
             nameChangeRule.UpdateFieldOrPropertyValue(game, "new name");
@@ -47,7 +48,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = nameChangeRule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}{nameChangeRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}" +
+                                        $"{nameChangeRule.ExpressionDebugView()}");
 
             _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
             nameChangeRule.UpdateFieldOrPropertyValue(game);

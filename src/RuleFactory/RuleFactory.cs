@@ -17,6 +17,9 @@ namespace RuleFactory
                 case "ValidationRule`1":
                 case "ValidationRule`2":
                     return CreateValidationRule(boundingTypes);
+                case "UpdateValueRule`1":
+                case "UpdateValueRule`2":
+                    return CreateUpdateValueRule(boundingTypes);
             }
 
             return null;
@@ -40,6 +43,17 @@ namespace RuleFactory
                     ? CreateRule(typeof(ValidationRule<>), new[] {ReflectionExtensions.GetTypeFor(boundingTypes[0])})
                     : CreateRule(typeof(ValidationRule<,>),
                         new[] {ReflectionExtensions.GetTypeFor(boundingTypes[0]), ReflectionExtensions.GetTypeFor(boundingTypes[1])}));
+        }
+
+        public static Rule CreateUpdateValueRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length < 1 || boundingTypes.Length > 2) return null;
+
+            return (boundingTypes.Length == 1
+                ? CreateRule(typeof(UpdateValueRule<>), new[] {ReflectionExtensions.GetTypeFor(boundingTypes[0])})
+                : CreateRule(typeof(UpdateValueRule<,>),
+                    new[] {ReflectionExtensions.GetTypeFor(boundingTypes[0]), ReflectionExtensions.GetTypeFor(boundingTypes[1])}));
+
         }
 
         private static Rule CreateRule(Type genericType, Type[] typesToBoundTo)
