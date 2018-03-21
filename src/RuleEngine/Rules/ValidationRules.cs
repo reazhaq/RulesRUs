@@ -24,8 +24,8 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
             if (!Enum.TryParse(OperatorToUse, out ExpressionType operatorToUse) ||
-                            (!LogicalOperatorsToUseAtTheRuleLevel.Contains(operatorToUse) && !LogicalOperatorsToBindChildrenRules.Contains(operatorToUse))
-                        )
+                (!LogicalOperatorsToUseAtTheRuleLevel.Contains(operatorToUse) &&
+                 !LogicalOperatorsToBindChildrenRules.Contains(operatorToUse)))
                 throw new RuleEngineException($"Bad {nameof(operatorToUse)} value {operatorToUse}"); //todo: update message 
 
             var rootParameterExpression = parameters[0];
@@ -107,8 +107,7 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with two parameters of {typeof(T1)} and {typeof(T2)}");
 
             if (!Enum.TryParse(OperatorToUse, out ExpressionType operatorToUse) ||
-                !LogicalOperatorsToUseAtTheRuleLevel.Contains(operatorToUse)
-            )
+                !LogicalOperatorsToUseAtTheRuleLevel.Contains(operatorToUse))
                 throw new RuleEngineException($"Bad {nameof(operatorToUse)} value {operatorToUse}"); //todo: update message 
 
             var param1 = parameters[0];
