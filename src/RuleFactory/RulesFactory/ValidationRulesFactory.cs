@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Text;
 using RuleEngine.Rules;
 using RuleEngine.Utils;
 
@@ -28,13 +25,24 @@ namespace RuleFactory.RulesFactory
             OrElse
         }
 
-        public static ValidationRule<T> CreateValidationRule<T>(Expression<Func<T, object>> objectToValidate, LogicalOperatorAtTheRootLevel operatorToUse, Rule valueValueToValidateAgainst)
+        public static ValidationRule<T> CreateValidationRule<T>(LogicalOperatorAtTheRootLevel operatorToUse,
+            Rule valueToValidateAgainst)
+        {
+            return new ValidationRule<T>
+            {
+                OperatorToUse = operatorToUse.ToString(),
+                ValueToValidateAgainst = valueToValidateAgainst
+            };
+        }
+
+        public static ValidationRule<T> CreateValidationRule<T>(Expression<Func<T, object>> objectToValidate,
+                                            LogicalOperatorAtTheRootLevel operatorToUse, Rule valueToValidateAgainst)
         {
             return new ValidationRule<T>
             {
                 ObjectToValidate = objectToValidate.GetObjectToValidateFromExpression(),
                 OperatorToUse = operatorToUse.ToString(),
-                ValueToValidateAgainst = valueValueToValidateAgainst
+                ValueToValidateAgainst = valueToValidateAgainst
             };
         }
 
