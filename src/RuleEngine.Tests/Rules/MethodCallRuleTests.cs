@@ -41,7 +41,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = nameEqualsRule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(nameEqualsRule)}:{Environment.NewLine}{nameEqualsRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(nameEqualsRule)}:{Environment.NewLine}" +
+                                        $"{nameEqualsRule.ExpressionDebugView()}");
 
             var executeResult = nameEqualsRule.Execute(_game1);
             executeResult.Should().Be(expectedResult);
