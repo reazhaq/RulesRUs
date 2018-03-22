@@ -7,6 +7,43 @@ namespace RuleEngine.Utils
 {
     public static class ExpressionExtensions
     {
+        public static string GetObjectToValidateFromExpression(this Expression exp)
+        {
+            var lastFieldOrProperty = (string)null;
+
+            var keepLooping = true;
+            MemberExpression memberExpression = null;
+            while (keepLooping)
+            {
+                switch (exp.NodeType)
+                {
+                    case ExpressionType.Lambda:
+                        exp = ((LambdaExpression)exp).Body;
+                        break;
+                    case ExpressionType.Convert:
+                        exp = ((UnaryExpression)exp).Operand;
+                        break;
+                    case ExpressionType.MemberAccess:
+                        memberExpression = ((MemberExpression)exp);
+                        lastFieldOrProperty = memberExpression.Member.Name;
+                        keepLooping = false;
+                        break;
+                }
+            }
+
+            // look for the rest of
+            var suffixPart = (string)null;
+            while (memberExpression != null && memberExpression.Expression.NodeType == ExpressionType.MemberAccess)
+            {
+                var propInfo = memberExpression.Expression.GetType().GetProperty("Member");
+                var propValue = propInfo.GetValue(memberExpression.Expression, null) as PropertyInfo;
+                if (propValue != null)
+                    suffixPart = string.Format($"{propValue.Name}.{suffixPart}");
+                memberExpression = memberExpression.Expression as MemberExpression;
+            }
+            return (suffixPart !=null ? string.Format($"{suffixPart}{lastFieldOrProperty}") : lastFieldOrProperty);
+        }
+
         private static readonly string Nl = Environment.NewLine;
         private const int NumberOfSpaces = 2;
         public static string GetDebugView(this Expression exp)

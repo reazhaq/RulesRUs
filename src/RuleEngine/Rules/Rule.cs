@@ -45,22 +45,14 @@ namespace RuleEngine.Rules
             "IsMatch"
         };
 
-        public static Expression[] GetArgumentsExpressions(ParameterExpression param, List<Rule> inputs, Type[] inputTypes)
+        public static Expression[] GetArgumentsExpressions(ParameterExpression param, List<Rule> paramList, Type[] paramTypes)
         {
-            var argumentsExpressions = new Expression[inputs.Count];
-            for (var index = 0; index < inputs.Count; index++)
+            var argumentsExpressions = new Expression[paramList.Count];
+            for (var index = 0; index < paramList.Count; index++)
             {
-                var input = inputs[index];
-                if (input is Rule)
-                {
-                    argumentsExpressions[index] = (input as Rule).BuildExpression(param);
-                    inputTypes[index] = argumentsExpressions[index].Type;
-                }
-                else
-                {
-                    argumentsExpressions[index] = Expression.Constant(input);
-                    inputTypes[index] = input.GetType();
-                }
+                var paramRule = paramList[index];
+                argumentsExpressions[index] = paramRule.BuildExpression(param);
+                paramTypes[index] = argumentsExpressions[index].Type;
             }
             return argumentsExpressions;
         }

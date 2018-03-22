@@ -34,7 +34,7 @@ namespace RuleEngine.Tests.Rules
             {
                 ObjectToCallMethodOn = "Name",
                 MethodToCall = "Equals",
-                Inputs = { new ConstantRule<string> { Value = input1 },
+                MethodParameters = { new ConstantRule<string> { Value = input1 },
                     new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
                 }
             };
@@ -79,7 +79,7 @@ namespace RuleEngine.Tests.Rules
             var gameHasPlayerWithCertainId = new MethodCallRule<Game, bool>
             {
                 MethodToCall = "HasPlayer",
-                Inputs = {new ConstantRule<int>{Value = id.ToString()}}
+                MethodParameters = {new ConstantRule<int>{Value = id.ToString()}}
             };
 
             var compileResult = gameHasPlayerWithCertainId.Compile();
@@ -99,7 +99,7 @@ namespace RuleEngine.Tests.Rules
             {
                 MethodToCall = "Contains",
                 ObjectToCallMethodOn = "Description",
-                Inputs = { new ConstantRule<string> { Value = "cool" } }
+                MethodParameters = { new ConstantRule<string> { Value = "cool" } }
             };
 
             var compileResult = gameNameContainsKeyWrodCool.Compile();
