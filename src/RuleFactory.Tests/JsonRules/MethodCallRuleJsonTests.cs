@@ -9,13 +9,13 @@ using Xunit.Abstractions;
 
 namespace RuleFactory.Tests.JsonRules
 {
-    public class MethodCallRuleJsonTests : IClassFixture<ExpressionRulesJsonFixture>
+    public class MethodCallRuleJsonTests : IClassFixture<ExpressionRulesFixture>
     {
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly Game _game1;
         private readonly Game _game2;
 
-        public MethodCallRuleJsonTests(ExpressionRulesJsonFixture fixture, ITestOutputHelper testOutputHelper)
+        public MethodCallRuleJsonTests(ExpressionRulesFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _game1 = fixture.Game1;
             _game2 = fixture.Game2;

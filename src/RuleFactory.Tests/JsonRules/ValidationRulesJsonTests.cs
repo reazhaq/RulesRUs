@@ -9,12 +9,12 @@ using Xunit.Abstractions;
 
 namespace RuleFactory.Tests.JsonRules
 {
-    public class ValidationRulesJsonTests : IClassFixture<ValidationRulesJsonFixture>
+    public class ValidationRulesJsonTests : IClassFixture<ValidationRulesFixture>
     {
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly Game _game;
 
-        public ValidationRulesJsonTests(ValidationRulesJsonFixture validationRulesJsonFixture, ITestOutputHelper testOutputHelper)
+        public ValidationRulesJsonTests(ValidationRulesFixture validationRulesJsonFixture, ITestOutputHelper testOutputHelper)
         {
             _game = validationRulesJsonFixture.Game;
             _testOutputHelper = testOutputHelper;
@@ -31,7 +31,8 @@ namespace RuleFactory.Tests.JsonRules
             };
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}{rule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
 
             var not5Rule = new ValidationRule<int>
             {
@@ -41,7 +42,8 @@ namespace RuleFactory.Tests.JsonRules
             };
             compileResult = not5Rule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(not5Rule)}:{Environment.NewLine}{not5Rule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(not5Rule)}:{Environment.NewLine}" +
+                                        $"{not5Rule.ExpressionDebugView()}");
 
             var ruleExecuteResult = rule.IsValid(5);
             ruleExecuteResult.Should().BeTrue();

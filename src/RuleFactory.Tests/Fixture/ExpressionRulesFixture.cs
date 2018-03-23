@@ -4,13 +4,13 @@ using RuleFactory.Tests.Model;
 
 namespace RuleFactory.Tests.Fixture
 {
-    public class ExpressionRulesJsonFixture : IDisposable
+    public class ExpressionRulesFixture : IDisposable
     {
         public void Dispose(){}
         public Game Game1 { get; }
         public Game Game2 { get; }
 
-        public ExpressionRulesJsonFixture()
+        public ExpressionRulesFixture()
         {
             var someRandomNumber = new Random();
             Game1 = new Game
