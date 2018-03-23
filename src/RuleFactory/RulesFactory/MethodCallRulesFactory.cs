@@ -6,7 +6,7 @@ using RuleEngine.Utils;
 
 namespace RuleFactory.RulesFactory
 {
-    public class MethodCallRulesFactory
+    public static class MethodCallRulesFactory
     {
         public static MethodVoidCallRule<T> CreateMethodVoidCallRule<T>(string methodToCall, string methodClassName,
             Expression<Func<T, object>> objectToCallMethodOn, IList<Rule> methodParams)
