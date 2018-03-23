@@ -13,7 +13,6 @@ namespace RuleEngine.Rules
         private Func<T, bool> CompiledDelegate { get; set; }
 
         public string RegExToUse;
-        public string OperatorToUse;
         public string ObjectToValidate { get; set; }
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
@@ -22,17 +21,8 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
             var param = parameters[0];
-
-            if (!RegularExpressionOperator.Contains(OperatorToUse))
-                throw new RuleEngineException($"Bad {OperatorToUse} for RegExRule"); //todo: update message
-
-            if (OperatorToUse == "IsMatch")
-            {
-                ExpressionForThisRule = GetExpressionWithSubPropertyForIsMatch(param);
-                return ExpressionForThisRule;
-            }
-
-            return null;
+            ExpressionForThisRule = GetExpressionWithSubPropertyForIsMatch(param);
+            return ExpressionForThisRule;
         }
 
         public override bool Compile()

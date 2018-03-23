@@ -40,11 +40,6 @@ namespace RuleEngine.Rules
             ExpressionType.LessThan, ExpressionType.LessThanOrEqual
         };
 
-        protected readonly string[] RegularExpressionOperator =
-        {
-            "IsMatch"
-        };
-
         public static Expression[] GetArgumentsExpressions(ParameterExpression param, List<Rule> paramList, Type[] paramTypes)
         {
             var argumentsExpressions = new Expression[paramList.Count];
