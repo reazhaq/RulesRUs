@@ -63,7 +63,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = playerCountRule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(playerCountRule)}:{Environment.NewLine}{playerCountRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(playerCountRule)}:{Environment.NewLine}" +
+                                        $"{playerCountRule.ExpressionDebugView()}");
 
             var currentActiveState = _game1.Active;
             playerCountRule.Execute(_game1);
@@ -85,7 +86,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = gameHasPlayerWithCertainId.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(gameHasPlayerWithCertainId)}:{Environment.NewLine}{gameHasPlayerWithCertainId.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(gameHasPlayerWithCertainId)}:{Environment.NewLine}" +
+                                        $"{gameHasPlayerWithCertainId.ExpressionDebugView()}");
 
             var executeResult = gameHasPlayerWithCertainId.Execute(_game1);
             executeResult.Should().Be(expectedResult);

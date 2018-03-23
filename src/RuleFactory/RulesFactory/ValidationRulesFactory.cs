@@ -40,7 +40,7 @@ namespace RuleFactory.RulesFactory
         {
             return new ValidationRule<T>
             {
-                ObjectToValidate = objectToValidate.GetObjectToValidateFromExpression(),
+                ObjectToValidate = objectToValidate?.GetObjectToValidateFromExpression(),
                 OperatorToUse = operatorToUse.ToString(),
                 ValueToValidateAgainst = valueToValidateAgainst
             };
@@ -53,7 +53,8 @@ namespace RuleFactory.RulesFactory
             {
                 OperatorToUse = operatorToUse.ToString()
             };
-            rule.ChildrenRules.AddRange(childrenRules);
+            if (childrenRules != null)
+                rule.ChildrenRules.AddRange(childrenRules);
             return rule;
         }
 
@@ -63,8 +64,8 @@ namespace RuleFactory.RulesFactory
             return new ValidationRule<T1, T2>
             {
                 OperatorToUse = operatorToUse.ToString(),
-                ObjectToValidate1 = objectToValidate1.GetObjectToValidateFromExpression(),
-                ObjectToValidate2 = objectToValidate2.GetObjectToValidateFromExpression()
+                ObjectToValidate1 = objectToValidate1?.GetObjectToValidateFromExpression(),
+                ObjectToValidate2 = objectToValidate2?.GetObjectToValidateFromExpression()
             };
         }
     }

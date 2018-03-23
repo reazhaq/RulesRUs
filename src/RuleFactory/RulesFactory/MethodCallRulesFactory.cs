@@ -8,6 +8,20 @@ namespace RuleFactory.RulesFactory
 {
     public class MethodCallRulesFactory
     {
+        public static MethodVoidCallRule<T> CreateMethodVoidCallRule<T>(string methodToCall, string methodClassName,
+            Expression<Func<T, object>> objectToCallMethodOn, IList<Rule> methodParams)
+        {
+            var rule = new MethodVoidCallRule<T>
+            {
+                MethodToCall = methodToCall,
+                MethodClassName = methodClassName,
+                ObjectToCallMethodOn = objectToCallMethodOn?.GetObjectToValidateFromExpression()
+            };
+            if (methodParams != null)
+                rule.MethodParameters.AddRange(methodParams);
+            return rule;
+        }
+
         public static MethodCallRule<T1, T2> CreateMethodCallRule<T1, T2>(string methodToCall, string methodClassName,
             Expression<Func<T1, object>> objectToCallMethodOn, IList<Rule> methodParams)
         {
@@ -15,9 +29,10 @@ namespace RuleFactory.RulesFactory
             {
                 MethodToCall = methodToCall,
                 MethodClassName = methodClassName,
-                ObjectToCallMethodOn = objectToCallMethodOn.GetObjectToValidateFromExpression()
+                ObjectToCallMethodOn = objectToCallMethodOn?.GetObjectToValidateFromExpression()
             };
-            rule.MethodParameters.AddRange(methodParams);
+            if (methodParams != null)
+                rule.MethodParameters.AddRange(methodParams);
             return rule;
         }
     }
