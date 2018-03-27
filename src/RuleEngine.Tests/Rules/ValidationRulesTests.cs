@@ -116,7 +116,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = rankingLessThan100Rule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(rankingLessThan100Rule)}:{Environment.NewLine}{rankingLessThan100Rule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(rankingLessThan100Rule)}:{Environment.NewLine}" +
+                                        $"{rankingLessThan100Rule.ExpressionDebugView()}");
 
 
             var validationResult = rankingLessThan100Rule.IsValid(_game);

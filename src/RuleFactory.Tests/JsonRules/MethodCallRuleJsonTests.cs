@@ -9,13 +9,13 @@ using Xunit.Abstractions;
 
 namespace RuleFactory.Tests.JsonRules
 {
-    public class MethodCallRuleJsonTests : IClassFixture<ExpressionRulesJsonFixture>
+    public class MethodCallRuleJsonTests : IClassFixture<ExpressionRulesFixture>
     {
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly Game _game1;
         private readonly Game _game2;
 
-        public MethodCallRuleJsonTests(ExpressionRulesJsonFixture fixture, ITestOutputHelper testOutputHelper)
+        public MethodCallRuleJsonTests(ExpressionRulesFixture fixture, ITestOutputHelper testOutputHelper)
         {
             _game1 = fixture.Game1;
             _game2 = fixture.Game2;
@@ -35,7 +35,7 @@ namespace RuleFactory.Tests.JsonRules
             {
                 ObjectToCallMethodOn = "Name",
                 MethodToCall = "Equals",
-                Inputs = { new ConstantRule<string> { Value = input1 },
+                MethodParameters = { new ConstantRule<string> { Value = input1 },
                     new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" } }
             };
 
@@ -107,7 +107,7 @@ namespace RuleFactory.Tests.JsonRules
             var rule = new MethodCallRule<Game, bool>
             {
                 MethodToCall = "HasPlayer",
-                Inputs = { new ConstantRule<int> { Value = id.ToString() } }
+                MethodParameters = { new ConstantRule<int> { Value = id.ToString() } }
             };
 
             var compileResult = rule.Compile();
@@ -140,7 +140,7 @@ namespace RuleFactory.Tests.JsonRules
             {
                 MethodToCall = "Contains",
                 ObjectToCallMethodOn = "Description",
-                Inputs = { new ConstantRule<string> { Value = "cool" } }
+                MethodParameters = { new ConstantRule<string> { Value = "cool" } }
             };
 
             var compileResult = rule.Compile();

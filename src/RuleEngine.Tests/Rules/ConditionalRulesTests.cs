@@ -144,7 +144,7 @@ namespace RuleEngine.Tests.Rules
                 {
                     ObjectToCallMethodOn = "Name",
                     MethodToCall = "Equals",
-                    Inputs = { new ConstantRule<string> { Value = "some name" }, 
+                    MethodParameters = { new ConstantRule<string> { Value = "some name" }, 
                             new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
                     }
                 },
@@ -176,7 +176,7 @@ namespace RuleEngine.Tests.Rules
                 {
                     ObjectToCallMethodOn = "Name",
                     MethodToCall = "Equals",
-                    Inputs = { new ConstantRule<string> { Value = "some name" }, 
+                    MethodParameters = { new ConstantRule<string> { Value = "some name" }, 
                         new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
                     }
                 },

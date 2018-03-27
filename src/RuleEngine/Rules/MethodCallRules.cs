@@ -15,21 +15,21 @@ namespace RuleEngine.Rules
         // MethodClassName needed for extension methods...
         public string MethodClassName { get; set; }
         public string ObjectToCallMethodOn { get; set; }
-        public List<Rule> Inputs { get; } = new List<Rule>();
+        public List<Rule> MethodParameters { get; } = new List<Rule>();
 
         public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
         public override bool Compile() => throw new NotImplementedException();
 
-        protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall, Type[] inputTypes,
+        protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall, Type[] paramTypes,
             Expression expression)
         {
             if (string.IsNullOrEmpty(methodClassName))
-                return expression.Type.GetMethodInfo(methodToCall, inputTypes);
+                return expression.Type.GetMethodInfo(methodToCall, paramTypes);
 
             var type = Type.GetType(methodClassName);
             if (type == null) throw new RuleEngineException($"can't find class named: {methodClassName}");
 
-            return type.GetMethodInfo(methodToCall, inputTypes);
+            return type.GetMethodInfo(methodToCall, paramTypes);
         }
     }
 
@@ -45,15 +45,15 @@ namespace RuleEngine.Rules
             var param = parameters[0];
             var expression = GetExpressionWithSubProperty(param, ObjectToCallMethodOn);
 
-            var inputTypes = new Type[Inputs.Count];
-            var argumentsExpressions = GetArgumentsExpressions(param, Inputs, inputTypes);
+            var paramTypes = new Type[MethodParameters.Count];
+            var argumentsExpressions = GetArgumentsExpressions(param, MethodParameters, paramTypes);
 
-            var methodInfo = GetMethodInfo(MethodClassName, MethodToCall, inputTypes, expression);
+            var methodInfo = GetMethodInfo(MethodClassName, MethodToCall, paramTypes, expression);
             if (methodInfo == null) return null;
             if (!methodInfo.IsGenericMethod)
-                inputTypes = null;
+                paramTypes = null;
 
-            ExpressionForThisRule = Expression.Call(expression, MethodToCall, inputTypes, argumentsExpressions);
+            ExpressionForThisRule = Expression.Call(expression, MethodToCall, paramTypes, argumentsExpressions);
             return ExpressionForThisRule;
         }
 
@@ -91,15 +91,15 @@ namespace RuleEngine.Rules
             var param = parameters[0];
             var expression = GetExpressionWithSubProperty(param, ObjectToCallMethodOn);
 
-            var inputTypes = new Type[Inputs.Count];
-            var argumentsExpressions = GetArgumentsExpressions(param, Inputs, inputTypes);
+            var paramTypes = new Type[MethodParameters.Count];
+            var argumentsExpressions = GetArgumentsExpressions(param, MethodParameters, paramTypes);
 
-            var methodInfo = GetMethodInfo(MethodClassName, MethodToCall, inputTypes, expression);
+            var methodInfo = GetMethodInfo(MethodClassName, MethodToCall, paramTypes, expression);
             if (methodInfo == null) return null;
             if (!methodInfo.IsGenericMethod)
-                inputTypes = null;
+                paramTypes = null;
 
-            ExpressionForThisRule = Expression.Call(expression, MethodToCall, inputTypes, argumentsExpressions);
+            ExpressionForThisRule = Expression.Call(expression, MethodToCall, paramTypes, argumentsExpressions);
             return ExpressionForThisRule;
         }
 

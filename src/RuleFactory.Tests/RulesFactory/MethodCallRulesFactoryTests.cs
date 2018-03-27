@@ -1,44 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using RuleEngine.Rules;
-using RuleEngine.Tests.Fixture;
-using RuleEngine.Tests.Model;
+using RuleFactory.RulesFactory;
+using RuleFactory.Tests.Fixture;
+using RuleFactory.Tests.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleEngine.Tests.Rules
+namespace RuleFactory.Tests.RulesFactory
 {
-    public class MethodCallRuleTests : IClassFixture<ExpressionRulesFixture>
+    public class MethodCallRulesFactoryTests: IClassFixture<ExpressionRulesFixture>
     {
         private readonly ITestOutputHelper _testOutputHelper;
         private readonly Game _game1;
         private readonly Game _game2;
 
-        public MethodCallRuleTests(ExpressionRulesFixture expressionRuleFixture, ITestOutputHelper testOutputHelper)
+        public MethodCallRulesFactoryTests(ExpressionRulesFixture expressionRuleFixture, ITestOutputHelper testOutputHelper)
         {
             _game1 = expressionRuleFixture.Game1;
             _game2 = expressionRuleFixture.Game2;
             _testOutputHelper = testOutputHelper;
         }
-        
+
+
         [Theory]
         [InlineData("Game 1", true)]
         [InlineData("game 1", true)]
         [InlineData("game 2", false)]
         [InlineData("gaMe 2", false)]
-        public void CallEqualsMethodOnNameUsingConstantRule(string input1, bool expectedResult)
+        public void CallEqualsMethodOnNameUsingConstantRule(string param1, bool expectedResult)
         {
             // call Equals method on Name string object
             // compiles to: Param_0.Name.Equals("Game 1", CurrentCultureIgnoreCase)
-            var nameEqualsRule = new MethodCallRule<Game, bool>
-            {
-                ObjectToCallMethodOn = "Name",
-                MethodToCall = "Equals",
-                MethodParameters = { new ConstantRule<string> { Value = input1 },
-                    new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
-                }
-            };
-
+            var param1Const = ConstantRulesFactory.CreateConstantRule<string>(param1);
+            var param2Const = ConstantRulesFactory.CreateConstantRule<StringComparison>("CurrentCultureIgnoreCase");
+            var nameEqualsRule = MethodCallRulesFactory.CreateMethodCallRule<Game, bool>("Equals", null, (g => g.Name),
+                new List<Rule> { param1Const, param2Const });
             var compileResult = nameEqualsRule.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(nameEqualsRule)}:{Environment.NewLine}" +
@@ -56,10 +55,7 @@ namespace RuleEngine.Tests.Rules
         {
             // call FlipActive method on the game object
             // compiles to: Param_0.FlipActive()
-            var playerCountRule = new MethodVoidCallRule<Game>
-            {
-                MethodToCall = "FlipActive"
-            };
+            var playerCountRule = MethodCallRulesFactory.CreateMethodVoidCallRule<Game>("FlipActive", null, null, null);
 
             var compileResult = playerCountRule.Compile();
             compileResult.Should().BeTrue();
@@ -78,11 +74,10 @@ namespace RuleEngine.Tests.Rules
         {
             // call HasPlayer method on the game object
             // compiles to: Param_0.HasPlayer(1000)
-            var gameHasPlayerWithCertainId = new MethodCallRule<Game, bool>
-            {
-                MethodToCall = "HasPlayer",
-                MethodParameters = {new ConstantRule<int>{Value = id.ToString()}}
-            };
+            var const1 = ConstantRulesFactory.CreateConstantRule<int>(id.ToString());
+            var gameHasPlayerWithCertainId =
+                MethodCallRulesFactory.CreateMethodCallRule<Game, bool>("HasPlayer", null, null,
+                    new List<Rule> {const1});
 
             var compileResult = gameHasPlayerWithCertainId.Compile();
             compileResult.Should().BeTrue();
@@ -98,12 +93,9 @@ namespace RuleEngine.Tests.Rules
         {
             // Description is a string - Call Contains method on Description
             // compiles to: Param_0.Description.Contains("cool")
-            var gameNameContainsKeyWrodCool = new MethodCallRule<Game, bool>
-            {
-                MethodToCall = "Contains",
-                ObjectToCallMethodOn = "Description",
-                MethodParameters = { new ConstantRule<string> { Value = "cool" } }
-            };
+            var const1 = ConstantRulesFactory.CreateConstantRule<string>("cool");
+            var gameNameContainsKeyWrodCool = MethodCallRulesFactory.CreateMethodCallRule<Game, bool>("Contains",
+                                null, (g => g.Description), new List<Rule> {const1});
 
             var compileResult = gameNameContainsKeyWrodCool.Compile();
             compileResult.Should().BeTrue();

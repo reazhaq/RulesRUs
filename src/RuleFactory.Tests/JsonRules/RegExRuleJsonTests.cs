@@ -27,7 +27,6 @@ namespace RuleFactory.Tests.JsonRules
             var rule = new RegExRule<Game>
             {
                 ObjectToValidate = "Name",
-                OperatorToUse = "IsMatch",
                 RegExToUse = regExToUse
             };
 

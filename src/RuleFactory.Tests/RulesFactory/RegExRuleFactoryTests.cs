@@ -1,17 +1,17 @@
 ﻿using System;
 using FluentAssertions;
-using RuleEngine.Rules;
-using RuleEngine.Tests.Model;
+using RuleFactory.RulesFactory;
+using RuleFactory.Tests.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleEngine.Tests.Rules
+namespace RuleFactory.Tests.RulesFactory
 {
-    public class RegExRuleTests
+    public class RegExRuleFactoryTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public RegExRuleTests(ITestOutputHelper testOutputHelper)
+        public RegExRuleFactoryTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
@@ -23,11 +23,7 @@ namespace RuleEngine.Tests.Rules
         [InlineData("BadName1", @"^[a-zA-Z0-9]*$", true)]
         public void NameMatchesRegEx(string nameToUse, string regExToUse, bool expectedResult)
         {
-            var alphaRule = new RegExRule<Game>
-            {
-                ObjectToValidate = "Name",
-                RegExToUse = regExToUse
-            };
+            var alphaRule = RegExRuleFactory.CreateRegExRule<Game>(g => g.Name, regExToUse);
 
             var compileRuleResult = alphaRule.Compile();
             compileRuleResult.Should().BeTrue();
@@ -37,8 +33,7 @@ namespace RuleEngine.Tests.Rules
             var game = new Game {Name = nameToUse};
 
             var executeResult = alphaRule.IsMatch(game);
-            _testOutputHelper.WriteLine($"executeResult={executeResult}; expectedResult={expectedResult} " +
-                                        $"for nameToUse={nameToUse}");
+            _testOutputHelper.WriteLine($"executeResult={executeResult}; expectedResult={expectedResult} for nameToUse={nameToUse}");
             executeResult.Should().Be(expectedResult);
         }
     }
