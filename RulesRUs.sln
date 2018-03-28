@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-
 		build.ps1 = build.ps1
 		build.sh = build.sh
 		LICENSE = LICENSE
+		README.MD = README.MD
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{64290977-C140-466F-8586-B81D14D197E1}"
