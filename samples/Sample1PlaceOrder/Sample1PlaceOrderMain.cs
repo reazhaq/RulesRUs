@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 using RuleEngine.Interfaces.Rules;
@@ -109,6 +110,11 @@ namespace Sample1PlaceOrder
             };
             if(orderProductIdPositiveOrNameGreaterThan5.Compile())
                 OrderRules.Add(orderProductIdPositiveOrNameGreaterThan5);
+
+            foreach (var rule in OrderRules)
+            {
+                Debug.WriteLine(rule.ExpressionDebugView());
+            }
         }
 
         private static void PlaceAnOrder()
