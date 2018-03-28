@@ -64,7 +64,7 @@ Action and Func gives you most freedom to create appropriate lambda and use it a
 __Note__: mostly I use these expression rules for experiments
 
 ## Method Call Rule
-Rule to call a method on a object.  There are two flavors - a void call (which becomes an Action<>) or call that returns a value (which becomes a Func<,>).
+Rule to call an object's method.  There are two flavors - a void call (which becomes an Action<>) or call that returns a value (which becomes a Func<,>).
 ```
     var rule = new MethodCallRule<string, string>{MethodToCall = "ToUpper"};
     var compileResult = rule.Compile();
@@ -182,6 +182,74 @@ Most used rule - takes an object and return boolean.  Combined with children rul
 
 ## Conditional Rule
 Represents simple if-then-else construct of some flavors.  If-then action rule (ConditionalIfThActionRule) execute true action (rule) when the condition is true; else nothing.  If-then-action rule (ConditionalIfThElActionRule) similar, but has an extra false caluse.  And if-then-else func rule (ConditionalFuncRule) returns a value.
+```
+    [Fact]
+    public void ConditionalRuleToUpdateNameToSomethingElse()
+    {
+        var conditionalIfThElRule = new ConditionalIfThElActionRule<Game>
+        {
+            ConditionRule = new MethodCallRule<Game, bool>
+            {
+                ObjectToCallMethodOn = "Name",
+                MethodToCall = "Equals",
+                MethodParameters = { new ConstantRule<string> { Value = "some name" }, 
+                    new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
+                }
+            },
+            TrueRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Name",
+                SourceDataRule = new ConstantRule<string> { Value = "true name" }
+            },
+            FalseRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Name",
+                SourceDataRule = new ConstantRule<string> { Value = "false name" }
+            }
+        };
+
+        var compileResult = conditionalIfThElRule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(conditionalIfThElRule)}:{Environment.NewLine}" +
+                                    $"{conditionalIfThElRule.ExpressionDebugView()}");
+
+        var game = new Game { Name = "some name" };
+        _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
+        conditionalIfThElRule.Execute(game);
+        _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
+        game.Name.Should().Be("true name");
+
+        conditionalIfThElRule.Execute(game);
+        _testOutputHelper.WriteLine($"after after game.Name: {game.Name}");
+        game.Name.Should().Be("false name");
+    }
+```
+resultant expression:
+```
+||- Expression Type: FullConditionalExpression
+||- Expression.NodeType: Conditional
+||- Expression.DebugView: .If (
+    .Invoke (.Lambda #Lambda1<System.Func`2[RuleEngine.Tests.Model.Game,System.Boolean]>)($var1)
+) {
+    .Invoke (.Lambda #Lambda2<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>)($var1)
+} .Else {
+    .Invoke (.Lambda #Lambda3<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>)($var1)
+}
+
+.Lambda #Lambda1<System.Func`2[RuleEngine.Tests.Model.Game,System.Boolean]>(RuleEngine.Tests.Model.Game $var1) {
+    .Call ($var1.Name).Equals(
+        (System.String)"some name",
+        (System.StringComparison).Constant<System.StringComparison>(CurrentCultureIgnoreCase))
+}
+
+.Lambda #Lambda2<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>(RuleEngine.Tests.Model.Game $var1) {
+    $var1.Name = (System.String)"true name"
+}
+
+.Lambda #Lambda3<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>(RuleEngine.Tests.Model.Game $var1) {
+    $var1.Name = (System.String)"false name"
+}
+```
 
 # Thanks to everyone
 Started playing with Expression Tree and had some sample/example code going for some years.  Some of the ideas for rule engine came from [MicroRuleEngine](https://github.com/runxc1/MicroRuleEngine); and [AutoMapper](https://github.com/AutoMapper/AutoMapper) source code.  [CoreFx](https://github.com/dotnet/corefx) code and unit tests - an excellent way to study and understand what's going on under the hood with Expression tree.  Thanks to many more blogs, example codes, SO answers, .....  Thought I would just glue my experiments together and release it into the wild.  Hope this helps...
