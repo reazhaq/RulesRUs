@@ -133,10 +133,55 @@ Want to update a value of an object; this is the rule.  I had been using this wi
 ```
 
 ## Validation Rule
+Most used rule - takes an object and return boolean.  Combined with children rules, like sub-rules; this can be used to validate a number of things all at once.  See [Sample 1](/samples/Sample1PlaceOrder) or unit tests for examples.
+```
+    [Fact]
+    public void RuleToCheckIfAnIntegerMatchesRuleValueOrNot()
+    {
+        var numberShouldBe5Rule = new ValidationRule<int>
+        {
+            ValueToValidateAgainst = new ConstantRule<int> {Value = "5"},
+            OperatorToUse = "Equal",
+            RuleError = new RuleError { Code="c1", Message = "number is not 5"}
+        };
+        var compileResult = numberShouldBe5Rule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(numberShouldBe5Rule)}:{Environment.NewLine}{numberShouldBe5Rule.ExpressionDebugView()}");
 
+        var numberShouldNotBe5Rule = new ValidationRule<int>
+        {
+            ValueToValidateAgainst = new ConstantRule<int> { Value = "5" },
+            OperatorToUse = "NotEqual",
+            RuleError = new RuleError { Code = "c2", Message = "number is 5"}
+        };
+        compileResult = numberShouldNotBe5Rule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(numberShouldNotBe5Rule)}:{Environment.NewLine}{numberShouldNotBe5Rule.ExpressionDebugView()}");
+
+        var ruleExecuteResult = numberShouldBe5Rule.IsValid(5);
+        ruleExecuteResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"with 5 {nameof(numberShouldBe5Rule)} execute result: {ruleExecuteResult}");
+
+        ruleExecuteResult = numberShouldBe5Rule.IsValid(6);
+        ruleExecuteResult.Should().BeFalse();
+        _testOutputHelper.WriteLine($"with 6 {nameof(numberShouldBe5Rule)} failed. " +
+                                        $"Error code={numberShouldBe5Rule.RuleError.Code}, " +
+                                        $"message={numberShouldBe5Rule.RuleError.Message}");
+
+        ruleExecuteResult = numberShouldNotBe5Rule.IsValid(6);
+        ruleExecuteResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"with 6 {nameof(numberShouldNotBe5Rule)} execute result: {ruleExecuteResult}");
+
+        ruleExecuteResult = numberShouldNotBe5Rule.IsValid(5);
+        ruleExecuteResult.Should().BeFalse();
+        _testOutputHelper.WriteLine($"with 5 {nameof(numberShouldNotBe5Rule)} failed. " +
+                                        $"Error code={numberShouldNotBe5Rule.RuleError.Code}, " +
+                                        $"message={numberShouldNotBe5Rule.RuleError.Message}");
+    }
+```
 
 ## Conditional Rule
-
+Represents simple if-then-else construct of some flavors.  If-then action rule (ConditionalIfThActionRule) execute true action (rule) when the condition is true; else nothing.  If-then-action rule (ConditionalIfThElActionRule) similar, but has an extra false caluse.  And if-then-else func rule (ConditionalFuncRule) returns a value.
 
 # Thanks to everyone
 Started playing with Expression Tree and had some sample/example code going for some years.  Some of the ideas for rule engine came from [MicroRuleEngine](https://github.com/runxc1/MicroRuleEngine); and [AutoMapper](https://github.com/AutoMapper/AutoMapper) source code.  [CoreFx](https://github.com/dotnet/corefx) code and unit tests - an excellent way to study and understand what's going on under the hood with Expression tree.  Thanks to many more blogs, example codes, SO answers, .....  Thought I would just glue my experiments together and release it into the wild.  Hope this helps...
