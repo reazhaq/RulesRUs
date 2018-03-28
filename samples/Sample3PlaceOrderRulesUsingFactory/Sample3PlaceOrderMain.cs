@@ -122,11 +122,6 @@ namespace Sample3PlaceOrderRulesUsingFactory
 
             if(orderProductIdPositiveOrNameGreaterThan5.Compile())
                 OrderRules.Add(orderProductIdPositiveOrNameGreaterThan5);
-
-            foreach (var rule in OrderRules)
-            {
-                Debug.WriteLine(rule.ExpressionDebugView());
-            }
         }
 
         private static void PlaceAnOrder()
