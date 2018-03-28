@@ -27,7 +27,7 @@ namespace RuleFactory.Tests.JsonRules
         [InlineData("game 1", true)]
         [InlineData("game 2", false)]
         [InlineData("gaMe 2", false)]
-        public void CallEqualsMethodOnNameUsingConstantRule(string input1, bool expectedResult)
+        public void CallEqualsMethodOnNameUsingConstantRule(string param1, bool expectedResult)
         {
             // call Equals method on Name string object
             // compiles to: Param_0.Name.Equals("Game 1", CurrentCultureIgnoreCase)
@@ -35,7 +35,7 @@ namespace RuleFactory.Tests.JsonRules
             {
                 ObjectToCallMethodOn = "Name",
                 MethodToCall = "Equals",
-                MethodParameters = { new ConstantRule<string> { Value = input1 },
+                MethodParameters = { new ConstantRule<string> { Value = param1 },
                     new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" } }
             };
 
