@@ -66,15 +66,15 @@ namespace Sample3PlaceOrderRulesUsingFactory
                 OrderRules.Add(orderCustomerAndProductCannotBeNullRule);
 
             var nullStrRule = ConstantRulesFactory.CreateConstantRule<string>("null");
-            var child11Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Customer.FirstName,
+            var child3Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Customer.FirstName,
                 LogicalOperatorAtTheRootLevel.NotEqual, nullStrRule);
             var len2Rule = ConstantRulesFactory.CreateConstantRule<int>("2");
-            var child22Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Customer.FirstName.Length,
+            var child4Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Customer.FirstName.Length,
                 LogicalOperatorAtTheRootLevel.GreaterThan, len2Rule);
 
             var orderCustomerFirstNameRule =
                 ValidationRulesFactory.CreateValidationRule<Order>(ChildrenBindingOperator.AndAlso,
-                    new List<Rule> {child11Rule, child22Rule});
+                    new List<Rule> {child3Rule, child4Rule});
             orderCustomerFirstNameRule.RuleError = new RuleError
             {
                 Code = "c3",
@@ -83,14 +83,14 @@ namespace Sample3PlaceOrderRulesUsingFactory
             if(orderCustomerFirstNameRule.Compile())
                 OrderRules.Add(orderCustomerFirstNameRule);
 
-            var child33Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Customer.LastName,
+            var child5Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Customer.LastName,
                 LogicalOperatorAtTheRootLevel.NotEqual, nullStrRule);
             var len3Rule = ConstantRulesFactory.CreateConstantRule<int>("3");
-            var child44Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Customer.LastName.Length,
+            var child6Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Customer.LastName.Length,
                 LogicalOperatorAtTheRootLevel.GreaterThan, len3Rule);
             var orderCustomerLastNameRule =
                 ValidationRulesFactory.CreateValidationRule<Order>(ChildrenBindingOperator.AndAlso,
-                    new List<Rule> {child33Rule, child44Rule});
+                    new List<Rule> {child5Rule, child6Rule});
             orderCustomerLastNameRule.RuleError = new RuleError
             {
                 Code = "c4",
@@ -100,43 +100,26 @@ namespace Sample3PlaceOrderRulesUsingFactory
                 OrderRules.Add(orderCustomerLastNameRule);
 
 
+            var zeroRule = ConstantRulesFactory.CreateConstantRule<int>("0");
+            var child7Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Product.Id,
+                LogicalOperatorAtTheRootLevel.GreaterThan, zeroRule);
+
+            var child81Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Product.Name,
+                LogicalOperatorAtTheRootLevel.NotEqual, nullStrRule);
+            var len4Rule = ConstantRulesFactory.CreateConstantRule<int>("4");
+            var child82Rule = ValidationRulesFactory.CreateValidationRule<Order>(o => o.Product.Name.Length,
+                LogicalOperatorAtTheRootLevel.GreaterThan, len4Rule);
+            var child8Rule = ValidationRulesFactory.CreateValidationRule<Order>(ChildrenBindingOperator.AndAlso,
+                new List<Rule> {child81Rule, child82Rule});
 
             var orderProductIdPositiveOrNameGreaterThan5 =
-                ValidationRulesFactory.CreateValidationRule<Order>(ChildrenBindingOperator.OrElse, new List<Rule> { });
+                ValidationRulesFactory.CreateValidationRule<Order>(ChildrenBindingOperator.OrElse, new List<Rule> {child7Rule, child8Rule });
             orderProductIdPositiveOrNameGreaterThan5.RuleError = new RuleError
             {
                 Code = "c5",
                 Message = "id must be greater than zero or name has to be non-null and 5+ chars"
             };
 
-            var foo=    new ValidationRule<Order>
-            {
-                OperatorToUse = "OrElse",
-                RuleError = new RuleError { Code = "c5", Message = "id must be greater than zero or name has to be non-null and 5+ chars"},
-                ChildrenRules =
-                {
-                    new ValidationRule<Order>
-                    {
-                        OperatorToUse = "GreaterThan", ObjectToValidate = "Product.Id",
-                        ValueToValidateAgainst = new ConstantRule<int>{Value = "0"}
-                    },
-                    new ValidationRule<Order>
-                    {
-                        OperatorToUse = "AndAlso",
-                        ChildrenRules =
-                        {
-                            new ValidationRule<Order>{
-                                OperatorToUse = "NotEqual", ObjectToValidate = "Product.Name",
-                                ValueToValidateAgainst = new ConstantRule<string>{Value = "null"}},
-                            new ValidationRule<Order>
-                            {
-                                OperatorToUse = "GreaterThan", ObjectToValidate = "Product.Name.Length",
-                                ValueToValidateAgainst = new ConstantRule<int>{Value = "4"}
-                            }
-                        }
-                    }
-                }
-            };
             if(orderProductIdPositiveOrNameGreaterThan5.Compile())
                 OrderRules.Add(orderProductIdPositiveOrNameGreaterThan5);
 
