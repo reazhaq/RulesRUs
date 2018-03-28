@@ -26,7 +26,7 @@ namespace RuleEngine.Tests.Rules
         [InlineData("game 1", true)]
         [InlineData("game 2", false)]
         [InlineData("gaMe 2", false)]
-        public void CallEqualsMethodOnNameUsingConstantRule(string input1, bool expectedResult)
+        public void CallEqualsMethodOnNameUsingConstantRule(string param1, bool expectedResult)
         {
             // call Equals method on Name string object
             // compiles to: Param_0.Name.Equals("Game 1", CurrentCultureIgnoreCase)
@@ -34,7 +34,7 @@ namespace RuleEngine.Tests.Rules
             {
                 ObjectToCallMethodOn = "Name",
                 MethodToCall = "Equals",
-                MethodParameters = { new ConstantRule<string> { Value = input1 },
+                MethodParameters = { new ConstantRule<string> { Value = param1 },
                     new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
                 }
             };
@@ -56,19 +56,33 @@ namespace RuleEngine.Tests.Rules
         {
             // call FlipActive method on the game object
             // compiles to: Param_0.FlipActive()
-            var playerCountRule = new MethodVoidCallRule<Game>
+            var rule = new MethodVoidCallRule<Game>
             {
                 MethodToCall = "FlipActive"
             };
 
-            var compileResult = playerCountRule.Compile();
+            var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(playerCountRule)}:{Environment.NewLine}" +
-                                        $"{playerCountRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
 
             var currentActiveState = _game1.Active;
-            playerCountRule.Execute(_game1);
+            rule.Execute(_game1);
             _game1.Active.Should().Be(!currentActiveState);
+        }
+
+        [Fact]
+        public void CallToUpper()
+        {
+            var rule = new MethodCallRule<string, string>{MethodToCall = "ToUpper"};
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var foo = "foo";
+            var FOO = rule.Execute(foo);
+            FOO.Should().Be("FOO");
         }
 
         [Theory]

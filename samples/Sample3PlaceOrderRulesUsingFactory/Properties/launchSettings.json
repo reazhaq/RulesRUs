@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Sample3PlaceOrderRulesUsingFactory": {
+      "commandName": "Project",
+      "commandLineArgs": "-o"
+    }
+  }
+}

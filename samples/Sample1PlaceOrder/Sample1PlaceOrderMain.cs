@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 using RuleEngine.Interfaces.Rules;

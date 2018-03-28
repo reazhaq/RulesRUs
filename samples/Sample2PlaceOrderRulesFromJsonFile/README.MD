@@ -1,0 +1,2 @@
+﻿# JSON Converter Demo
+The sample is the same as [Sample 1](/samples/Sample1PlaceOrder); except it reads rules from a new-line separated JSON documents.  If the file is not present, it creates the rules and saves them to a file.
