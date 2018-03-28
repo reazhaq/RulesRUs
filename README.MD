@@ -23,6 +23,7 @@ and the expression tree it creates:
     |  |- constantExpression.Type: System.Int32
     |  |- constantExpression.DebugView: 55
 ```
+If for some odd reason, you need something that takes an object of whatever and always returs some constant (regardless) - you can use ConstantRule<,>.  I needed it only once... may drop it someday - feels like it is not needed.
 
 ## Contains Value Rule
 Got a list of values that you always check against; this rule can help - make sure to use desired equality comparer.
@@ -46,7 +47,7 @@ Got a list of values that you always check against; this rule can help - make su
     var a7 = containsRule.ContainsValue("seven");
     a7.Should().BeFalse();
 ```
-Note: Contains Value rule requires an equality comparer; if none provided it uses the default for the object.  Loading from file, fill class name and property name to create the comparer for you.  Remember, not all comparer comes as property and those are not supported.
+__Note__: Contains Value rule requires an equality comparer; if none provided it uses the default for the object.  Loading from file, fill class name and property name to create the comparer for you.  Remember, not all comparer comes as property and those are not supported.
 
 ## Expression Action Rule
 Action and Func gives you most freedom to create appropriate lambda and use it as rule; when needed
@@ -60,12 +61,82 @@ Action and Func gives you most freedom to create appropriate lambda and use it a
     var ruleReturningCountOfPlayers = new ExpressionFuncRules<Game, int>(
                                         g => (g == null || g.Players == null) ? 0 : g.Players.Count);
 ```
+__Note__: mostly I use these expression rules for experiments
 
 ## Method Call Rule
+Rule to call a method on a object.  There are two flavors - a void call (which becomes an Action<>) or call that returns a value (which becomes a Func<,>).
+```
+    var rule = new MethodCallRule<string, string>{MethodToCall = "ToUpper"};
+    var compileResult = rule.Compile();
+    compileResult.Should().BeTrue();
+    _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
+                                $"{rule.ExpressionDebugView()}");
+
+    var foo = "foo";
+    var FOO = rule.Execute(foo);
+    FOO.Should().Be("FOO");
+```
 
 ## RegEx Rule
+Helps call regular expression; like validating an name or email address.
+```
+    [Theory]
+    [InlineData("ValidName", @"^[a-zA-Z]*$", true)]
+    [InlineData("BadName1", @"^[a-zA-Z]*$", false)]
+    [InlineData("AnotherBadName#", @"^[a-zA-Z]*$", false)]
+    [InlineData("BadName1", @"^[a-zA-Z0-9]*$", true)]
+    public void NameMatchesRegEx(string nameToUse, string regExToUse, bool expectedResult)
+    {
+        var alphaRule = new RegExRule<Game>
+        {
+            ObjectToValidate = "Name",
+            RegExToUse = regExToUse
+        };
+
+        var compileRuleResult = alphaRule.Compile();
+        compileRuleResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(alphaRule)}:{Environment.NewLine}" +
+                                    $"{alphaRule.ExpressionDebugView()}");
+
+        var game = new Game {Name = nameToUse};
+
+        var executeResult = alphaRule.IsMatch(game);
+        _testOutputHelper.WriteLine($"executeResult={executeResult}; expectedResult={expectedResult} " +
+                                    $"for nameToUse={nameToUse}");
+        executeResult.Should().Be(expectedResult);
+    }
+```
+
+## Update Value Rule
+Want to update a value of an object; this is the rule.  I had been using this with Conditional Rule (see below)
+```
+    [Fact]
+    public void UpdatePropertyFromAnotherRule()
+    {
+        var game = new Game {Name = "game name"};
+        var nameChangeRule = new UpdateValueRule<Game>
+        {
+            ObjectToUpdate = "Name",
+            SourceDataRule = new ConstantRule<string> {Value = "name from constant rule"}
+        };
+
+        var compileResult = nameChangeRule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}" +
+                                    $"{nameChangeRule.ExpressionDebugView()}");
+
+        _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
+        nameChangeRule.UpdateFieldOrPropertyValue(game);
+        game.Name.Should().Be("name from constant rule");
+        _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
+    }
+```
 
 ## Validation Rule
+
+
+## Conditional Rule
+
 
 # Thanks to everyone
 Started playing with Expression Tree and had some sample/example code going for some years.  Some of the ideas for rule engine came from [MicroRuleEngine](https://github.com/runxc1/MicroRuleEngine); and [AutoMapper](https://github.com/AutoMapper/AutoMapper) source code.  [CoreFx](https://github.com/dotnet/corefx) code and unit tests - an excellent way to study and understand what's going on under the hood with Expression tree.  Thanks to many more blogs, example codes, SO answers, .....  Thought I would just glue my experiments together and release it into the wild.  Hope this helps...

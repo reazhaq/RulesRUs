@@ -56,19 +56,33 @@ namespace RuleEngine.Tests.Rules
         {
             // call FlipActive method on the game object
             // compiles to: Param_0.FlipActive()
-            var playerCountRule = new MethodVoidCallRule<Game>
+            var rule = new MethodVoidCallRule<Game>
             {
                 MethodToCall = "FlipActive"
             };
 
-            var compileResult = playerCountRule.Compile();
+            var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(playerCountRule)}:{Environment.NewLine}" +
-                                        $"{playerCountRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
 
             var currentActiveState = _game1.Active;
-            playerCountRule.Execute(_game1);
+            rule.Execute(_game1);
             _game1.Active.Should().Be(!currentActiveState);
+        }
+
+        [Fact]
+        public void CallToUpper()
+        {
+            var rule = new MethodCallRule<string, string>{MethodToCall = "ToUpper"};
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var foo = "foo";
+            var FOO = rule.Execute(foo);
+            FOO.Should().Be("FOO");
         }
 
         [Theory]
