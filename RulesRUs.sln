@@ -30,6 +30,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RuleFactory.Tests", "src\Ru
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample2PlaceOrderRulesFromJsonFile", "samples\Sample2PlaceOrderRulesFromJsonFile\Sample2PlaceOrderRulesFromJsonFile.csproj", "{C2C0BCBD-7CD9-4754-A19C-D168D1CFC9FD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample3PlaceOrderRulesUsingFactory", "samples\Sample3PlaceOrderRulesUsingFactory\Sample3PlaceOrderRulesUsingFactory.csproj", "{EE52307F-2408-42A6-9376-BD17B08C353D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,6 +62,10 @@ Global
 		{C2C0BCBD-7CD9-4754-A19C-D168D1CFC9FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2C0BCBD-7CD9-4754-A19C-D168D1CFC9FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2C0BCBD-7CD9-4754-A19C-D168D1CFC9FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE52307F-2408-42A6-9376-BD17B08C353D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE52307F-2408-42A6-9376-BD17B08C353D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE52307F-2408-42A6-9376-BD17B08C353D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE52307F-2408-42A6-9376-BD17B08C353D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -71,6 +77,7 @@ Global
 		{67D5C84B-8ADB-4270-8780-09A61240903D} = {64290977-C140-466F-8586-B81D14D197E1}
 		{8B389F17-27E0-4B75-A6DB-4B39A3042D54} = {741D9194-A36C-4E2E-864F-83CDE4FA185B}
 		{C2C0BCBD-7CD9-4754-A19C-D168D1CFC9FD} = {B3C305B4-E12C-4276-91B7-D49D56BD1FEF}
+		{EE52307F-2408-42A6-9376-BD17B08C353D} = {B3C305B4-E12C-4276-91B7-D49D56BD1FEF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E799544-0217-479E-A142-014AD9DD3982}
