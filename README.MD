@@ -3,7 +3,9 @@ Couldn't come up with a name - this came to mind.
 Built using Expression Tree; this helps create-compile-execute simple business rules at runtime; or just wrap some expressions with the same look and feel while writing code.
 
 ## How To
-Create a Rule, and compile it.  Once compiled, rule can be executed over and over... with almost next to nothing execution time.  Just remember, compile may take some time depending on the comlexity of the expression tree.  Unit tests - probably good place to look for examples and ideas.
+Create a Rule, and compile it.  Once compiled, rule can be executed over and over... with almost next to nothing execution time.  Just remember, compile may take some time depending on the comlexity of the expression tree. I load the rules at start-up (or at some frequent interval) and compile them, keep using them there after.
+
+Unit tests - probably good place to look for examples and ideas.
 
 ## Constant Rule
 Most simple rule, and most used rule is a Constant Rule.  Constant rule is a simple Func; that returns a constant value.
@@ -260,6 +262,9 @@ Same as sample 1, but loads the rules from a text file using custom JSON convert
 
 ## [Sample 3](/samples/Sample3PlaceOrderRulesUsingFactory)
 Same as sample 1, but rules were created using factory methods.
+
+## [Sample 4](/samples/Sample4RuleCreateMadeEasy)
+Quick how-to sample.
 
 # Thanks to everyone
 Started playing with Expression Tree and had some sample/example code going for some years.  Some of the ideas for rule engine came from [MicroRuleEngine](https://github.com/runxc1/MicroRuleEngine); and [AutoMapper](https://github.com/AutoMapper/AutoMapper) source code.  [CoreFx](https://github.com/dotnet/corefx) code and unit tests - an excellent way to study and understand what's going on under the hood with Expression tree.  Thanks to many more blogs, example codes, SO answers, .....  Thought I would just glue my experiments together and release it into the wild.  Hope this helps...
