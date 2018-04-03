@@ -41,7 +41,7 @@ namespace RuleEngine.Utils
                     suffixPart = string.Format($"{propValue.Name}.{suffixPart}");
                 memberExpression = memberExpression.Expression as MemberExpression;
             }
-            return (suffixPart !=null ? string.Format($"{suffixPart}{lastFieldOrProperty}") : lastFieldOrProperty);
+            return (suffixPart != null ? string.Format($"{suffixPart}{lastFieldOrProperty}") : lastFieldOrProperty);
         }
 
         private static readonly string Nl = Environment.NewLine;
@@ -58,7 +58,7 @@ namespace RuleEngine.Utils
         public static Expression GetInnerExpression(this Expression exp)
         {
             if (exp == null) return null;
-            var propertyInfo = typeof(Expression).GetProperty("Expression", BindingFlags.Instance|BindingFlags.NonPublic);
+            var propertyInfo = typeof(Expression).GetProperty("Expression", BindingFlags.Instance | BindingFlags.NonPublic);
             return propertyInfo?.GetValue(exp) as Expression;
         }
 
@@ -70,18 +70,72 @@ namespace RuleEngine.Utils
                 case BinaryExpression binaryExpression:
                     binaryExpression.TraceNode(sb, level);
                     break;
+                case BlockExpression blockExpression:
+                    blockExpression.TraceNode(sb, level);
+                    break;
+                case ConditionalExpression conditionalExpression:
+                    conditionalExpression.TraceNode(sb, level);
+                    break;
                 case ConstantExpression constantExpression:
                     constantExpression.TraceNode(sb, level);
                     break;
+                //case DebugInfoExpression debugInfoExpression:
+                //    debugInfoExpression.TraceNode(sb, level);
+                //    break;
+                //case DefaultExpression defaultExpression:
+                //    defaultExpression.TraceNode(sb, level);
+                //    break;
+                case DynamicExpression dynamicExpression:
+                    dynamicExpression.TraceNode(sb, level);
+                    break;
+                //case GotoExpression gotoExpression:
+                //    gotoExpression.TraceNode(sb, level);
+                //    break;
+                //case IndexExpression indexExpression:
+                //    indexExpression.TraceNode(sb, level);
+                //    break;
+                //case InvocationExpression invocationExpression:
+                //    invocationExpression.TraceNode(sb, level);
+                //    break;
+                //case LabelExpression labelExpression:
+                //    labelExpression.TraceNode(sb, level);
+                //    break;
+                case LambdaExpression lambdaExpression:
+                    lambdaExpression.TraceNode(sb, level);
+                    break;
+                //case ListInitExpression listInitExpression:
+                //    listInitExpression.TraceNode(sb, level);
+                //    break;
+                //case LoopExpression loopExpression:
+                //    loopExpression.TraceNode(sb, level);
+                //    break;
                 case MemberExpression memberExpression:
                     memberExpression.TraceNode(sb, level);
+                    break;
+                //case MemberInitExpression memberInitExpression:
+                //    memberInitExpression.TraceNode(sb, level);
+                //    break;
+                case MethodCallExpression methodCallExpression:
+                    methodCallExpression.TraceNode(sb, level);
+                    break;
+                //case NewArrayExpression newArrayExpression:
+                //    newArrayExpression.TraceNode(sb, level);
+                //    break;
+                case NewExpression newExpression:
+                    newExpression.TraceNode(sb, level);
                     break;
                 case ParameterExpression parameterExpression:
                     parameterExpression.TraceNode(sb, level);
                     break;
-                case LambdaExpression lambdaExpression:
-                    lambdaExpression.TraceNode(sb, level);
-                    break;
+                //case RuntimeVariablesExpression runtimeVariablesExpression:
+                //    runtimeVariablesExpression.TraceNode(sb, level);
+                //    break;
+                //case TryExpression tryExpression:
+                //    tryExpression.TraceNode(sb, level);
+                //    break;
+                //case TypeBinaryExpression typeBinaryExpression:
+                //    typeBinaryExpression.TraceNode(sb, level);
+                //    break;
                 case UnaryExpression unaryExpression:
                     unaryExpression.TraceNode(sb, level);
                     break;
@@ -94,32 +148,23 @@ namespace RuleEngine.Utils
             }
         }
 
-        public static void TraceNode(this UnaryExpression unaryExpression, StringBuilder sb, int level = 0)
-        {
-            if (sb == null) return;
-            var levelSpace = new string(' ', level * NumberOfSpaces);
-            sb.Append($"|{levelSpace}|- unaryExpression.NodeType: {unaryExpression.NodeType}{Nl}");
-            sb.Append($"|{levelSpace}|- unaryExpression.DebugView: {unaryExpression.GetDebugView()}{Nl}");
-            sb.Append($"|{levelSpace}|- unaryExpression.Method: {unaryExpression.Method}{Nl}");
-            sb.Append($"|{levelSpace}|- unaryExpression.Operand:{Nl}");
-
-            level++;
-            unaryExpression.Operand.TraceNode(sb, level);
-
-            level++;
-            var innerExpression = unaryExpression.Operand.GetInnerExpression();
-            innerExpression.TraceNode(sb, level);
-        }
-
         public static void TraceNode(this BinaryExpression binaryExpression, StringBuilder sb, int level = 0)
         {
             if (sb == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
             sb.Append($"|{levelSpace}|- binaryExpression.NodeType: {binaryExpression.NodeType}{Nl}");
             sb.Append($"|{levelSpace}|- binaryExpression.DebugView: {binaryExpression.GetDebugView()}{Nl}");
+            sb.Append($"|{levelSpace}|- binaryExpression.CanReduce: {binaryExpression.CanReduce}{Nl}");
+            if (binaryExpression.CanReduce)
+                binaryExpression.Reduce().TraceNode(sb, level);
 
             level++;
+            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|- Left:{Nl}");
             binaryExpression.Left?.TraceNode(sb, level);
+
+            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|- Right:{Nl}");
             binaryExpression.Right?.TraceNode(sb, level);
         }
 
@@ -131,6 +176,7 @@ namespace RuleEngine.Utils
             sb.Append($"|{levelSpace}|- blockExpression.DebugView: {blockExpression.GetDebugView()}{Nl}");
 
             level++;
+            sb.Append($"|{Nl}");
             sb.Append($"|{levelSpace}|- Variables count: {blockExpression.Variables.Count}{Nl}");
             foreach (var blockExpressionVariable in blockExpression.Variables)
                 blockExpressionVariable.TraceNode(sb, level);
@@ -148,10 +194,13 @@ namespace RuleEngine.Utils
             sb.Append($"|{levelSpace}|- conditionalExpression.DebugView: {conditionalExpression.GetDebugView()}{Nl}");
 
             level++;
-            sb.Append($"|{levelSpace}|- IfFalse:{Nl}");
-            conditionalExpression.IfFalse.TraceNode(sb, level);
+            sb.Append($"|{Nl}");
             sb.Append($"|{levelSpace}|- IfTrue:{Nl}");
             conditionalExpression.IfTrue.TraceNode(sb, level);
+
+            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|- IfFalse:{Nl}");
+            conditionalExpression.IfFalse.TraceNode(sb, level);
         }
 
         public static void TraceNode(this ConstantExpression constantExpression, StringBuilder sb, int level = 0)
@@ -178,24 +227,25 @@ namespace RuleEngine.Utils
             sb.Append($"|{levelSpace}|- lambdaExpression.NodeType: {lambdaExpression.NodeType}{Nl}");
             sb.Append($"|{levelSpace}|- lambdaExpression.DebugView: {lambdaExpression.GetDebugView()}{Nl}");
 
-            var nextLevel = level + 1;
+            level++;
+            sb.Append($"|{Nl}");
             sb.Append($"|{levelSpace}|- Parameters count: {lambdaExpression.Parameters.Count}{Nl}");
             foreach (var lambdaExpressionParameter in lambdaExpression.Parameters)
-                lambdaExpressionParameter.TraceNode(sb, nextLevel);
+                lambdaExpressionParameter.TraceNode(sb, level);
 
             sb.Append($"|{Nl}");
             sb.Append($"|{levelSpace}|- Body [{lambdaExpression.Body.NodeType}]{Nl}");
-            lambdaExpression.Body?.TraceNode(sb, nextLevel);
+            lambdaExpression.Body?.TraceNode(sb, level);
         }
 
         public static void TraceNode(this MemberExpression memberExpression, StringBuilder sb, int level = 0)
         {
             if (sb == null) return;
             var levelSpace = new string(' ', level * NumberOfSpaces);
-            sb.Append($"|{levelSpace}|- memberExpression.NodeType: {memberExpression.NodeType}{Nl}");
-            sb.Append($"|{levelSpace}|- memberExpression.DebugView: {memberExpression.GetDebugView()}{Nl}");
             sb.Append($"|{levelSpace}|- memberExpression.Member - field: {(memberExpression.Member as FieldInfo)?.ToString()}{Nl}");
             sb.Append($"|{levelSpace}|- memberExpression.Member - prop: {(memberExpression.Member as PropertyInfo)?.ToString()}{Nl}");
+            sb.Append($"|{levelSpace}|- memberExpression.NodeType: {memberExpression.NodeType}{Nl}");
+            sb.Append($"|{levelSpace}|- memberExpression.DebugView: {memberExpression.GetDebugView()}{Nl}");
         }
 
         public static void TraceNode(this MethodCallExpression methodCallExpression, StringBuilder sb, int level = 0)
@@ -204,6 +254,12 @@ namespace RuleEngine.Utils
             var levelSpace = new string(' ', level * NumberOfSpaces);
             sb.Append($"|{levelSpace}|- methodCallExpression.NodeType: {methodCallExpression.NodeType}{Nl}");
             sb.Append($"|{levelSpace}|- methodCallExpression.DebugView: {methodCallExpression.GetDebugView()}{Nl}");
+
+            level++;
+            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|- Arguments Count: {methodCallExpression.Arguments.Count}{Nl}");
+            foreach (var expression in methodCallExpression.Arguments)
+                expression.TraceNode(sb, level);
         }
 
         public static void TraceNode(this NewExpression newExpression, StringBuilder sb, int level = 0)
@@ -221,6 +277,25 @@ namespace RuleEngine.Utils
             sb.Append($"|{levelSpace}|- parameterExpression.Name: {parameterExpression.Name ?? "null"}{Nl}");
             sb.Append($"|{levelSpace}|- parameterExpression.Type: {parameterExpression.Type}{Nl}");
             sb.Append($"|{levelSpace}|- parameterExpression.DebugView: {parameterExpression.GetDebugView()}{Nl}");
+        }
+
+        public static void TraceNode(this UnaryExpression unaryExpression, StringBuilder sb, int level = 0)
+        {
+            if (sb == null) return;
+            var levelSpace = new string(' ', level * NumberOfSpaces);
+            sb.Append($"|{levelSpace}|- unaryExpression.Method: {unaryExpression.Method}{Nl}");
+            sb.Append($"|{levelSpace}|- unaryExpression.NodeType: {unaryExpression.NodeType}{Nl}");
+            sb.Append($"|{levelSpace}|- unaryExpression.DebugView: {unaryExpression.GetDebugView()}{Nl}");
+
+            level++;
+            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|- Operand:{Nl}");
+            unaryExpression?.Operand?.TraceNode(sb, level);
+
+            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|- innerExpression:{Nl}");
+            var innerExpression = unaryExpression?.Operand?.GetInnerExpression();
+            innerExpression?.TraceNode(sb, level);
         }
     }
 }
