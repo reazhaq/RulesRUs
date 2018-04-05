@@ -233,6 +233,9 @@ namespace RuleEngine.Utils
             var levelSpace = new string(' ', level * NumberOfSpaces);
             level++;
             sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|- Expression:{Nl}");
+            invocationExpression.Expression.TraceNode(sb, level);
+            sb.Append($"|{Nl}");
             sb.Append($"|{levelSpace}|- Arguments count: {invocationExpression.Arguments.Count}{Nl}");
             foreach (var invocationExpressionArgument in invocationExpression.Arguments)
                 invocationExpressionArgument.TraceNode(sb, level);
