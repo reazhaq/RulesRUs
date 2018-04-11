@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
 using FluentAssertions;
@@ -10,6 +11,7 @@ using RuleEngine.Rules;
 using RuleEngine.Utils;
 using Xunit;
 using Xunit.Abstractions;
+using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 
 namespace RuleEngine.Tests.Utils
 {
@@ -112,6 +114,74 @@ namespace RuleEngine.Tests.Utils
 
             var sb = new StringBuilder();
             invocationExpression.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        [Fact]
+        public void TraceLambdaExpression()
+        {
+            var p0 = Expression.Parameter(typeof(int), "p0");
+            var p1 = Expression.Parameter(typeof(int), "p1");
+
+            var lambdaExpression = Expression.Lambda<Func<int, int, int>>(
+                                    Expression.Add(p0, p1),
+                                    new ParameterExpression[] {p0, p1});
+
+            var sb = new StringBuilder();
+            lambdaExpression.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        [Fact]
+        public void TraceMemberExpression()
+        {
+            var stringConst = Expression.Constant("something", typeof(string));
+            var stringLength = Expression.Property(stringConst, typeof(string), "Length");
+            var sb = new StringBuilder();
+            stringLength.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        [Fact]
+        public void TraceMethodCallExpression()
+        {
+            var stringConst = Expression.Constant("something", typeof(string));
+            var p1 = Expression.Parameter(typeof(string), "p1");
+            var callExp = Expression.Call(stringConst,
+                                        typeof(string).GetMethodInfo("Equals", new Type[] {typeof(string)}),
+                                        p1);
+
+            var sb = new StringBuilder();
+            callExp.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        [Fact]
+        public void TraceNewExpression()
+        {
+            var newExp = Expression.New(typeof(object));
+
+            var sb = new StringBuilder();
+            newExp.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        private class SomeClassWithByRefCtor
+        {
+            public SomeClassWithByRefCtor(ref int x)
+            {
+                x = x + 99;
+            }
+        }
+
+        [Fact]
+        public void TraceNewExpressionWithByRefCtor()
+        {
+            var p0 = Expression.Parameter(typeof(int).MakeByRefType());
+            var newExp = Expression.New(typeof(SomeClassWithByRefCtor).GetConstructors()[0], p0);
+
+            var sb = new StringBuilder();
+            newExp.TraceNode(sb);
             _testOutputHelper.WriteLine(sb.ToString());
         }
     }
