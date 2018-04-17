@@ -234,10 +234,57 @@ namespace RuleEngine.Tests.Utils
         }
 
         [Fact]
-        public void TraceUnaryExpression()
+        public void TraceUnaryExpression1()
         {
             var val1 = Expression.Constant(5);
             var uExp = Expression.Negate(val1);
+            _testOutputHelper.WriteLine($"uExp: {uExp}");
+
+            var sb = new StringBuilder();
+            uExp.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        [Fact]
+        public void TraceUnaryExpression2()
+        {
+            var val1 = Expression.Constant(null, typeof(int?));
+            var uExp = Expression.Negate(val1);
+            _testOutputHelper.WriteLine($"uExp: {uExp}");
+
+            var sb = new StringBuilder();
+            uExp.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        [Fact]
+        public void TraceUnaryExpression3()
+        {
+            var val1 = Expression.Constant(true, typeof(bool));
+            var uExp = Expression.Not(val1);
+            _testOutputHelper.WriteLine($"uExp: {uExp}");
+
+            var sb = new StringBuilder();
+            uExp.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        [Fact]
+        public void TraceUnaryExpression4()
+        {
+            var param = Expression.Parameter(typeof(bool?));
+            var uExp = Expression.Not(param);
+            _testOutputHelper.WriteLine($"uExp: {uExp}");
+
+            var sb = new StringBuilder();
+            uExp.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        [Fact]
+        public void TraceUnaryExpression5()
+        {
+            var uExp = Expression.Unbox(Expression.Default(typeof(object)), typeof(int?));
             _testOutputHelper.WriteLine($"uExp: {uExp}");
 
             var sb = new StringBuilder();
