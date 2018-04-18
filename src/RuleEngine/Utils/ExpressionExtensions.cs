@@ -337,15 +337,17 @@ namespace RuleEngine.Utils
             var levelSpace = new string(' ', level * NumberOfSpaces);
 
             sb.Append($"|{levelSpace}|- unaryExpression.Method: {unaryExpression.Method}{Nl}");
+            sb.Append($"|{levelSpace}|- unaryExpression.IsLifted: {unaryExpression.IsLifted}{Nl}");
+            sb.Append($"|{levelSpace}|- unaryExpression.IsLiftedToNull: {unaryExpression.IsLiftedToNull}{Nl}");
 
             level++;
             sb.Append($"|{Nl}");
-            sb.Append($"|{levelSpace}|- Operand:{Nl}");
-            unaryExpression?.Operand?.TraceNode(sb, level);
+            sb.Append($"|{levelSpace}|- unaryExpression.Operand:{Nl}");
+            unaryExpression.Operand?.TraceNode(sb, level);
 
             sb.Append($"|{Nl}");
-            sb.Append($"|{levelSpace}|- innerExpression:{Nl}");
-            unaryExpression?.Operand?.GetInnerExpression().TraceNode(sb, level);
+            sb.Append($"|{levelSpace}|- unaryExpression.Operand.GetInnerExpression():{Nl}");
+            unaryExpression.Operand?.GetInnerExpression()?.TraceNode(sb, level);
         }
     }
 }
