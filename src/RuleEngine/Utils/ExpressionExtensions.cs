@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
@@ -169,11 +170,11 @@ namespace RuleEngine.Utils
             var levelSpace = new string(' ', level * NumberOfSpaces);
 
             level++;
-            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|{Nl}");
             sb.Append($"|{levelSpace}|- Left:{Nl}");
             binaryExpression.Left?.TraceNode(sb, level);
 
-            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|{Nl}");
             sb.Append($"|{levelSpace}|- Right:{Nl}");
             binaryExpression.Right?.TraceNode(sb, level);
         }
@@ -187,7 +188,7 @@ namespace RuleEngine.Utils
             level++;
             if(blockExpression.Variables !=null)
             {
-                sb.Append($"|{Nl}");
+                sb.Append($"|{levelSpace}|{Nl}");
                 sb.Append($"|{levelSpace}|- Variables count: {blockExpression.Variables.Count}{Nl}");
                 foreach (var blockExpressionVariable in blockExpression.Variables)
                     blockExpressionVariable.TraceNode(sb, level);
@@ -195,7 +196,7 @@ namespace RuleEngine.Utils
 
             if(blockExpression.Expressions !=null)
             {
-                sb.Append($"|{Nl}");
+                sb.Append($"|{levelSpace}|{Nl}");
                 sb.Append($"|{levelSpace}|- Expressions count: {blockExpression.Expressions.Count}{Nl}");
                 foreach (var blockExpressionExpression in blockExpression.Expressions)
                     blockExpressionExpression.TraceNode(sb, level);
@@ -209,11 +210,11 @@ namespace RuleEngine.Utils
             var levelSpace = new string(' ', level * NumberOfSpaces);
 
             level++;
-            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|{Nl}");
             sb.Append($"|{levelSpace}|- IfTrue:{Nl}");
             conditionalExpression.IfTrue.TraceNode(sb, level);
 
-            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|{Nl}");
             sb.Append($"|{levelSpace}|- IfFalse:{Nl}");
             conditionalExpression.IfFalse.TraceNode(sb, level);
         }
@@ -238,13 +239,13 @@ namespace RuleEngine.Utils
             invocationExpression.TraceBaseInfo(sb, level);
             var levelSpace = new string(' ', level * NumberOfSpaces);
             level++;
-            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|{Nl}");
             sb.Append($"|{levelSpace}|- Expression:{Nl}");
             invocationExpression.Expression?.TraceNode(sb, level);
 
             if(invocationExpression.Arguments != null)
             {
-                sb.Append($"|{Nl}");
+                sb.Append($"|{levelSpace}|{Nl}");
                 sb.Append($"|{levelSpace}|- Arguments count: {invocationExpression.Arguments.Count}{Nl}");
                 foreach (var invocationExpressionArgument in invocationExpression.Arguments)
                     invocationExpressionArgument.TraceNode(sb, level);
@@ -260,13 +261,13 @@ namespace RuleEngine.Utils
             level++;
             if(lambdaExpression.Parameters !=null)
             {
-                sb.Append($"|{Nl}");
+                sb.Append($"|{levelSpace}|{Nl}");
                 sb.Append($"|{levelSpace}|- Parameters count: {lambdaExpression.Parameters.Count}{Nl}");
                 foreach (var lambdaExpressionParameter in lambdaExpression.Parameters)
                     lambdaExpressionParameter.TraceNode(sb, level);
             }
 
-            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|{Nl}");
             sb.Append($"|{levelSpace}|- Body [{lambdaExpression.Body?.NodeType}]{Nl}");
             lambdaExpression.Body?.TraceNode(sb, level);
         }
@@ -290,7 +291,7 @@ namespace RuleEngine.Utils
             level++;
             if(methodCallExpression.Arguments != null)
             {
-                sb.Append($"|{Nl}");
+                sb.Append($"|{levelSpace}|{Nl}");
                 sb.Append($"|{levelSpace}|- Arguments Count: {methodCallExpression.Arguments.Count}{Nl}");
                 foreach (var expression in methodCallExpression.Arguments)
                     expression.TraceNode(sb, level);
@@ -302,11 +303,16 @@ namespace RuleEngine.Utils
             if (sb == null || newExpression == null) return;
             newExpression.TraceBaseInfo(sb, level);
             var levelSpace = new string(' ', level * NumberOfSpaces);
+            sb.Append($"|{levelSpace}|- newExpression.Constructor?.Name: {newExpression.Constructor?.Name}{Nl}");
+            if (newExpression.Constructor?.GetParameters() != null)
+                sb.Append($"|{levelSpace}|- newExpression.Constructor?.GetParameters(): " +
+                          $"{string.Join(",", newExpression.Constructor?.GetParameters().Select(p=>$"{p.ParameterType.Name} {p.Name}"))}" +
+                          $"{Nl}");
 
             level++;
             if (newExpression.Arguments != null)
             {
-                sb.Append($"|{Nl}");
+                sb.Append($"|{levelSpace}|{Nl}");
                 sb.Append($"|{levelSpace}|- Arguments Count: {newExpression.Arguments.Count}{Nl}");
                 foreach (var expression in newExpression.Arguments)
                     expression.TraceNode(sb, level);
@@ -314,7 +320,7 @@ namespace RuleEngine.Utils
 
             if (newExpression.Members != null)
             {
-                sb.Append($"|{Nl}");
+                sb.Append($"|{levelSpace}|{Nl}");
                 sb.Append($"|{levelSpace}|- Members Count: {newExpression.Members.Count}{Nl}");
                 foreach (var memberInfo in newExpression.Members)
                     sb.Append($"|{levelSpace}|- memberInfo.Name: {memberInfo.Name}");
@@ -328,6 +334,7 @@ namespace RuleEngine.Utils
             var levelSpace = new string(' ', level * NumberOfSpaces);
 
             sb.Append($"|{levelSpace}|- parameterExpression.Name: {parameterExpression.Name ?? "null"}{Nl}");
+            sb.Append($"|{levelSpace}|- parameterExpression.IsByRef: {parameterExpression.IsByRef}{Nl}");
         }
 
         public static void TraceNode(this UnaryExpression unaryExpression, StringBuilder sb, int level = 0)
@@ -341,11 +348,11 @@ namespace RuleEngine.Utils
             sb.Append($"|{levelSpace}|- unaryExpression.IsLiftedToNull: {unaryExpression.IsLiftedToNull}{Nl}");
 
             level++;
-            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|{Nl}");
             sb.Append($"|{levelSpace}|- unaryExpression.Operand:{Nl}");
             unaryExpression.Operand?.TraceNode(sb, level);
 
-            sb.Append($"|{Nl}");
+            sb.Append($"|{levelSpace}|{Nl}");
             sb.Append($"|{levelSpace}|- unaryExpression.Operand.GetInnerExpression():{Nl}");
             unaryExpression.Operand?.GetInnerExpression()?.TraceNode(sb, level);
         }
