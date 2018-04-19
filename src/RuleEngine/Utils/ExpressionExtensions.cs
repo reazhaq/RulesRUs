@@ -278,8 +278,8 @@ namespace RuleEngine.Utils
             memberExpression.TraceBaseInfo(sb, level);
             var levelSpace = new string(' ', level * NumberOfSpaces);
 
-            sb.Append($"|{levelSpace}|- memberExpression.Member - field: {(memberExpression.Member as FieldInfo)?.ToString()}{Nl}");
-            sb.Append($"|{levelSpace}|- memberExpression.Member - prop: {(memberExpression.Member as PropertyInfo)?.ToString()}{Nl}");
+            sb.Append($"|{levelSpace}|- memberExpression.Member - field: {memberExpression.Member as FieldInfo}{Nl}");
+            sb.Append($"|{levelSpace}|- memberExpression.Member - prop: {memberExpression.Member as PropertyInfo}{Nl}");
         }
 
         public static void TraceNode(this MethodCallExpression methodCallExpression, StringBuilder sb, int level = 0)
@@ -288,14 +288,20 @@ namespace RuleEngine.Utils
             methodCallExpression.TraceBaseInfo(sb, level);
             var levelSpace = new string(' ', level * NumberOfSpaces);
 
-            level++;
-            if(methodCallExpression.Arguments != null)
+            if(methodCallExpression.Method != null)
             {
-                sb.Append($"|{levelSpace}|{Nl}");
-                sb.Append($"|{levelSpace}|- Arguments Count: {methodCallExpression.Arguments.Count}{Nl}");
-                foreach (var expression in methodCallExpression.Arguments)
-                    expression.TraceNode(sb, level);
-            }
+                sb.Append($"|{levelSpace}|- methodCallExpression.Method.Name: {methodCallExpression.Method.Name}{Nl}");
+                sb.Append($"|{levelSpace}|- methodCallExpression.Method.GetParameters(): " +
+                          $"{string.Join(",", methodCallExpression.Method.GetParameters().Select(p=>$"{p.ParameterType.Name} {p.Name}"))}" +
+                          $"{Nl}");
+            }           
+
+            if (methodCallExpression.Arguments == null) return;
+            level++;
+            sb.Append($"|{levelSpace}|{Nl}");
+            sb.Append($"|{levelSpace}|- Arguments Count: {methodCallExpression.Arguments.Count}{Nl}");
+            foreach (var expression in methodCallExpression.Arguments)
+                expression.TraceNode(sb, level);
         }
 
         public static void TraceNode(this NewExpression newExpression, StringBuilder sb, int level = 0)
@@ -353,7 +359,7 @@ namespace RuleEngine.Utils
             unaryExpression.Operand?.TraceNode(sb, level);
 
             sb.Append($"|{levelSpace}|{Nl}");
-            sb.Append($"|{levelSpace}|- unaryExpression.Operand.GetInnerExpression():{Nl}");
+            sb.Append($"|{levelSpace}|- innerExpression:{Nl}");
             unaryExpression.Operand?.GetInnerExpression()?.TraceNode(sb, level);
         }
     }

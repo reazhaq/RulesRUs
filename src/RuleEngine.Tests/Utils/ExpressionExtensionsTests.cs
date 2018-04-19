@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Text;
-using FluentAssertions;
 using Microsoft.CSharp.RuntimeBinder;
-using RuleEngine.Rules;
 using RuleEngine.Utils;
 using Xunit;
 using Xunit.Abstractions;
@@ -157,7 +153,7 @@ namespace RuleEngine.Tests.Utils
             var stringConst = Expression.Constant("something", typeof(string));
             var p1 = Expression.Parameter(typeof(string), "p1");
             var callExp = Expression.Call(stringConst,
-                                        typeof(string).GetMethodInfo("Equals", new Type[] {typeof(string)}),
+                                        typeof(string).GetMethodInfo("Equals", new[] {typeof(string)}),
                                         p1);
             _testOutputHelper.WriteLine($"callExp: {callExp}");
 
@@ -189,12 +185,9 @@ namespace RuleEngine.Tests.Utils
 
         private class SomeClassWithParamCtor
         {
-            private readonly int _x;
+            public SomeClassWithParamCtor(int x){}
 
-            public SomeClassWithParamCtor(int x)
-            {
-                _x = x;
-            }
+            public SomeClassWithParamCtor(int x, int y){}
         }
 
         [Fact]
@@ -215,6 +208,20 @@ namespace RuleEngine.Tests.Utils
             var ctor = typeof(SomeClassWithParamCtor).GetConstructors()[0];
             var arg1 = Expression.Constant(5);
             var newExp = Expression.New(ctor, arg1);
+            _testOutputHelper.WriteLine($"newExp: {newExp}");
+
+            var sb = new StringBuilder();
+            newExp.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+        }
+
+        [Fact]
+        public void TraceNewExpressionWithParamCtor2()
+        {
+            var ctor = typeof(SomeClassWithParamCtor).GetConstructors()[1];
+            var arg1 = Expression.Constant(5);
+            var arg2 = Expression.Constant(9);
+            var newExp = Expression.New(ctor, arg1, arg2);
             _testOutputHelper.WriteLine($"newExp: {newExp}");
 
             var sb = new StringBuilder();
