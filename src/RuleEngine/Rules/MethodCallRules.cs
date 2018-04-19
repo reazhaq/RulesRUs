@@ -20,16 +20,29 @@ namespace RuleEngine.Rules
         public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
         public override bool Compile() => throw new NotImplementedException();
 
-        protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall, Type[] paramTypes,
-            Expression expression)
+        protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall,
+                                        Type[] methodArgumentTypes, Expression expression)
         {
-            if (string.IsNullOrEmpty(methodClassName))
-                return expression.Type.GetMethodInfo(methodToCall, paramTypes);
+            if (String.IsNullOrEmpty(methodClassName))
+                return expression.Type.GetMethodInfo(methodToCall, methodArgumentTypes);
 
             var type = Type.GetType(methodClassName);
             if (type == null) throw new RuleEngineException($"can't find class named: {methodClassName}");
 
-            return type.GetMethodInfo(methodToCall, paramTypes);
+            return type.GetMethodInfo(methodToCall, methodArgumentTypes);
+        }
+
+        public Expression[] GetArgumentsExpressions(ParameterExpression rootParam, out Type[] methodArgumentTypes)
+        {
+            methodArgumentTypes = new Type[MethodParameters.Count];
+            var argumentsExpressions = new Expression[MethodParameters.Count];
+            for (var index = 0; index < MethodParameters.Count; index++)
+            {
+                var paramRule = MethodParameters[index];
+                argumentsExpressions[index] = paramRule.BuildExpression(rootParam);
+                methodArgumentTypes[index] = argumentsExpressions[index].Type;
+            }
+            return argumentsExpressions;
         }
     }
 
@@ -45,15 +58,14 @@ namespace RuleEngine.Rules
             var param = parameters[0];
             var expression = GetExpressionWithSubProperty(param, ObjectToCallMethodOn);
 
-            var paramTypes = new Type[MethodParameters.Count];
-            var argumentsExpressions = GetArgumentsExpressions(param, MethodParameters, paramTypes);
+            var argumentsExpressions = GetArgumentsExpressions(param, out var methodArgumentTypes);
 
-            var methodInfo = GetMethodInfo(MethodClassName, MethodToCall, paramTypes, expression);
+            var methodInfo = GetMethodInfo(MethodClassName, MethodToCall, methodArgumentTypes, expression);
             if (methodInfo == null) return null;
             if (!methodInfo.IsGenericMethod)
-                paramTypes = null;
+                methodArgumentTypes = null;
 
-            ExpressionForThisRule = Expression.Call(expression, MethodToCall, paramTypes, argumentsExpressions);
+            ExpressionForThisRule = Expression.Call(expression, MethodToCall, methodArgumentTypes, argumentsExpressions);
             return ExpressionForThisRule;
         }
 
@@ -91,15 +103,14 @@ namespace RuleEngine.Rules
             var param = parameters[0];
             var expression = GetExpressionWithSubProperty(param, ObjectToCallMethodOn);
 
-            var paramTypes = new Type[MethodParameters.Count];
-            var argumentsExpressions = GetArgumentsExpressions(param, MethodParameters, paramTypes);
+            var argumentsExpressions = GetArgumentsExpressions(param, out var methodArgumentTypes);
 
-            var methodInfo = GetMethodInfo(MethodClassName, MethodToCall, paramTypes, expression);
+            var methodInfo = GetMethodInfo(MethodClassName, MethodToCall, methodArgumentTypes, expression);
             if (methodInfo == null) return null;
             if (!methodInfo.IsGenericMethod)
-                paramTypes = null;
+                methodArgumentTypes = null;
 
-            ExpressionForThisRule = Expression.Call(expression, MethodToCall, paramTypes, argumentsExpressions);
+            ExpressionForThisRule = Expression.Call(expression, MethodToCall, methodArgumentTypes, argumentsExpressions);
             return ExpressionForThisRule;
         }
 

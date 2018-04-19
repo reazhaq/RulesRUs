@@ -137,10 +137,12 @@ namespace RuleFactory
 
         }
 
-        private static Rule CreateRule(Type genericType, Type[] typesToBoundTo)
+        private static Rule CreateRule(Type ruleType, Type[] typesToBindTo)
         {
-            if (genericType == null || typesToBoundTo == null) return null;
-            var boundedGenericType = genericType.MakeGenericType(typesToBoundTo);
+            // make sure we are trying to create a bounded generic object drived from Rule
+            if (ruleType == null || typesToBindTo == null || !ruleType.IsSubclassOf(typeof(Rule))) return null;
+
+            var boundedGenericType = ruleType.MakeGenericType(typesToBindTo);
             var instance = Activator.CreateInstance(boundedGenericType);
             return (Rule)instance;
         }
