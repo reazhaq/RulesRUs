@@ -6,10 +6,13 @@ using RuleEngine.Interfaces.Rules;
 
 namespace RuleEngine.Rules
 {
-    public class ConstantRuleBase : Rule
+    public abstract class ConstantRuleBase : Rule
     {
         public virtual string Value { get; set; }
 
+        // convert "Value" to the requested type
+        // if target type is nullable type like int?
+        //     - convert the value to int; than change type to int?
         protected ConstantExpression GetUnderlyingTypedValue(Type tType)
         {
             tType = Nullable.GetUnderlyingType(tType) ?? tType;
@@ -17,6 +20,9 @@ namespace RuleEngine.Rules
             return Expression.Constant(Convert.ChangeType(valueToConvert, tType));
         }
 
+        // get default/null value representation for a type
+        // applies to nullable types
+        // for value type - it throws an exception
         protected ConstantExpression GetNullValueExpression<T>(Type tType)
         {
             if (!tType.IsValueType || Nullable.GetUnderlyingType(tType) != null)
@@ -24,9 +30,6 @@ namespace RuleEngine.Rules
 
             throw new RuleEngineException($"{typeof(T)} is not nullable and [null and/or empty string] can't be assigned");
         }
-
-        public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
-        public override bool Compile() => throw new NotImplementedException();
     }
 
     // creates a typed lambda that takes no paramter and returns a fixed value

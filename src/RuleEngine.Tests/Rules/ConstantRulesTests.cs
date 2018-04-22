@@ -1,5 +1,6 @@
 ﻿using System;
 using FluentAssertions;
+using RuleEngine.Common;
 using RuleEngine.Rules;
 using Xunit;
 using Xunit.Abstractions;
@@ -41,6 +42,14 @@ namespace RuleEngine.Tests.Rules
             var value = ruleReturningDouble.Get();
             _testOutputHelper.WriteLine($"expected: 99.1 - actual: {value}");
             value.Should().Be(99.1);
+        }
+
+        [Fact]
+        public void CosntantRuleThrowsExceptionForNullValueType()
+        {
+            var rule = new ConstantRule<int> {Value = "null"};
+            var exception = Assert.Throws<RuleEngineException>(() => rule.Compile());
+            exception.Message.Should().Be("System.Int32 is not nullable and [null and/or empty string] can't be assigned");
         }
 
         // shortcut - quick tests to work with different types
