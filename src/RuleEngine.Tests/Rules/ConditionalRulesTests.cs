@@ -135,6 +135,58 @@ namespace RuleEngine.Tests.Rules
             ruleResult.Should().BeEquivalentTo(expectedOutput);
         }
 
+        [Theory]
+        [InlineData("one", true)]
+        [InlineData("nine", false)]
+        public void ConditionalWithConstantRule2(string valueToCheck, bool expectedOutput)
+        {
+            var containsTextRule = new ConditionalFuncRule<string, bool>
+            {
+                ConditionRule = new ContainsValueRule<string>
+                {
+                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+                },
+                TrueRule = new ConstantRule<string, bool> { Value = "true" },
+                FalseRule = new ConstantRule<string, bool> { Value = "false" }
+            };
+
+            var compileResult = containsTextRule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(containsTextRule)}:{Environment.NewLine}" +
+                                        $"{containsTextRule.ExpressionDebugView()}");
+
+            var ruleResult = containsTextRule.Execute(valueToCheck);
+            _testOutputHelper.WriteLine($"expected: {expectedOutput} - actual: {ruleResult}");
+            ruleResult.Should().Be(expectedOutput);
+        }
+
+        [Theory]
+        [InlineData("one", "true", "false", true)]
+        [InlineData("nine", "true", "null", null)]
+        public void ConditionalWithConstantRule3(string valueToCheck, string trueRuleValue, string falseRuleValue, bool? expectedOutput)
+        {
+            var containsTextRule = new ConditionalFuncRule<string, bool?>
+            {
+                ConditionRule = new ContainsValueRule<string>
+                {
+                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+                },
+                TrueRule = new ConstantRule<string, bool?> { Value = trueRuleValue },
+                FalseRule = new ConstantRule<string, bool?> { Value = falseRuleValue }
+            };
+
+            var compileResult = containsTextRule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(containsTextRule)}:{Environment.NewLine}" +
+                                        $"{containsTextRule.ExpressionDebugView()}");
+
+            var ruleResult = containsTextRule.Execute(valueToCheck);
+            _testOutputHelper.WriteLine($"expected: {expectedOutput} - actual: {ruleResult}");
+            ruleResult.Should().Be(expectedOutput);
+        }
+
         [Fact]
         public void ConditionalRuleToUpdateName()
         {

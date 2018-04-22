@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
-using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
@@ -112,7 +111,7 @@ namespace RuleEngine.Rules
     }
 
     // creates a if-then-else block that returns a value
-    // take a param if type T1 and returns a value type of T2
+    // take a param of type T1 and returns a value type of T2
     // returns a value if true or returns another value if false
     public class ConditionalFuncRule<T1, T2> : ConditionalRuleBase, IConditionalFuncRule<T1, T2>
     {
@@ -145,8 +144,9 @@ namespace RuleEngine.Rules
             Debug.WriteLine($"TrueRule:{Environment.NewLine}{TrueRule.ExpressionDebugView()}");
             Debug.WriteLine($"FalseRule:{Environment.NewLine}{FalseRule.ExpressionDebugView()}");
 
+            var defaultForReturnLabel = Expression.Convert(Expression.Constant(default(T2)), typeof(T2));
             ExpressionForThisRule = Expression.Block(ifThenElseExpression,
-                                        Expression.Label(returnLabel, Expression.Constant(string.Empty)));
+                                                    Expression.Label(returnLabel, defaultForReturnLabel));
             return ExpressionForThisRule;
         }
 
