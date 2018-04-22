@@ -4,19 +4,19 @@ using System.Linq;
 using System.Linq.Expressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
+using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
-    public class ConditionalRuleBase : Rule
+    public abstract class ConditionalRuleBase : Rule
     {
         public Rule ConditionRule;
         public Rule TrueRule;
         public Rule FalseRule;
-
-        public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
-        public override bool Compile() => throw new NotImplementedException();
     }
-
+    
+    // creates an if-then block with no-return value
+    // executes the true rule - if conditional rule passes
     public class ConditionalIfThActionRule<T> : ConditionalRuleBase, IConditionalActionRule<T>
     {
         private Action<T> CompiledDelegate { get; set; }
@@ -61,6 +61,7 @@ namespace RuleEngine.Rules
         }
     }
 
+    // creates a if-then-else block with no-return
     // executes a rule if true or executes another rule if false
     public class ConditionalIfThElActionRule<T> : ConditionalRuleBase, IConditionalActionRule<T>
     {
@@ -110,6 +111,8 @@ namespace RuleEngine.Rules
         }
     }
 
+    // creates a if-then-else block that returns a value
+    // take a param if type T1 and returns a value type of T2
     // returns a value if true or returns another value if false
     public class ConditionalFuncRule<T1, T2> : ConditionalRuleBase, IConditionalFuncRule<T1, T2>
     {
@@ -138,9 +141,9 @@ namespace RuleEngine.Rules
                                         Expression.Return(returnLabel, Expression.Invoke(falseExpression, parameters.Cast<Expression>()))
             );
 
-            Debug.WriteLine($"trueExpression:{Environment.NewLine}{ExpressionDebugView()}");
-            Debug.WriteLine($"falseExpression:{Environment.NewLine}{ExpressionDebugView()}");
-            Debug.WriteLine($"conditionalExpression:{Environment.NewLine}{ExpressionDebugView()}");
+            Debug.WriteLine($"ConditionRule:{Environment.NewLine}{ConditionRule.ExpressionDebugView()}");
+            Debug.WriteLine($"TrueRule:{Environment.NewLine}{TrueRule.ExpressionDebugView()}");
+            Debug.WriteLine($"FalseRule:{Environment.NewLine}{FalseRule.ExpressionDebugView()}");
 
             ExpressionForThisRule = Expression.Block(ifThenElseExpression,
                                         Expression.Label(returnLabel, Expression.Constant(string.Empty)));
