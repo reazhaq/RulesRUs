@@ -7,6 +7,77 @@ Create a Rule, and compile it.  Once compiled, rule can be executed over and ove
 
 Unit tests - probably good place to look for examples and ideas.
 
+## Conditional Rule
+Represents simple if-then-else construct of some flavors.  If-then action rule (ConditionalIfThActionRule) execute true action (rule) when the condition is true; else nothing.  If-then-action rule (ConditionalIfThElActionRule) similar, but has an extra false caluse.  And if-then-else func rule (ConditionalFuncRule) returns a value.
+```
+    [Fact]
+    public void ConditionalRuleToUpdateNameToSomethingElse()
+    {
+        var conditionalIfThElRule = new ConditionalIfThElActionRule<Game>
+        {
+            ConditionRule = new MethodCallRule<Game, bool>
+            {
+                ObjectToCallMethodOn = "Name",
+                MethodToCall = "Equals",
+                MethodParameters = { new ConstantRule<string> { Value = "some name" }, 
+                    new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
+                }
+            },
+            TrueRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Name",
+                SourceDataRule = new ConstantRule<string> { Value = "true name" }
+            },
+            FalseRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Name",
+                SourceDataRule = new ConstantRule<string> { Value = "false name" }
+            }
+        };
+
+        var compileResult = conditionalIfThElRule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(conditionalIfThElRule)}:{Environment.NewLine}" +
+                                    $"{conditionalIfThElRule.ExpressionDebugView()}");
+
+        var game = new Game { Name = "some name" };
+        _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
+        conditionalIfThElRule.Execute(game);
+        _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
+        game.Name.Should().Be("true name");
+
+        conditionalIfThElRule.Execute(game);
+        _testOutputHelper.WriteLine($"after after game.Name: {game.Name}");
+        game.Name.Should().Be("false name");
+    }
+```
+resultant expression:
+```
+||- Expression Type: FullConditionalExpression
+||- Expression.NodeType: Conditional
+||- Expression.DebugView: .If (
+    .Invoke (.Lambda #Lambda1<System.Func`2[RuleEngine.Tests.Model.Game,System.Boolean]>)($var1)
+) {
+    .Invoke (.Lambda #Lambda2<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>)($var1)
+} .Else {
+    .Invoke (.Lambda #Lambda3<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>)($var1)
+}
+
+.Lambda #Lambda1<System.Func`2[RuleEngine.Tests.Model.Game,System.Boolean]>(RuleEngine.Tests.Model.Game $var1) {
+    .Call ($var1.Name).Equals(
+        (System.String)"some name",
+        (System.StringComparison).Constant<System.StringComparison>(CurrentCultureIgnoreCase))
+}
+
+.Lambda #Lambda2<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>(RuleEngine.Tests.Model.Game $var1) {
+    $var1.Name = (System.String)"true name"
+}
+
+.Lambda #Lambda3<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>(RuleEngine.Tests.Model.Game $var1) {
+    $var1.Name = (System.String)"false name"
+}
+```
+
 ## Constant Rule
 Most simple rule, and most used rule is a Constant Rule.  Constant rule is a simple Func; that returns a constant value.
 ```
@@ -109,6 +180,26 @@ Helps call regular expression; like validating an name or email address.
     }
 ```
 
+## Self Return Rule
+This is a 'no-op' rule; returns whatever argument is given.
+```
+    [Theory]
+    [InlineData(5)]
+    [InlineData(-5)]
+    [InlineData(int.MaxValue)]
+    public void IntSelfReturn(int someValue)
+    {
+        var rule = new SelfReturnRule<int>();
+        var compileResult = rule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"selfReturnRule for Int:{Environment.NewLine}" +
+                                    $"{rule.ExpressionDebugView()}");
+
+        var value = rule.Get(someValue);
+        value.Should().Be(someValue);
+    }
+```
+
 ## Update Value Rule
 Want to update a value of an object; this is the rule.  I had been using this with Conditional Rule (see below)
 ```
@@ -180,77 +271,6 @@ Most used rule - takes an object and return boolean.  Combined with children rul
                                         $"Error code={numberShouldNotBe5Rule.RuleError.Code}, " +
                                         $"message={numberShouldNotBe5Rule.RuleError.Message}");
     }
-```
-
-## Conditional Rule
-Represents simple if-then-else construct of some flavors.  If-then action rule (ConditionalIfThActionRule) execute true action (rule) when the condition is true; else nothing.  If-then-action rule (ConditionalIfThElActionRule) similar, but has an extra false caluse.  And if-then-else func rule (ConditionalFuncRule) returns a value.
-```
-    [Fact]
-    public void ConditionalRuleToUpdateNameToSomethingElse()
-    {
-        var conditionalIfThElRule = new ConditionalIfThElActionRule<Game>
-        {
-            ConditionRule = new MethodCallRule<Game, bool>
-            {
-                ObjectToCallMethodOn = "Name",
-                MethodToCall = "Equals",
-                MethodParameters = { new ConstantRule<string> { Value = "some name" }, 
-                    new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
-                }
-            },
-            TrueRule = new UpdateValueRule<Game>
-            {
-                ObjectToUpdate = "Name",
-                SourceDataRule = new ConstantRule<string> { Value = "true name" }
-            },
-            FalseRule = new UpdateValueRule<Game>
-            {
-                ObjectToUpdate = "Name",
-                SourceDataRule = new ConstantRule<string> { Value = "false name" }
-            }
-        };
-
-        var compileResult = conditionalIfThElRule.Compile();
-        compileResult.Should().BeTrue();
-        _testOutputHelper.WriteLine($"{nameof(conditionalIfThElRule)}:{Environment.NewLine}" +
-                                    $"{conditionalIfThElRule.ExpressionDebugView()}");
-
-        var game = new Game { Name = "some name" };
-        _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
-        conditionalIfThElRule.Execute(game);
-        _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
-        game.Name.Should().Be("true name");
-
-        conditionalIfThElRule.Execute(game);
-        _testOutputHelper.WriteLine($"after after game.Name: {game.Name}");
-        game.Name.Should().Be("false name");
-    }
-```
-resultant expression:
-```
-||- Expression Type: FullConditionalExpression
-||- Expression.NodeType: Conditional
-||- Expression.DebugView: .If (
-    .Invoke (.Lambda #Lambda1<System.Func`2[RuleEngine.Tests.Model.Game,System.Boolean]>)($var1)
-) {
-    .Invoke (.Lambda #Lambda2<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>)($var1)
-} .Else {
-    .Invoke (.Lambda #Lambda3<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>)($var1)
-}
-
-.Lambda #Lambda1<System.Func`2[RuleEngine.Tests.Model.Game,System.Boolean]>(RuleEngine.Tests.Model.Game $var1) {
-    .Call ($var1.Name).Equals(
-        (System.String)"some name",
-        (System.StringComparison).Constant<System.StringComparison>(CurrentCultureIgnoreCase))
-}
-
-.Lambda #Lambda2<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>(RuleEngine.Tests.Model.Game $var1) {
-    $var1.Name = (System.String)"true name"
-}
-
-.Lambda #Lambda3<System.Func`2[RuleEngine.Tests.Model.Game,System.String]>(RuleEngine.Tests.Model.Game $var1) {
-    $var1.Name = (System.String)"false name"
-}
 ```
 
 # Samples
