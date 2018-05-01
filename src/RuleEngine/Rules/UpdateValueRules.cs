@@ -6,12 +6,9 @@ using RuleEngine.Interfaces.Rules;
 
 namespace RuleEngine.Rules
 {
-    public class UpdateValueRuleBase : Rule
+    public abstract class UpdateValueRuleBase : Rule
     {
         public string ObjectToUpdate;
-
-        public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
-        public override bool Compile() => throw new NotImplementedException();
     }
 
     public class UpdateValueRule<T> : UpdateValueRuleBase, IUpdateValueRule<T>
@@ -90,6 +87,45 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             CompiledDelegate(targetObject, source);
+        }
+    }
+
+    public class RefUpdateValueRule<T> : Rule, IRefUpdateValueRule<T>
+    {
+        private delegate void UpdateAction(ref T param);
+        private UpdateAction CompiledDelegate { get; set; }
+        public Rule SourceDataRule;
+
+        public override Expression BuildExpression(params ParameterExpression[] parameters)
+        {
+            if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T))
+                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
+
+            var target = parameters[0];
+            var sourceExpression = SourceDataRule.BuildExpression(target);
+            ExpressionForThisRule = Expression.Assign(target, sourceExpression);
+            return ExpressionForThisRule;
+        }
+
+        public override bool Compile()
+        {
+            var param = Expression.Parameter(typeof(T).MakeByRefType());
+            ExpressionForThisRule = BuildExpression(param);
+            if (ExpressionForThisRule == null) return false;
+
+            Debug.WriteLine($"Expression for RefUpdateRule<{typeof(T)}>:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}`");
+
+            CompiledDelegate = Expression.Lambda<UpdateAction>(ExpressionForThisRule, param).Compile();
+            return CompiledDelegate != null;
+        }
+
+        public void RefUpdate(ref T target)
+        {
+            if (CompiledDelegate == null)
+                throw new RuleEngineException("A Rule must be compiled first");
+
+            CompiledDelegate(ref target);
         }
     }
 }

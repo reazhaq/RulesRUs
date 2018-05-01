@@ -56,5 +56,48 @@ namespace RuleEngine.Tests.Rules
             game.Name.Should().Be("name from constant rule");
             _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
         }
+
+        [Fact]
+        public void UpdateStringRef()
+        {
+            var rule = new RefUpdateValueRule<string>
+            {
+                SourceDataRule = new ConstantRule<string>{Value = "something"}
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");
+
+            var string1 = "one";
+            rule.RefUpdate(ref string1);
+            string1.Should().Be("something");
+        }
+
+        [Fact]
+        public void UpdateIntRef()
+        {
+            var rule = new RefUpdateValueRule<int>
+            {
+                SourceDataRule = new ConstantRule<int>{Value = "99"}
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");
+
+            var myInt = 0;
+            rule.RefUpdate(ref myInt);
+            myInt.Should().Be(99);
+        }
+
+        //[Fact]
+        //public void UpdateGameRef()
+        //{
+        //    var rule = new RefUpdateValueRule<Game>
+        //    {
+        //        SourceDataRule = new MethodCallRule<Int16,int>()
+        //    };
+        //}
     }
 }
