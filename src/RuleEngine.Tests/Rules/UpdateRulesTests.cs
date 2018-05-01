@@ -67,11 +67,21 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"RefUpdateValueRule<string>:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
 
             var string1 = "one";
             rule.RefUpdate(ref string1);
             string1.Should().Be("something");
+
+            var rule2 = new RefUpdateValueRule<string>();
+            compileResult = rule2.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"RefUpdateValueRule<string, string>:{Environment.NewLine}" +
+                                        $"{rule2.ExpressionDebugView()}");
+
+            rule2.RefUpdate(ref string1, "some other value");
+            string1.Should().Be("some other value");
         }
 
         [Fact]
@@ -89,15 +99,16 @@ namespace RuleEngine.Tests.Rules
             var myInt = 0;
             rule.RefUpdate(ref myInt);
             myInt.Should().Be(99);
+
+            var rule2 = new RefUpdateValueRule<int>();
+            compileResult = rule2.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"RefUpdateValueRule<int, int>:{Environment.NewLine}" +
+                                        $"{rule2.ExpressionDebugView()}");
+
+            rule2.RefUpdate(ref myInt, -99);
+            myInt.Should().Be(-99);
         }
 
-        //[Fact]
-        //public void UpdateGameRef()
-        //{
-        //    var rule = new RefUpdateValueRule<Game>
-        //    {
-        //        SourceDataRule = new MethodCallRule<Int16,int>()
-        //    };
-        //}
     }
 }
