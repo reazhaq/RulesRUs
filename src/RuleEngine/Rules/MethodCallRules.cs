@@ -9,16 +9,13 @@ using RuleEngine.Utils;
 
 namespace RuleEngine.Rules
 {
-    public class MethodCallBase : Rule
+    public abstract class MethodCallBase : Rule
     {
         public string MethodToCall;
         // MethodClassName needed for extension methods...
         public string MethodClassName { get; set; }
         public string ObjectToCallMethodOn { get; set; }
         public List<Rule> MethodParameters { get; } = new List<Rule>();
-
-        public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
-        public override bool Compile() => throw new NotImplementedException();
 
         protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall,
                                         Type[] methodArgumentTypes, Expression expression)

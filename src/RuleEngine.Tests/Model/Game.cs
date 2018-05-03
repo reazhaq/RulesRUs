@@ -16,5 +16,8 @@ namespace RuleEngine.Tests.Model
         public bool HasPlayer(int id) => Players.Any(p => p.Id == id);
 
         public void FlipActive() => Active = !Active;
+
+        public static Game CreateGame() => new Game {Active = false, Name = "new"};
+        public static Game CreateGame(string name) => new Game {Active = false, Name = name};
     }
 }
