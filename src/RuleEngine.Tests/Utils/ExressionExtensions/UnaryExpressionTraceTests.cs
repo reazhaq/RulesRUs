@@ -32,6 +32,18 @@ namespace RuleEngine.Tests.Utils.ExressionExtensions
             var sb = new StringBuilder();
             uExp.TraceNode(sb);
             _testOutputHelper.WriteLine(sb.ToString());
+
+            var lambda1 = Expression.Lambda<Func<int>>(val1);
+            var compiled1 = lambda1.Compile();
+            compiled1.Should().NotBeNull();
+            var ret1 = compiled1();
+            ret1.Should().Be(5);
+
+            var lambda2 = Expression.Lambda<Func<int>>(uExp);
+            var compiled2 = lambda2.Compile();
+            compiled2.Should().NotBeNull();
+            var ret2 = compiled2();
+            ret2.Should().Be(-5);
         }
 
         [Fact]
@@ -79,6 +91,24 @@ namespace RuleEngine.Tests.Utils.ExressionExtensions
             var sb = new StringBuilder();
             uExp.TraceNode(sb);
             _testOutputHelper.WriteLine(sb.ToString());
+
+            var lambda = Expression.Lambda<Func<int?>>(uExp);
+            var compiled = lambda.Compile();
+            compiled.Should().NotBeNull();
+
+            compiled().Should().BeNull();
+
+            var uExp2 = Expression.Unbox(Expression.Constant(-5, typeof(object)), typeof(int));
+            _testOutputHelper.WriteLine($"uExp2: {uExp2}");
+
+            sb.Clear();
+            uExp.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+
+            var lambda2 = Expression.Lambda<Func<int>>(uExp2);
+            var compiled2 = lambda2.Compile();
+            compiled2.Should().NotBeNull();
+            compiled2().Should().Be(-5);
         }
     }
 }
