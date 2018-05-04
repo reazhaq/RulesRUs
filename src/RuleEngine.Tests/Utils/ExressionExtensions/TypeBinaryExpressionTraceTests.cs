@@ -37,5 +37,24 @@ namespace RuleEngine.Tests.Utils.ExressionExtensions
             compiled(5).Should().BeTrue();
             compiled((object) 55).Should().BeTrue();
         }
+
+        [Fact]
+        public void TypeEqualTrace()
+        {
+            var exp1 = Expression.Constant(default(object), typeof(object));
+            var typeByRef = typeof(int);
+            var typeEqualExp = Expression.TypeEqual(exp1, typeByRef);
+            _testOutputHelper.WriteLine($"typeEqualExp: {typeEqualExp}");
+
+            var sb = new StringBuilder();
+            typeEqualExp.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+
+            var lambda = Expression.Lambda<Func<bool>>(typeEqualExp);
+            var compiled = lambda.Compile();
+            compiled.Should().NotBeNull();
+
+            compiled().Should().BeFalse();
+        }
     }
 }
