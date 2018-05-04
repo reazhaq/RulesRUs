@@ -134,9 +134,9 @@ namespace RuleEngine.Utils
                 //case TryExpression tryExpression:
                 //    tryExpression.TraceNode(sb, level);
                 //    break;
-                //case TypeBinaryExpression typeBinaryExpression:
-                //    typeBinaryExpression.TraceNode(sb, level);
-                //    break;
+                case TypeBinaryExpression typeBinaryExpression:
+                    typeBinaryExpression.TraceNode(sb, level);
+                    break;
                 case UnaryExpression unaryExpression:
                     unaryExpression.TraceNode(sb, level);
                     break;
@@ -341,6 +341,15 @@ namespace RuleEngine.Utils
 
             sb.Append($"|{levelSpace}|- parameterExpression.Name: {parameterExpression.Name ?? "null"}{Nl}");
             sb.Append($"|{levelSpace}|- parameterExpression.IsByRef: {parameterExpression.IsByRef}{Nl}");
+        }
+
+        public static void TraceNode(this TypeBinaryExpression typeBinaryExpression, StringBuilder sb, int level = 0)
+        {
+            if (sb == null || typeBinaryExpression == null) return;
+            typeBinaryExpression.TraceBaseInfo(sb, level);
+            var levelSpace = new string(' ', level * NumberOfSpaces);
+
+            sb.Append($"|{levelSpace}|- typeBinaryExpression.TypeOperand: {typeBinaryExpression.TypeOperand}{Nl}");
         }
 
         public static void TraceNode(this UnaryExpression unaryExpression, StringBuilder sb, int level = 0)
