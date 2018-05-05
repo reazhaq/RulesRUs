@@ -86,17 +86,17 @@ Total:                        00:00:41.4879563
 - Open PowerShell; change directory to root of the repository
 - Make sure version, release notes, etc. had been updated
 - create a local directory for the output (like c:\nuget-local)
-- run ```dotnet pack .\src\RuleEngine\RuleEngine.csproj -c Release -o C:\nuget-local\```; you should see ouput like below:
+- run ```dotnet pack .\src\RuleEngine\RuleEngine.csproj -c Release -o C:\nuget-local\ --include-symbols```; you should see ouput like below:
 
 ```PowerShell
-PS C:\Projects\Github\RulesRUs> dotnet pack .\src\RuleEngine\RuleEngine.csproj -c Release -o C:\nuget-local\
+PS C:\Projects\Github\RulesRUs> dotnet pack .\src\RuleEngine\RuleEngine.csproj -c Release -o C:\nuget-local\ --include-symbols
 Microsoft (R) Build Engine version 15.6.84.34536 for .NET Core
 Copyright (C) Microsoft Corporation. All rights reserved.
 
-  Restoring packages for ....RuleEngine\RuleEngine.csproj...
-  Restore completed in 228.53 ms for ....RuleEngine.csproj.
-  RuleEngine -> ....RuleEngine.dll
+  Restore completed in 194.73 ms for C:\Projects\Github\RulesRUs\src\RuleEngine\RuleEngine.csproj.
+  RuleEngine -> C:\Projects\Github\RulesRUs\src\RuleEngine\bin\Release\netstandard2.0\RuleEngine.dll
   Successfully created package 'C:\nuget-local\RuleEngine.1.0.1.nupkg'.
+  Successfully created package 'C:\nuget-local\RuleEngine.1.0.1.symbols.nupkg'.
 ```
 
-- for prerlease add version suffix like: ```dotnet pack .\src\RuleEngine\RuleEngine.csproj -c Release -o C:\nuget-local\ -version-suffix pre1```
+- for prerlease add version suffix like: ```dotnet pack .\src\RuleEngine\RuleEngine.csproj -c Release -o C:\nuget-local\ --include-symbols -version-suffix pre1```
