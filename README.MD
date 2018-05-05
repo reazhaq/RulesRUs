@@ -284,7 +284,11 @@ Same as sample 1, but loads the rules from a text file using custom JSON convert
 Same as sample 1, but rules were created using factory methods.
 
 ## [Sample 4](/samples/Sample4RuleCreateMadeEasy)
-Quick how-to sample.
+Quick how-to sample/tutorial.
+
+# Misc
+ - [How to Build/Publish](/HOWTO.MD)
+ - [Release Notes](/RELEASENOTES.MD)
 
 # Thanks to everyone
 Started playing with Expression Tree and had some sample/example code going for some years.  Some of the ideas for rule engine came from [MicroRuleEngine](https://github.com/runxc1/MicroRuleEngine); and [AutoMapper](https://github.com/AutoMapper/AutoMapper) source code.  [CoreFx](https://github.com/dotnet/corefx) code and unit tests - an excellent way to study and understand what's going on under the hood with Expression tree.  Thanks to many more blogs, example codes, SO answers, .....  Thought I would just glue my experiments together and release it into the wild.  Hope this helps...
