@@ -56,5 +56,22 @@ namespace RuleEngine.Tests.Utils.ExressionExtensions
 
             compiled().Should().BeFalse();
         }
+
+        [Fact]
+        public void TypeAsTrace()
+        {
+            var exp1 = Expression.TypeAs(Expression.Constant(null, typeof(int?)), typeof(ValueType));
+            _testOutputHelper.WriteLine($"exp1: {exp1}");
+
+            var sb = new StringBuilder();
+            exp1.TraceNode(sb);
+            _testOutputHelper.WriteLine(sb.ToString());
+
+            var lambda = Expression.Lambda<Func<ValueType>>(exp1);
+            var compiled = lambda.Compile();
+            compiled.Should().NotBeNull();
+
+            compiled().Should().BeNull();
+        }
     }
 }
