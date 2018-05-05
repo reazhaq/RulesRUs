@@ -8,8 +8,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-
 		build.cake = build.cake
 		build.ps1 = build.ps1
 		build.sh = build.sh
+		HOWTO.MD = HOWTO.MD
 		LICENSE = LICENSE
 		README.MD = README.MD
+		RELEASENOTES.MD = RELEASENOTES.MD
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{64290977-C140-466F-8586-B81D14D197E1}"
@@ -32,7 +34,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample2PlaceOrderRulesFromJ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample3PlaceOrderRulesUsingFactory", "samples\Sample3PlaceOrderRulesUsingFactory\Sample3PlaceOrderRulesUsingFactory.csproj", "{EE52307F-2408-42A6-9376-BD17B08C353D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample4RuleCreateMadeEasy", "samples\Sample4RuleCreateMadeEasy\Sample4RuleCreateMadeEasy.csproj", "{D74662B6-75C1-420D-A608-1D1246578AD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample4RuleCreateMadeEasy", "samples\Sample4RuleCreateMadeEasy\Sample4RuleCreateMadeEasy.csproj", "{D74662B6-75C1-420D-A608-1D1246578AD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
