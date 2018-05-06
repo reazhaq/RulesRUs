@@ -50,5 +50,32 @@ namespace RuleFactory.Tests.RulesFactory
             game.Name.Should().Be("name from constant rule");
             _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
         }
+
+        [Fact]
+        public void UpdateStringRef()
+        {
+            var sourceDataRule = ConstantRulesFactory.CreateConstantRule<string>("something");
+            var rule = UpdateValueRulesFactory.CreateRefUpdateValueRule<string>(sourceDataRule);
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"RefUpdateValueRule<string>:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var string1 = "one";
+            rule.RefUpdate(ref string1);
+            string1.Should().Be("something");
+
+            // source value shall come as argument
+            var rule2 = UpdateValueRulesFactory.CreateRefUpdateValueRule<string>();
+            compileResult = rule2.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"RefUpdateValueRule<string, string>:{Environment.NewLine}" +
+                                        $"{rule2.ExpressionDebugView()}");
+
+            string1 = null;
+            rule2.RefUpdate(ref string1, "some other value");
+            string1.Should().Be("some other value");
+        }
     }
 }

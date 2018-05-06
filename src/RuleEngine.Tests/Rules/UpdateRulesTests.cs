@@ -60,6 +60,7 @@ namespace RuleEngine.Tests.Rules
         [Fact]
         public void UpdateStringRef()
         {
+            // source value is fixed with a constant rule
             var rule = new RefUpdateValueRule<string>
             {
                 SourceDataRule = new ConstantRule<string>{Value = "something"}
@@ -74,12 +75,14 @@ namespace RuleEngine.Tests.Rules
             rule.RefUpdate(ref string1);
             string1.Should().Be("something");
 
+            // source value shall come as argument
             var rule2 = new RefUpdateValueRule<string>();
             compileResult = rule2.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"RefUpdateValueRule<string, string>:{Environment.NewLine}" +
                                         $"{rule2.ExpressionDebugView()}");
 
+            string1 = null;
             rule2.RefUpdate(ref string1, "some other value");
             string1.Should().Be("some other value");
         }

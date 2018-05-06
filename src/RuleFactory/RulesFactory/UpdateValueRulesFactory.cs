@@ -25,5 +25,10 @@ namespace RuleFactory.RulesFactory
                 ObjectToUpdate = objectToValidate?.GetObjectToValidateFromExpression()
             };
         }
+
+        public static RefUpdateValueRule<T> CreateRefUpdateValueRule<T>() => new RefUpdateValueRule<T>();
+
+        public static RefUpdateValueRule<T> CreateRefUpdateValueRule<T>(Rule sourceDataRule) =>
+            new RefUpdateValueRule<T> {SourceDataRule = sourceDataRule};
     }
 }

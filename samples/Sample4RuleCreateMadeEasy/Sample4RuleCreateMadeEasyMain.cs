@@ -73,7 +73,7 @@ namespace Sample4RuleCreateMadeEasy
             var jsonDoc = JsonConvert.SerializeObject(orderCustomerAndProductCannotBeNullRule, Formatting.Indented, converter);
             Debug.WriteLine(jsonDoc);
 
-            // this shall throw and null exception
+            // this shall throw a null exception
             //orderCustomerAndProductCannotBeNullRule.IsValid(null);
         }
     }

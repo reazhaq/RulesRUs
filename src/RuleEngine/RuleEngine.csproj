@@ -6,8 +6,14 @@
     <Company>Bluebonnet Software</Company>
     <Description>Run simple expression tree based rules.</Description>
     <PackageLicenseUrl>https://github.com/reazhaq/RulesRUs/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl></PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/reazhaq/RulesRUs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/reazhaq/RulesRUs</RepositoryUrl>
+    <Version>1.1.0</Version>
+    <PackageReleaseNotes>- New rules:
+  - Self Return Rule; returns the same typed value
+  - Ref Update Value Rule; can be used to update a variable by ref
+</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
 </Project>

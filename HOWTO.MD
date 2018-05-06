@@ -1,7 +1,7 @@
 # How to Build
 
 - Open PowerShell; browse to root of the repository
-- Note: 
+- Note: you have to be online for this to work; since it does fresh package restore
 - run ```.\build.ps1```; you should see output as follows:
 
 ```PowerShell
@@ -95,8 +95,35 @@ Copyright (C) Microsoft Corporation. All rights reserved.
 
   Restore completed in 194.73 ms for C:\Projects\Github\RulesRUs\src\RuleEngine\RuleEngine.csproj.
   RuleEngine -> C:\Projects\Github\RulesRUs\src\RuleEngine\bin\Release\netstandard2.0\RuleEngine.dll
-  Successfully created package 'C:\nuget-local\RuleEngine.1.0.1.nupkg'.
-  Successfully created package 'C:\nuget-local\RuleEngine.1.0.1.symbols.nupkg'.
+  Successfully created package 'C:\nuget-local\RuleEngine.___.nupkg'.
+  Successfully created package 'C:\nuget-local\RuleEngine.___.symbols.nupkg'.
 ```
 
 - for prerlease add version suffix like: ```dotnet pack .\src\RuleEngine\RuleEngine.csproj -c Release -o C:\nuget-local\ --include-symbols -version-suffix pre1```
+
+## Push to Nuget
+- Open command prompt; change directory to c:\nuget-local (because my nuget.exe is there and dotnet-pack outputs are there)
+- Set the API Key:
+```PowerShell
+PS C:\nuget-local> .\nuget SetApiKey ****
+The API Key '****' was saved for the NuGet gallery (https://www.nuget.org) and the symbol server (https://nuget.smbsrc.net/).
+```
+- Push Package
+```PowerShell
+PS C:\nuget-local> .\nuget push RuleEngine.___.nupkg -source https://api.nuget.org/v3/index.json
+Pushing RuleEngine.___.nupkg to 'https://www.nuget.org/api/v2/package'...
+  PUT https://www.nuget.org/api/v2/package/
+.
+.
+```
+- Push Symbols
+```PowerShell
+PS C:\nuget-local> .\nuget push RuleEngine.___.symbols.nupkg -source https://www.symbolsource.org/Public/Metadata/NuGet
+WARNING: No API Key was provided and no API Key could be found for 'https://www.symbolsource.org/Public/Metadata/NuGet'. To save an API Key for a source use the 'setApiKey' command.
+Pushing RuleEngine.___.symbols.nupkg to 'https://www.symbolsource.org/Public/Metadata/NuGet'...
+  PUT https://www.symbolsource.org/Public/Metadata/NuGet/
+  OK https://www.symbolsource.org/Public/Metadata/NuGet/ 36044ms
+Your package was pushed.
+.
+.
+```
