@@ -61,14 +61,14 @@ namespace RuleEngine.Tests.Rules
         public void UpdateStringRef()
         {
             // source value is fixed with a constant rule
-            var rule = new RefUpdateValueRule<string>
+            var rule = new UpdateRefValueRule<string>
             {
                 SourceDataRule = new ConstantRule<string>{Value = "something"}
             };
 
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"RefUpdateValueRule<string>:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string>:{Environment.NewLine}" +
                                         $"{rule.ExpressionDebugView()}");
 
             var string1 = "one";
@@ -76,10 +76,10 @@ namespace RuleEngine.Tests.Rules
             string1.Should().Be("something");
 
             // source value shall come as argument
-            var rule2 = new RefUpdateValueRule<string>();
+            var rule2 = new UpdateRefValueRule<string>();
             compileResult = rule2.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"RefUpdateValueRule<string, string>:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string, string>:{Environment.NewLine}" +
                                         $"{rule2.ExpressionDebugView()}");
 
             string1 = null;
@@ -90,7 +90,7 @@ namespace RuleEngine.Tests.Rules
         [Fact]
         public void UpdateIntRef()
         {
-            var rule = new RefUpdateValueRule<int>
+            var rule = new UpdateRefValueRule<int>
             {
                 SourceDataRule = new ConstantRule<int>{Value = "99"}
             };
@@ -103,10 +103,10 @@ namespace RuleEngine.Tests.Rules
             rule.RefUpdate(ref myInt);
             myInt.Should().Be(99);
 
-            var rule2 = new RefUpdateValueRule<int>();
+            var rule2 = new UpdateRefValueRule<int>();
             compileResult = rule2.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"RefUpdateValueRule<int, int>:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<int, int>:{Environment.NewLine}" +
                                         $"{rule2.ExpressionDebugView()}");
 
             rule2.RefUpdate(ref myInt, -99);

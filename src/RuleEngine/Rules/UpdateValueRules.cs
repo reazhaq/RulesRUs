@@ -90,7 +90,7 @@ namespace RuleEngine.Rules
         }
     }
 
-    public class RefUpdateValueRule<T> : Rule, IRefUpdateValueRule<T>
+    public class UpdateRefValueRule<T> : Rule, IUpdateRefValueRule<T>
     {
         private delegate void UpdateAction2(ref T target, T source);
         private UpdateAction2 CompiledDelegate2 { get; set; }

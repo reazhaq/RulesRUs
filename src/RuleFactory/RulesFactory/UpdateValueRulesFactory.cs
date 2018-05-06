@@ -26,9 +26,9 @@ namespace RuleFactory.RulesFactory
             };
         }
 
-        public static RefUpdateValueRule<T> CreateRefUpdateValueRule<T>() => new RefUpdateValueRule<T>();
+        public static UpdateRefValueRule<T> CreateUpdateRefValueRule<T>() => new UpdateRefValueRule<T>();
 
-        public static RefUpdateValueRule<T> CreateRefUpdateValueRule<T>(Rule sourceDataRule) =>
-            new RefUpdateValueRule<T> {SourceDataRule = sourceDataRule};
+        public static UpdateRefValueRule<T> CreateUpdateRefValueRule<T>(Rule sourceDataRule) =>
+            new UpdateRefValueRule<T> {SourceDataRule = sourceDataRule};
     }
 }

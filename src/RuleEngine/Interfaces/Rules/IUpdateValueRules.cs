@@ -10,7 +10,7 @@
         void UpdateFieldOrPropertyValue(T targetObject);
     }
 
-    public interface IRefUpdateValueRule<T>
+    public interface IUpdateRefValueRule<T>
     {
         void RefUpdate(ref T target);
         void RefUpdate(ref T target, T source);

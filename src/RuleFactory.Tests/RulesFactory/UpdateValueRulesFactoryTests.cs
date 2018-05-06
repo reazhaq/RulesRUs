@@ -55,11 +55,11 @@ namespace RuleFactory.Tests.RulesFactory
         public void UpdateStringRef()
         {
             var sourceDataRule = ConstantRulesFactory.CreateConstantRule<string>("something");
-            var rule = UpdateValueRulesFactory.CreateRefUpdateValueRule<string>(sourceDataRule);
+            var rule = UpdateValueRulesFactory.CreateUpdateRefValueRule<string>(sourceDataRule);
 
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"RefUpdateValueRule<string>:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string>:{Environment.NewLine}" +
                                         $"{rule.ExpressionDebugView()}");
 
             var string1 = "one";
@@ -67,10 +67,10 @@ namespace RuleFactory.Tests.RulesFactory
             string1.Should().Be("something");
 
             // source value shall come as argument
-            var rule2 = UpdateValueRulesFactory.CreateRefUpdateValueRule<string>();
+            var rule2 = UpdateValueRulesFactory.CreateUpdateRefValueRule<string>();
             compileResult = rule2.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"RefUpdateValueRule<string, string>:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string, string>:{Environment.NewLine}" +
                                         $"{rule2.ExpressionDebugView()}");
 
             string1 = null;

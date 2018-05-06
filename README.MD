@@ -154,21 +154,21 @@ Want to update a value of an object; this is the rule.  I had been using this wi
     }
 ```
 
-## Ref Update Value Rule
+## Update Ref Value Rule
 How about trying to update a variable by ref?  The rule comes in two flavors; you can define a source value with another rule or pass it as argument.
 ```c#
         [Fact]
         public void UpdateStringRef()
         {
             // source value is fixed with a constant rule
-            var rule = new RefUpdateValueRule<string>
+            var rule = new UpdateRefValueRule<string>
             {
                 SourceDataRule = new ConstantRule<string>{Value = "something"}
             };
 
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"RefUpdateValueRule<string>:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string>:{Environment.NewLine}" +
                                         $"{rule.ExpressionDebugView()}");
 
             var string1 = "one";
@@ -176,10 +176,10 @@ How about trying to update a variable by ref?  The rule comes in two flavors; yo
             string1.Should().Be("something");
 
             // source value shall come as argument
-            var rule2 = new RefUpdateValueRule<string>();
+            var rule2 = new UpdateRefValueRule<string>();
             compileResult = rule2.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"RefUpdateValueRule<string, string>:{Environment.NewLine}" +
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string, string>:{Environment.NewLine}" +
                                         $"{rule2.ExpressionDebugView()}");
 
             string1 = null;
