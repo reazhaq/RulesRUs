@@ -99,8 +99,6 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   Successfully created package 'C:\nuget-local\RuleEngine.___.symbols.nupkg'.
 ```
 
-- for prerlease add version suffix like: ```dotnet pack .\src\RuleEngine\RuleEngine.csproj -c Release -o C:\nuget-local\ --include-symbols -version-suffix pre1```
-
 ## Push to Nuget
 - Open command prompt; change directory to c:\nuget-local (because my nuget.exe is there and dotnet-pack outputs are there)
 - Set the API Key:
