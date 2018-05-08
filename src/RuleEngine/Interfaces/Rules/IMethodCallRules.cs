@@ -9,4 +9,9 @@
     {
         TResult Execute(TTarget param);
     }
+
+    public interface IStaticMethodCallRule<out T>
+    {
+        T Execute();
+    }
 }

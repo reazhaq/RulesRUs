@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Linq.Expressions;
 using System.Text;
 using RuleEngine.Utils;
 
@@ -17,7 +18,7 @@ namespace RuleEngine.Rules
 
         public virtual string ExpressionDebugView()
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder($"{ExpressionForThisRule} is:{Environment.NewLine}");
             ExpressionForThisRule.TraceNode(sb);
             return sb.ToString();
         }

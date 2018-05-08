@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using RuleEngine.Common;
@@ -14,22 +15,21 @@ namespace RuleEngine.Rules
         public string MethodToCall;
         // MethodClassName needed for extension methods...
         public string MethodClassName { get; set; }
-        public string ObjectToCallMethodOn { get; set; }
         public List<Rule> MethodParameters { get; } = new List<Rule>();
 
         protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall,
                                         Type[] methodArgumentTypes, Expression expression)
         {
-            if (String.IsNullOrEmpty(methodClassName))
+            if (string.IsNullOrEmpty(methodClassName) && expression != null)
                 return expression.Type.GetMethodInfo(methodToCall, methodArgumentTypes);
 
-            var type = Type.GetType(methodClassName);
+            var type = ReflectionExtensions.GetTypeFor(methodClassName);
             if (type == null) throw new RuleEngineException($"can't find class named: {methodClassName}");
 
             return type.GetMethodInfo(methodToCall, methodArgumentTypes);
         }
 
-        public Expression[] GetArgumentsExpressions(ParameterExpression rootParam, out Type[] methodArgumentTypes)
+        protected Expression[] GetArgumentsExpressions(ParameterExpression rootParam, out Type[] methodArgumentTypes)
         {
             methodArgumentTypes = new Type[MethodParameters.Count];
             var argumentsExpressions = new Expression[MethodParameters.Count];
@@ -46,6 +46,7 @@ namespace RuleEngine.Rules
     public class MethodVoidCallRule<T> : MethodCallBase, IMethodVoidCallRule<T>
     {
         private Action<T> CompiledDelegate { get; set; }
+        public string ObjectToCallMethodOn { get; set; }
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
@@ -72,7 +73,7 @@ namespace RuleEngine.Rules
             ExpressionForThisRule = BuildExpression(param);
             if (ExpressionForThisRule == null) return false;
 
-            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile:" +
+            Debug.WriteLine($"{ExpressionForThisRule} ready to compile:" +
                             $"{Environment.NewLine}{ExpressionDebugView()}");
 
             CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, param).Compile();
@@ -91,6 +92,7 @@ namespace RuleEngine.Rules
     public class MethodCallRule<T1, T2> : MethodCallBase, IMethodCallRule<T1, T2>
     {
         private Func<T1, T2> CompiledDelegate { get; set; }
+        public string ObjectToCallMethodOn { get; set; }
 
         public override Expression BuildExpression(params ParameterExpression[] parameters)
         {
@@ -117,7 +119,7 @@ namespace RuleEngine.Rules
             ExpressionForThisRule = BuildExpression(funcParameter);
             if (ExpressionForThisRule == null) return false;
 
-            Debug.WriteLine($"{nameof(ExpressionForThisRule)} ready to compile:" +
+            Debug.WriteLine($"{ExpressionForThisRule} ready to compile:" +
                             $"{Environment.NewLine}{ExpressionDebugView()}");
 
             CompiledDelegate = Expression.Lambda<Func<T1, T2>>(ExpressionForThisRule, funcParameter).Compile();
@@ -130,6 +132,42 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate(target);
+        }
+    }
+
+    public class StaticMethodCallRule<T> : MethodCallBase, IStaticMethodCallRule<T>
+    {
+        private Func<T> CompiledDelegate { get; set; }
+
+        public override Expression BuildExpression(params ParameterExpression[] _)
+        {
+            var argumentsExpressions = GetArgumentsExpressions(null, out var methodArgumentTypes);
+
+            var methodInfo = GetMethodInfo(MethodClassName, MethodToCall, methodArgumentTypes, null);
+            if (methodInfo == null) return null;
+
+            ExpressionForThisRule = Expression.Call(methodInfo, argumentsExpressions);
+            return ExpressionForThisRule;
+        }
+
+        public override bool Compile()
+        {
+            ExpressionForThisRule = BuildExpression();
+            if (ExpressionForThisRule == null) return false;
+
+            Debug.WriteLine($"{ExpressionForThisRule} ready to compile:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}");
+
+            CompiledDelegate = Expression.Lambda<Func<T>>(ExpressionForThisRule).Compile();
+            return CompiledDelegate != null;
+        }
+
+        public T Execute()
+        {
+            if (CompiledDelegate == null)
+                throw new RuleEngineException("A Rule must be compiled first");
+
+            return CompiledDelegate();
         }
     }
 }

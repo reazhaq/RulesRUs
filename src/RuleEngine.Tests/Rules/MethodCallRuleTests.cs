@@ -121,7 +121,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = gameNameContainsKeyWrodCool.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(gameNameContainsKeyWrodCool)}:{Environment.NewLine}{gameNameContainsKeyWrodCool.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(gameNameContainsKeyWrodCool)}:{Environment.NewLine}" +
+                                        $"{gameNameContainsKeyWrodCool.ExpressionDebugView()}");
 
             // check to see if _game1 description contains keyword "cool"
             var executeResult = gameNameContainsKeyWrodCool.Execute(_game1);
@@ -130,6 +131,46 @@ namespace RuleEngine.Tests.Rules
             // check to see if _game2 description contains keyword "cool"
             executeResult = gameNameContainsKeyWrodCool.Execute(_game2);
             executeResult.Should().BeTrue();
+        }
+
+        [Fact]
+        public void CallCreateGameStaticMethod()
+        {
+            //var game = Game.CreateGame();
+            var rule = new StaticMethodCallRule<Game>
+            {
+                MethodClassName = "RuleEngine.Tests.Model.Game",
+                MethodToCall = "CreateGame"
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var game = rule.Execute();
+            game.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void CallCreateGameStaticMethod2()
+        {
+            //var game = Game.CreateGame("cool game");
+            var rule = new StaticMethodCallRule<Game>
+            {
+                MethodClassName = "RuleEngine.Tests.Model.Game",
+                MethodToCall = "CreateGame",
+                MethodParameters = { new ConstantRule<string> { Value = "cool game" } }
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var game = rule.Execute();
+            game.Should().NotBeNull();
+            game.Name.Should().Be("cool game");
         }
     }
 }

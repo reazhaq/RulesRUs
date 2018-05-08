@@ -51,9 +51,9 @@ namespace RuleEngine.Utils
 
         public static IEqualityComparer<T> GetEqualityComparerProperty<T>(string className, string comparerProp)
         {
-            var type = Type.GetType(className);
+            var type = GetTypeFor(className);
             var comparerPropInfo = type.GetProperty(comparerProp);
-            return (IEqualityComparer<T>) comparerPropInfo.GetValue(null);
+            return (IEqualityComparer<T>) comparerPropInfo?.GetValue(null);
         }
     }
 }

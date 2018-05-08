@@ -19,7 +19,7 @@ namespace RuleEngine.Tests.Utils
         [Fact]
         public void GetNativeMethodInfoFromMethodName()
         {
-            var type = Type.GetType("System.String");
+            var type = ReflectionExtensions.GetTypeFor("System.String");
             var mi = type.GetMethodInfo("ToUpper", null);
             mi.Should().NotBeNull();
 
