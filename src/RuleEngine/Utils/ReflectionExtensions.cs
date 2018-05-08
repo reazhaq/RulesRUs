@@ -36,6 +36,7 @@ namespace RuleEngine.Utils
 
         public static Type GetTypeFor(string typeName)
         {
+            if (string.IsNullOrEmpty(typeName)) return null;
             var thisType = Type.GetType(typeName);
             if (thisType != null) return thisType;
 
@@ -52,7 +53,7 @@ namespace RuleEngine.Utils
         public static IEqualityComparer<T> GetEqualityComparerProperty<T>(string className, string comparerProp)
         {
             var type = GetTypeFor(className);
-            var comparerPropInfo = type.GetProperty(comparerProp);
+            var comparerPropInfo = type?.GetProperty(comparerProp);
             return (IEqualityComparer<T>) comparerPropInfo?.GetValue(null);
         }
     }

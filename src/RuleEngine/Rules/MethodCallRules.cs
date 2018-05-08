@@ -20,8 +20,8 @@ namespace RuleEngine.Rules
         protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall,
                                         Type[] methodArgumentTypes, Expression expression)
         {
-            if (string.IsNullOrEmpty(methodClassName) && expression != null)
-                return expression.Type.GetMethodInfo(methodToCall, methodArgumentTypes);
+            if (string.IsNullOrEmpty(methodClassName))
+                return expression?.Type.GetMethodInfo(methodToCall, methodArgumentTypes);
 
             var type = ReflectionExtensions.GetTypeFor(methodClassName);
             if (type == null) throw new RuleEngineException($"can't find class named: {methodClassName}");
