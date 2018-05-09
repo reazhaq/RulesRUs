@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\misc\SampleModel\SampleModel.csproj" />
     <ProjectReference Include="..\RuleEngine\RuleEngine.csproj" />
   </ItemGroup>
 

@@ -36,6 +36,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample3PlaceOrderRulesUsing
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample4RuleCreateMadeEasy", "samples\Sample4RuleCreateMadeEasy\Sample4RuleCreateMadeEasy.csproj", "{D74662B6-75C1-420D-A608-1D1246578AD1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{8A3FB0F0-6E0F-4F9D-AECA-D6ACB663E959}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleModel", "misc\SampleModel\SampleModel.csproj", "{C5742060-DDFC-4E2B-8118-F35DDEFCAD7A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +78,10 @@ Global
 		{D74662B6-75C1-420D-A608-1D1246578AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D74662B6-75C1-420D-A608-1D1246578AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D74662B6-75C1-420D-A608-1D1246578AD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5742060-DDFC-4E2B-8118-F35DDEFCAD7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5742060-DDFC-4E2B-8118-F35DDEFCAD7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5742060-DDFC-4E2B-8118-F35DDEFCAD7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5742060-DDFC-4E2B-8118-F35DDEFCAD7A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +95,7 @@ Global
 		{C2C0BCBD-7CD9-4754-A19C-D168D1CFC9FD} = {B3C305B4-E12C-4276-91B7-D49D56BD1FEF}
 		{EE52307F-2408-42A6-9376-BD17B08C353D} = {B3C305B4-E12C-4276-91B7-D49D56BD1FEF}
 		{D74662B6-75C1-420D-A608-1D1246578AD1} = {B3C305B4-E12C-4276-91B7-D49D56BD1FEF}
+		{C5742060-DDFC-4E2B-8118-F35DDEFCAD7A} = {8A3FB0F0-6E0F-4F9D-AECA-D6ACB663E959}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E799544-0217-479E-A142-014AD9DD3982}

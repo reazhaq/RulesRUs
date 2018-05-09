@@ -5,7 +5,6 @@ using System.Linq.Expressions;
 using System.Text;
 using FluentAssertions;
 using Microsoft.CSharp.RuntimeBinder;
-using RuleEngine.Tests.Model;
 using RuleEngine.Utils;
 using Xunit;
 using Xunit.Abstractions;

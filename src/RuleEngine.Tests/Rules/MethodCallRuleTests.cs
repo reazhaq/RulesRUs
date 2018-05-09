@@ -2,7 +2,7 @@
 using FluentAssertions;
 using RuleEngine.Rules;
 using RuleEngine.Tests.Fixture;
-using RuleEngine.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -139,7 +139,7 @@ namespace RuleEngine.Tests.Rules
             //var game = Game.CreateGame();
             var rule = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "RuleEngine.Tests.Model.Game",
+                MethodClassName = "SampleModel.Game",
                 MethodToCall = "CreateGame"
             };
 
@@ -158,7 +158,7 @@ namespace RuleEngine.Tests.Rules
             //var game = Game.CreateGame("cool game");
             var rule = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "RuleEngine.Tests.Model.Game",
+                MethodClassName = "SampleModel.Game",
                 MethodToCall = "CreateGame",
                 MethodParameters = { new ConstantRule<string> { Value = "cool game" } }
             };

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace RuleEngine.Tests.Model
+namespace SampleModel
 {
     public class Game
     {

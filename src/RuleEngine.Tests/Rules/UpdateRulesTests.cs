@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using RuleEngine.Rules;
-using RuleEngine.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
