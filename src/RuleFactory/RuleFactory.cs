@@ -33,11 +33,20 @@ namespace RuleFactory
                     return CreateContainsValueRule(boundingTypes);
                 case "RegExRule`1":
                     return CreateRegExRule(boundingTypes);
+                case "SelfReturnRule`1":
+                    return CreateSelfReturnRule(boundingTypes);
                 default:
                     break;
             }
 
             return null;
+        }
+
+        private static Rule CreateSelfReturnRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length != 1) return null;
+            return CreateRule(typeof(SelfReturnRule<>),
+                new[] { ReflectionExtensions.GetTypeFor(boundingTypes[0]) });
         }
 
         private static Rule CreateRegExRule(string[] boundingTypes)
