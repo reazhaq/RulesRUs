@@ -3,7 +3,7 @@ using FluentAssertions;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
 using RuleFactory.Tests.Fixture;
-using RuleFactory.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 

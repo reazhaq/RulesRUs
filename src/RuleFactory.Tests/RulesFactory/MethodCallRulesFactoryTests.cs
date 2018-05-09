@@ -4,7 +4,7 @@ using FluentAssertions;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
 using RuleFactory.Tests.Fixture;
-using RuleFactory.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 

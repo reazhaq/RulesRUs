@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RuleEngine.Rules;
-using RuleFactory.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 

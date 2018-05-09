@@ -37,7 +37,7 @@ namespace RuleEngine.Utils
             while (memberExpression != null && memberExpression.Expression.NodeType == ExpressionType.MemberAccess)
             {
                 var propInfo = memberExpression.Expression.GetType().GetProperty("Member");
-                var propValue = propInfo.GetValue(memberExpression.Expression, null) as PropertyInfo;
+                var propValue = propInfo?.GetValue(memberExpression.Expression, null) as PropertyInfo;
                 if (propValue != null)
                     suffixPart = string.Format($"{propValue.Name}.{suffixPart}");
                 memberExpression = memberExpression.Expression as MemberExpression;
@@ -53,7 +53,7 @@ namespace RuleEngine.Utils
                 return null;
 
             var propertyInfo = typeof(Expression).GetProperty("DebugView", BindingFlags.Instance | BindingFlags.NonPublic);
-            return propertyInfo.GetValue(exp) as string;
+            return propertyInfo?.GetValue(exp) as string;
         }
 
         public static Expression GetInnerExpression(this Expression exp)

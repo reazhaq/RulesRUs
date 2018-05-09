@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
-using RuleFactory.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 

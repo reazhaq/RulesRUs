@@ -18,7 +18,8 @@ namespace RuleEngine.Rules
 
         public virtual string ExpressionDebugView()
         {
-            var sb = new StringBuilder($"{ExpressionForThisRule} is:{Environment.NewLine}");
+            var sb = new StringBuilder($"Expression: {ExpressionForThisRule}{Environment.NewLine}");
+            sb.Append($"Expression Tree:{Environment.NewLine}");
             ExpressionForThisRule.TraceNode(sb);
             return sb.ToString();
         }
