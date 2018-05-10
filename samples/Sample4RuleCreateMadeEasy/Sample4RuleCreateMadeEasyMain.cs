@@ -69,7 +69,7 @@ namespace Sample4RuleCreateMadeEasy
             ruleResult = orderCustomerAndProductCannotBeNullRule.IsValid(order);
             Debug.WriteLine($"ruleResult: {ruleResult}"); // true - because both are non-null
 
-            var converter = new CustomRuleJsonConverter();
+            var converter = new JsonConverterForRule();
             var jsonDoc = JsonConvert.SerializeObject(orderCustomerAndProductCannotBeNullRule, Formatting.Indented, converter);
             Debug.WriteLine(jsonDoc);
 

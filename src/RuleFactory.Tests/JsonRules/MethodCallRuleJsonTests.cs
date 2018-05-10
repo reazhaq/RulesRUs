@@ -50,10 +50,10 @@ namespace RuleFactory.Tests.JsonRules
             executeResult.Should().Be(!expectedResult);
 
             // convert to json
-            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = (MethodCallRule<Game, bool>)JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = (MethodCallRule<Game, bool>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
@@ -84,10 +84,10 @@ namespace RuleFactory.Tests.JsonRules
             _game1.Active.Should().Be(!currentActiveState);
 
             // convert to json
-            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = (MethodVoidCallRule<Game>)JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = (MethodVoidCallRule<Game>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
@@ -119,10 +119,10 @@ namespace RuleFactory.Tests.JsonRules
             executeResult.Should().Be(expectedResult);
 
             // convert to json
-            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = (MethodCallRule<Game, bool>)JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = (MethodCallRule<Game, bool>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
@@ -157,10 +157,10 @@ namespace RuleFactory.Tests.JsonRules
             executeResult.Should().BeTrue();
 
             // convert to json
-            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = (MethodCallRule<Game, bool>)JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = (MethodCallRule<Game, bool>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
@@ -184,7 +184,7 @@ namespace RuleFactory.Tests.JsonRules
                 MethodToCall = "CreateGame"
             };
 
-            var jsonConverterForRule = new CustomRuleJsonConverter();
+            var jsonConverterForRule = new JsonConverterForRule();
             // convert to json
             var ruleJson = JsonConvert.SerializeObject(ruleBefore, jsonConverterForRule);
             _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
@@ -211,7 +211,7 @@ namespace RuleFactory.Tests.JsonRules
                 MethodParameters = { new ConstantRule<string> { Value = "cool game" } }
             };
 
-            var jsonConverterForRule = new CustomRuleJsonConverter();
+            var jsonConverterForRule = new JsonConverterForRule();
             // convert to json
             var ruleJson = JsonConvert.SerializeObject(ruleBefore, jsonConverterForRule);
             _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");

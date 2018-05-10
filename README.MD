@@ -1,14 +1,17 @@
 # Rules R Us
-Couldn't come up with a name - this came to mind.
-Built using Expression Tree; this helps create-compile-execute simple business rules at runtime; or just wrap some expressions with the same look and feel while writing code.
+Couldn't come up with a name - "Rules R Us" came to mind; Sounded good.
+
+Built using Expression Tree; create-compile-execute simple business rules at runtime.  [Rules Factory](/src/RuleEngine) can help create rules; since there may be too many details to keep track for a complex rule.  See [Sample 4](/samples/Sample4RuleCreateMadeEasy) for a simple step-by-step tutorial.
+
+Json Converter For Rule is there to help read-write rule from-into a json document.  See [Sample 2](/samples/Sample2PlaceOrderRulesFromJsonFile).
 
 ## How To
-Create a Rule, and compile it.  Once compiled, rule can be executed over and over... with almost next to nothing execution time.  Just remember, compile may take some time depending on the comlexity of the expression tree. I load the rules at start-up (or at some frequent interval) and compile them, keep using them there after.
+Create a Rule, and compile it.  Once compiled, rule can be executed over and over... with almost next to nothing execution time.  Just remember, compile may take some time depending on the comlexity of the final expression tree. In my projects, I load the rules at start-up (or at some frequent interval) and compile them, keep using them there after for the life of the application.
 
-Unit tests - probably good place to look for examples and ideas.
+Unit tests and samples - probably good place to look for examples and ideas.  Also checkout the [Release Notes](/RELEASENOTES.MD) for changes.
 
 ## Constant Rule
-Most simple rule, and most used rule is a Constant Rule.  Constant rule is a simple Func; that returns a constant value.
+Simple and most used rule is a Constant Rule.  Constant rule is a simple Func; that returns a constant value.
 ```c#
 [Fact]
 public void ConstantRuleOfTypeIntThatReturns55WhenValueIsSetTo55()
@@ -44,10 +47,10 @@ Expression Tree:
 ||
 ||- innerExpression:
 ```
-If for some odd reason, you need something that takes an object of whatever and always returs some constant (regardless) - you can use ConstantRule<,>.  I needed it only once... may drop it someday - feels like it is not needed.
+If for some odd reason, you need something that takes an object of whatever and always returs some constant; regardless of source - you can use ConstantRule<,>.  I needed it only once... may drop it someday - feels like it is not needed.
 
 ## Contains Value Rule
-Got a list of values that you always check against; this rule can help - make sure to use desired equality comparer.
+Got a list of values that you always check against; this rule can help - make sure to use desired equality comparer or let it use the default.
 ```c#
 [Theory]
 [InlineData("one", true)]
@@ -112,7 +115,7 @@ public void OneInOneOutParameterExpressionTest()
     executeResult.Should().BeOfType(typeof(int)).And.Be(_game1.Players.Count);
 }
 ```
-__Note__: mostly I use these expression rules for experiments
+__Note__: mostly I use these expression rules for experiments and study the resultant expression tree
 
 ## Method Call Rule
 Rule to call an object's method.  There are two flavors - a void call (which becomes an Action<>) or call that returns a value (which becomes a Func<,>).
@@ -519,7 +522,7 @@ Expression Tree:
 ```
 
 # [Rule Factory](/src/RuleFactory)
-Library to help create rules using bunch of static methods; or use custom json converter to read-write rules from-to json documents.
+Library to help create rules using bunch of static methods; or use custom json converter to read-write rules from-to json documents.  See [Sample 4](/samples/Sample4RuleCreateMadeEasy) for a simple step-by-step tutorial.
 
 # Samples
 ## [Sample1 Place an Order](/samples/Sample1PlaceOrder)
@@ -536,7 +539,6 @@ Quick how-to sample/tutorial.
 
 # Misc
  - [How to Build/Publish](/HOWTO.MD)
- - [Release Notes](/RELEASENOTES.MD)
 
 # Thanks to everyone
 Started playing with Expression Tree and had some sample/example code going for some years.  Some of the ideas for rule engine came from [MicroRuleEngine](https://github.com/runxc1/MicroRuleEngine); and [AutoMapper](https://github.com/AutoMapper/AutoMapper) source code.  [CoreFx](https://github.com/dotnet/corefx) code and unit tests - an excellent way to study and understand what's going on under the hood with Expression tree.  Thanks to many more blogs, example codes, SO answers, .....  Thought I would just glue my experiments together and release it into the wild.  Hope this helps...

@@ -24,7 +24,7 @@ namespace RuleFactory.Tests.JsonRules
         public void IntSelfReturn(int someValue)
         {
             var ruleBefore = new SelfReturnRule<int>();
-            var customJsonConverter = new CustomRuleJsonConverter();
+            var customJsonConverter = new JsonConverterForRule();
 
             // serialize to json
             var ruleJson = JsonConvert.SerializeObject(ruleBefore, customJsonConverter);
@@ -49,7 +49,7 @@ namespace RuleFactory.Tests.JsonRules
         public void StringSelfReturn(string someValue)
         {
             var ruleBefore = new SelfReturnRule<string>();
-            var customJsonConverter = new CustomRuleJsonConverter();
+            var customJsonConverter = new JsonConverterForRule();
 
             // serialize to json
             var ruleJson = JsonConvert.SerializeObject(ruleBefore, customJsonConverter);
@@ -74,7 +74,7 @@ namespace RuleFactory.Tests.JsonRules
         public void GameSelfReturn()
         {
             var ruleBefore = new SelfReturnRule<Game>();
-            var customJsonConverter = new CustomRuleJsonConverter();
+            var customJsonConverter = new JsonConverterForRule();
 
             // serialize to json
             var ruleJson = JsonConvert.SerializeObject(ruleBefore, customJsonConverter);

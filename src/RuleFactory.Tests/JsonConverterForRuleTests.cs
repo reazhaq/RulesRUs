@@ -7,11 +7,11 @@ using Xunit.Abstractions;
 
 namespace RuleFactory.Tests
 {
-    public class CustomRuleJsonConverterTests
+    public class JsonConverterForRuleTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public CustomRuleJsonConverterTests(ITestOutputHelper testOutputHelper)
+        public JsonConverterForRuleTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
@@ -20,11 +20,11 @@ namespace RuleFactory.Tests
         public void Test1()
         {
             var rule = new ConstantRule<int>{Value = "55"};
-            var json = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var json = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine(json);
 
             //var rule2 = JsonConvert.DeserializeObject<Rule>(json, settings);
-            var rule2 = JsonConvert.DeserializeObject<Rule>(json, new CustomRuleJsonConverter());
+            var rule2 = JsonConvert.DeserializeObject<Rule>(json, new JsonConverterForRule());
             var foo = rule2.Compile();
             _testOutputHelper.WriteLine(rule2.ExpressionDebugView());
         }
@@ -38,10 +38,10 @@ namespace RuleFactory.Tests
                 OperatorToUse = "Equal",
                 RuleError = new RuleError { Code="c1", Message = "number is not 5"}
             };
-            var json = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var json = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine(json);
 
-            var rule2 = JsonConvert.DeserializeObject<Rule>(json, new CustomRuleJsonConverter());
+            var rule2 = JsonConvert.DeserializeObject<Rule>(json, new JsonConverterForRule());
             var foo = rule2.Compile();
             _testOutputHelper.WriteLine(rule2.ExpressionDebugView());
         }
@@ -79,7 +79,7 @@ namespace RuleFactory.Tests
                 ContractResolver = new CamelCasePropertyNamesContractResolver(),
                 Formatting = Formatting.Indented
             };
-            settings.Converters.Add(new CustomRuleJsonConverter());
+            settings.Converters.Add(new JsonConverterForRule());
 		
             var json = JsonConvert.SerializeObject(rule, settings);
             _testOutputHelper.WriteLine(json);

@@ -7,7 +7,7 @@ using RuleEngine.Rules;
 
 namespace RuleFactory
 {
-    public class CustomRuleJsonConverter : JsonConverter
+    public class JsonConverterForRule : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {

@@ -47,6 +47,7 @@ namespace Sample2PlaceOrderRulesFromJsonFile
             if (LoadFromFile())
                 return;
 
+            // this is mainly used to create rules and save them into a file; to be used during subsequent execution
             var orderRule = new ValidationRule<Order>
             {
                 OperatorToUse = "NotEqual",
@@ -119,9 +120,10 @@ namespace Sample2PlaceOrderRulesFromJsonFile
             SaveRulesToFile();
         }
 
+        // save as new-line json format; just because I wanted to
         private static void SaveRulesToFile()
         {
-            var jsonConverter = new CustomRuleJsonConverter();
+            var jsonConverter = new JsonConverterForRule();
             using (var file = new StreamWriter(_ruleFileName))
             foreach (var orderRule in OrderRules)
             {
@@ -134,7 +136,7 @@ namespace Sample2PlaceOrderRulesFromJsonFile
         {
             if (!File.Exists(_ruleFileName)) return false;
 
-            var jsonConverter = new CustomRuleJsonConverter();
+            var jsonConverter = new JsonConverterForRule();
             using (var stream = File.OpenText(_ruleFileName))
             {
                 var line = stream.ReadLine();
