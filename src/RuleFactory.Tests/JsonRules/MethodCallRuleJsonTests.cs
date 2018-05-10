@@ -173,5 +173,59 @@ namespace RuleFactory.Tests.JsonRules
             executeResult2 = ruleFromJson.Execute(_game2);
             executeResult2.Should().BeTrue();
         }
+
+        [Fact]
+        public void CallCreateGameStaticMethod()
+        {
+            //var game = Game.CreateGame();
+            var ruleBefore = new StaticMethodCallRule<Game>
+            {
+                MethodClassName = "SampleModel.Game",
+                MethodToCall = "CreateGame"
+            };
+
+            var jsonConverterForRule = new CustomRuleJsonConverter();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(ruleBefore, jsonConverterForRule);
+            _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
+            // read from json
+            var ruleAfter = JsonConvert.DeserializeObject<Rule>(ruleJson, jsonConverterForRule);
+
+            var compileResult = ruleAfter.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"ruleAfter: {Environment.NewLine}" +
+                                        $"{ruleAfter.ExpressionDebugView()}");
+
+            var game = ((StaticMethodCallRule<Game>)ruleAfter).Execute();
+            game.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void CallCreateGameStaticMethod2()
+        {
+            //var game = Game.CreateGame("cool game");
+            var ruleBefore = new StaticMethodCallRule<Game>
+            {
+                MethodClassName = "SampleModel.Game",
+                MethodToCall = "CreateGame",
+                MethodParameters = { new ConstantRule<string> { Value = "cool game" } }
+            };
+
+            var jsonConverterForRule = new CustomRuleJsonConverter();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(ruleBefore, jsonConverterForRule);
+            _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
+            // read from json
+            var ruleAfter = JsonConvert.DeserializeObject<Rule>(ruleJson, jsonConverterForRule);
+
+            var compileResult = ruleAfter.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{ruleAfter.ExpressionDebugView()}");
+
+            var game = ((StaticMethodCallRule<Game>)ruleAfter).Execute();
+            game.Should().NotBeNull();
+            game.Name.Should().Be("cool game");
+        }
     }
 }

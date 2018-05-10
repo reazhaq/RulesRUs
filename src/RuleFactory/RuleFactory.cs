@@ -25,6 +25,8 @@ namespace RuleFactory
                 case "MethodVoidCallRule`1":
                 case "MethodCallRule`2":
                     return CreateMethodVoidCallRule(boundingTypes);
+                case "StaticMethodCallRule`1":
+                    return CreateStaticMethodCallRule(boundingTypes);
                 case "ConditionalIfThActionRule`1":
                     return CreateConditionalIfThActionRule(boundingTypes);
                 case "ConditionalIfThElActionRule`1":
@@ -37,11 +39,16 @@ namespace RuleFactory
                     return CreateRegExRule(boundingTypes);
                 case "SelfReturnRule`1":
                     return CreateSelfReturnRule(boundingTypes);
-                default:
-                    break;
             }
 
             return null;
+        }
+
+        private static Rule CreateStaticMethodCallRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length != 1) return null;
+            return CreateRule(typeof(StaticMethodCallRule<>),
+                new[] { ReflectionExtensions.GetTypeFor(boundingTypes[0]) });
         }
 
         private static Rule CreateUpdateRefValueRule(string[] boundingTypes)
