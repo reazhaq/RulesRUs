@@ -20,6 +20,8 @@ namespace RuleFactory
                 case "UpdateValueRule`1":
                 case "UpdateValueRule`2":
                     return CreateUpdateValueRule(boundingTypes);
+                case "UpdateRefValueRule`1":
+                    return CreateUpdateRefValueRule(boundingTypes);
                 case "MethodVoidCallRule`1":
                 case "MethodCallRule`2":
                     return CreateMethodVoidCallRule(boundingTypes);
@@ -40,6 +42,13 @@ namespace RuleFactory
             }
 
             return null;
+        }
+
+        private static Rule CreateUpdateRefValueRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length != 1) return null;
+            return CreateRule(typeof(UpdateRefValueRule<>),
+                new[] { ReflectionExtensions.GetTypeFor(boundingTypes[0]) });
         }
 
         private static Rule CreateSelfReturnRule(string[] boundingTypes)

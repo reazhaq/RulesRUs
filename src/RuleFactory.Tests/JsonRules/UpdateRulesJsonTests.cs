@@ -85,5 +85,56 @@ namespace RuleFactory.Tests.JsonRules
             ((UpdateValueRule<Game>) ruleFromJson).UpdateFieldOrPropertyValue(game);
             game.Name.Should().Be("name from constant rule");
         }
+
+        [Fact]
+        public void UpdateStringRef()
+        {
+            // source value is fixed with a constant rule
+            var ruleBefore = new UpdateRefValueRule<string>
+            {
+                SourceDataRule = new ConstantRule<string>{Value = "something"}
+            };
+
+            var ruleJsonConverter = new CustomRuleJsonConverter();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(ruleBefore, ruleJsonConverter);
+            _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
+            // read from json
+            var ruleAfter = JsonConvert.DeserializeObject<Rule>(ruleJson, ruleJsonConverter);
+
+
+            var compileResult = ruleAfter.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string>:{Environment.NewLine}" +
+                                        $"{ruleAfter.ExpressionDebugView()}");
+
+            var string1 = "one";
+            ((UpdateRefValueRule<string>)ruleAfter).RefUpdate(ref string1);
+            string1.Should().Be("something");
+        }
+
+        [Fact]
+        public void UpdateStringRef2()
+        {
+            // source value shall come as argument
+            var ruleBefore = new UpdateRefValueRule<string>();
+
+            var ruleJsonConverter = new CustomRuleJsonConverter();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(ruleBefore, ruleJsonConverter);
+            _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
+            // read from json
+            var ruleAfter = JsonConvert.DeserializeObject<Rule>(ruleJson, ruleJsonConverter);
+
+
+            var compileResult = ruleAfter.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string, string>:{Environment.NewLine}" +
+                                        $"{ruleAfter.ExpressionDebugView()}");
+
+            string string1 = null;
+            ((UpdateRefValueRule<string>)ruleAfter).RefUpdate(ref string1, "some other value");
+            string1.Should().Be("some other value");
+        }
     }
 }
