@@ -14,4 +14,9 @@
     {
         T Execute();
     }
+
+    public interface IStaticVoidMethodCallRule
+    {
+        void Execute();
+    }
 }

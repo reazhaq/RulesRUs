@@ -8,7 +8,7 @@ namespace RuleEngine.Utils
 {
     public static class ExpressionExtensions
     {
-        public static string GetObjectToValidateFromExpression(this Expression exp)
+        public static string GetObjectToWorkOnFromExpression(this Expression exp)
         {
             var lastFieldOrProperty = (string)null;
 

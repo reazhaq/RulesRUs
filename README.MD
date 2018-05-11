@@ -160,6 +160,30 @@ public void CallCreateGameStaticMethod2()
 }
 ```
 
+## Static Void Method Call Rule:
+Same as Static call; but doesn't return any value, not it is generic.
+```c#
+[Fact]
+public void CallStaticVoidMethod2()
+{
+    var rule = new StaticVoidMethodCallRule
+    {
+        MethodClassName = "SampleModel.Game",
+        MethodToCall = "SomeVoidStaticMethod",
+        MethodParameters = {new ConstantRule<int> {Value = "99"}}
+    };
+
+    var compileResult = rule.Compile();
+    compileResult.Should().BeTrue();
+    _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                $"{rule.ExpressionDebugView()}");
+
+    Game.SomeStaticIntValue = 0;
+    rule.Execute();
+    Game.SomeStaticIntValue.Should().Be(99);
+}
+```
+
 ## RegEx Rule
 Helps call regular expression; like validating an name or email address.
 ```c#

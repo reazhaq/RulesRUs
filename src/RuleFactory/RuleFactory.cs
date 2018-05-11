@@ -27,6 +27,8 @@ namespace RuleFactory
                     return CreateMethodVoidCallRule(boundingTypes);
                 case "StaticMethodCallRule`1":
                     return CreateStaticMethodCallRule(boundingTypes);
+                case "StaticVoidMethodCallRule":
+                    return CreateStaticVoidMethodCallRule();
                 case "ConditionalIfThActionRule`1":
                     return CreateConditionalIfThActionRule(boundingTypes);
                 case "ConditionalIfThElActionRule`1":
@@ -42,6 +44,11 @@ namespace RuleFactory
             }
 
             return null;
+        }
+
+        private static Rule CreateStaticVoidMethodCallRule()
+        {
+            return CreateRule(typeof(StaticVoidMethodCallRule));
         }
 
         private static Rule CreateStaticMethodCallRule(string[] boundingTypes)
@@ -170,6 +177,14 @@ namespace RuleFactory
             var boundedGenericType = ruleType.MakeGenericType(typesToBindTo);
             var instance = Activator.CreateInstance(boundedGenericType);
             return (Rule)instance;
+        }
+
+        private static Rule CreateRule(Type ruleType)
+        {
+            if (ruleType == null || !ruleType.IsSubclassOf(typeof(Rule))) return null;
+
+            var instance = Activator.CreateInstance(ruleType);
+            return (Rule) instance;
         }
     }
 }

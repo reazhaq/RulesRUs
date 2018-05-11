@@ -12,7 +12,7 @@ namespace RuleFactory.RulesFactory
         {
             return new UpdateValueRule<T>
             {
-                ObjectToUpdate = objectToValidate?.GetObjectToValidateFromExpression(),
+                ObjectToUpdate = objectToValidate?.GetObjectToWorkOnFromExpression(),
                 SourceDataRule = sourceDataRule
             };
         }
@@ -22,7 +22,7 @@ namespace RuleFactory.RulesFactory
         {
             return new UpdateValueRule<T1, T2>
             {
-                ObjectToUpdate = objectToValidate?.GetObjectToValidateFromExpression()
+                ObjectToUpdate = objectToValidate?.GetObjectToWorkOnFromExpression()
             };
         }
 

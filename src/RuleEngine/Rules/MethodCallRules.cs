@@ -135,10 +135,8 @@ namespace RuleEngine.Rules
         }
     }
 
-    public class StaticMethodCallRule<T> : MethodCallBase, IStaticMethodCallRule<T>
+    public abstract class StaticCallBase : MethodCallBase
     {
-        private Func<T> CompiledDelegate { get; set; }
-
         public override Expression BuildExpression(params ParameterExpression[] _)
         {
             var argumentsExpressions = GetArgumentsExpressions(null, out var methodArgumentTypes);
@@ -157,8 +155,19 @@ namespace RuleEngine.Rules
 
             Debug.WriteLine($"{ExpressionForThisRule} ready to compile:" +
                             $"{Environment.NewLine}{ExpressionDebugView()}");
+            return true;
+        }
+    }
 
-            CompiledDelegate = Expression.Lambda<Func<T>>(ExpressionForThisRule).Compile();
+    public class StaticMethodCallRule<T> : StaticCallBase, IStaticMethodCallRule<T>
+    {
+        private Func<T> CompiledDelegate { get; set; }
+
+        public override bool Compile()
+        {
+            if(base.Compile())
+                CompiledDelegate = Expression.Lambda<Func<T>>(ExpressionForThisRule).Compile();
+
             return CompiledDelegate != null;
         }
 
@@ -168,6 +177,28 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             return CompiledDelegate();
+        }
+    }
+
+    public class StaticVoidMethodCallRule : StaticCallBase, IStaticVoidMethodCallRule
+    {
+        private delegate void VoidAction();
+        private VoidAction CompiledDelegate { get; set; }
+
+        public override bool Compile()
+        {
+            if (base.Compile())
+                CompiledDelegate = Expression.Lambda<VoidAction>(ExpressionForThisRule).Compile();
+
+            return CompiledDelegate != null;
+        }
+
+        public void Execute()
+        {
+            if (CompiledDelegate == null)
+                throw new RuleEngineException("A Rule must be compiled first");
+
+            CompiledDelegate();
         }
     }
 }

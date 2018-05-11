@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using FluentAssertions;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
+using RuleFactory.RulesFactory;
 using RuleFactory.Tests.Fixture;
 using SampleModel;
 using Xunit;
@@ -226,6 +228,51 @@ namespace RuleFactory.Tests.JsonRules
             var game = ((StaticMethodCallRule<Game>)ruleAfter).Execute();
             game.Should().NotBeNull();
             game.Name.Should().Be("cool game");
+        }
+
+        [Fact]
+        public void CallStaticVoidMethod()
+        {
+            var ruleBefore = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", null);
+ 
+            var jsonConverterForRule = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(ruleBefore, jsonConverterForRule);
+            _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
+            // read from json
+            var ruleAfter = JsonConvert.DeserializeObject<Rule>(ruleJson, jsonConverterForRule);
+
+            var compileResult = ruleAfter.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{ruleAfter.ExpressionDebugView()}");
+
+            Game.SomeStaticIntValue = 0;
+            (ruleAfter as StaticVoidMethodCallRule)?.Execute();
+            Game.SomeStaticIntValue.Should().Be(1);
+        }
+
+        [Fact]
+        public void CallStaticVoidMethod2()
+        {
+            var ruleBefore = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", 
+                new List<Rule>{new ConstantRule<int> {Value = "99"}});
+ 
+            var jsonConverterForRule = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(ruleBefore, jsonConverterForRule);
+            _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
+            // read from json
+            var ruleAfter = JsonConvert.DeserializeObject<Rule>(ruleJson, jsonConverterForRule);
+
+            var compileResult = ruleAfter.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{ruleAfter.ExpressionDebugView()}");
+
+            Game.SomeStaticIntValue = 0;
+            (ruleAfter as StaticVoidMethodCallRule)?.Execute();
+            Game.SomeStaticIntValue.Should().Be(99);
         }
     }
 }

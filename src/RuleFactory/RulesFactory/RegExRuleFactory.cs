@@ -11,7 +11,7 @@ namespace RuleFactory.RulesFactory
         {
             return new RegExRule<T>
             {
-                ObjectToValidate = objectToValidate?.GetObjectToValidateFromExpression(),
+                ObjectToValidate = objectToValidate?.GetObjectToWorkOnFromExpression(),
                 RegExToUse = regExToUse
             };
         }

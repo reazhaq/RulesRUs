@@ -172,5 +172,44 @@ namespace RuleEngine.Tests.Rules
             game.Should().NotBeNull();
             game.Name.Should().Be("cool game");
         }
+
+        [Fact]
+        public void CallStaticVoidMethod()
+        {
+            var rule = new StaticVoidMethodCallRule
+            {
+                MethodClassName = "SampleModel.Game",
+                MethodToCall = "SomeVoidStaticMethod"
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            Game.SomeStaticIntValue = 0;
+            rule.Execute();
+            Game.SomeStaticIntValue.Should().Be(1);
+        }
+
+        [Fact]
+        public void CallStaticVoidMethod2()
+        {
+            var rule = new StaticVoidMethodCallRule
+            {
+                MethodClassName = "SampleModel.Game",
+                MethodToCall = "SomeVoidStaticMethod",
+                MethodParameters = {new ConstantRule<int> {Value = "99"}}
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            Game.SomeStaticIntValue = 0;
+            rule.Execute();
+            Game.SomeStaticIntValue.Should().Be(99);
+        }
     }
 }

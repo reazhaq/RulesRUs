@@ -108,5 +108,68 @@ namespace RuleFactory.Tests.RulesFactory
             executeResult = gameNameContainsKeyWrodCool.Execute(_game2);
             executeResult.Should().BeTrue();
         }
+
+        [Fact]
+        public void CallCreateGameStaticMethod()
+        {
+            //var game = Game.CreateGame();
+            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "SampleModel.Game", null);
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var game = rule.Execute();
+            game.Should().NotBeNull();
+        }
+
+        [Fact]
+        public void CallCreateGameStaticMethod2()
+        {
+            //var game = Game.CreateGame("cool game");
+            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "SampleModel.Game", 
+                                                        new List<Rule>{new ConstantRule<string> {Value = "cool game"}});
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var game = rule.Execute();
+            game.Should().NotBeNull();
+            game.Name.Should().Be("cool game");
+        }
+
+        [Fact]
+        public void CallStaticVoidMethod()
+        {
+            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", null);
+ 
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            Game.SomeStaticIntValue = 0;
+            rule.Execute();
+            Game.SomeStaticIntValue.Should().Be(1);
+        }
+
+        [Fact]
+        public void CallStaticVoidMethod2()
+        {
+            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", 
+                                                                            new List<Rule>{new ConstantRule<int> {Value = "99"}});
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            Game.SomeStaticIntValue = 0;
+            rule.Execute();
+            Game.SomeStaticIntValue.Should().Be(99);
+        }
     }
 }
