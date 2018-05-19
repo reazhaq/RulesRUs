@@ -17,7 +17,7 @@ namespace Sample2PlaceOrderRulesFromJsonFile
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Simple Place Order example");
+            Console.WriteLine("Validate an Order example");
             Console.WriteLine("Rule: order cannot be null, customer can't be null and product can't be null");
             Console.WriteLine("Rule: first name can't be null and has to be 3+ chars");
             Console.WriteLine("Rule: last name can't be null and has to be 4+ chars");
@@ -47,6 +47,7 @@ namespace Sample2PlaceOrderRulesFromJsonFile
             if (LoadFromFile())
                 return;
 
+            // this is mainly used to create rules and save them into a file; to be used during subsequent execution
             var orderRule = new ValidationRule<Order>
             {
                 OperatorToUse = "NotEqual",
@@ -98,7 +99,11 @@ namespace Sample2PlaceOrderRulesFromJsonFile
             var orderProductIdPositiveOrNameGreaterThan5 = new ValidationRule<Order>
             {
                 OperatorToUse = "OrElse",
-                RuleError = new RuleError { Code = "c5", Message = "id must be greater than zero or name has to be non-null and 5+ chars"},
+                RuleError = new RuleError
+                {
+                    Code = "c5",
+                    Message = "product id must be greater than zero or name has to be 5+ chars"
+                },
                 ChildrenRules =
                 {
                     new ValidationRule<Order>{OperatorToUse = "GreaterThan", ObjectToValidate = "Product.Id", ValueToValidateAgainst = new ConstantRule<int>{Value = "0"}},
@@ -119,9 +124,10 @@ namespace Sample2PlaceOrderRulesFromJsonFile
             SaveRulesToFile();
         }
 
+        // save as new-line json format; just because I wanted to
         private static void SaveRulesToFile()
         {
-            var jsonConverter = new CustomRuleJsonConverter();
+            var jsonConverter = new JsonConverterForRule();
             using (var file = new StreamWriter(_ruleFileName))
             foreach (var orderRule in OrderRules)
             {
@@ -134,7 +140,7 @@ namespace Sample2PlaceOrderRulesFromJsonFile
         {
             if (!File.Exists(_ruleFileName)) return false;
 
-            var jsonConverter = new CustomRuleJsonConverter();
+            var jsonConverter = new JsonConverterForRule();
             using (var stream = File.OpenText(_ruleFileName))
             {
                 var line = stream.ReadLine();

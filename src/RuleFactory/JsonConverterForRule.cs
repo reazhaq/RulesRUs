@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Newtonsoft.Json;
@@ -8,19 +7,22 @@ using RuleEngine.Rules;
 
 namespace RuleFactory
 {
-    public class CustomRuleJsonConverter : JsonConverter
+    public class JsonConverterForRule : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
             var jo = new JObject();
             var valueType = value.GetType();
-            if(typeof(Rule).IsAssignableFrom(valueType))
+            if (typeof(Rule).IsAssignableFrom(valueType))
             {
                 jo.Add("RuleType", valueType.Name);
 
-                var genericTypeArguments = valueType.GenericTypeArguments;
-                if (genericTypeArguments != null)
-                    jo.Add("BoundingTypes", string.Join(",", genericTypeArguments.Select(t => t.ToString())));
+                if (valueType.IsGenericType)
+                {
+                    var genericTypeArguments = valueType.GenericTypeArguments;
+                    if (genericTypeArguments != null)
+                        jo.Add("BoundingTypes", string.Join(",", genericTypeArguments.Select(t => t.ToString())));
+                }
             }
 
             foreach (var prop in valueType.GetProperties())
@@ -65,10 +67,10 @@ namespace RuleFactory
             Debug.WriteLine($"********* jsonObject: {jsonObject}");
             var ruleType = jsonObject["RuleType"].ToObject<string>();
             Debug.WriteLine($"******* ruleType: {ruleType}");
-            var boundingTypes = jsonObject["BoundingTypes"].ToObject<string>();
+            var boundingTypes = jsonObject["BoundingTypes"]?.ToObject<string>();
             Debug.WriteLine($"***** boundingTypes: {boundingTypes}");
-            
-            return RuleFactory.CreateRule(ruleType, boundingTypes.Split(','));
+
+            return RuleFactory.CreateRule(ruleType, boundingTypes?.Split(','));
         }
 
         public override bool CanConvert(Type objectType)

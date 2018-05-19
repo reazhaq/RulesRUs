@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Text;
 using RuleEngine.Utils;
@@ -19,7 +18,8 @@ namespace RuleEngine.Rules
 
         public virtual string ExpressionDebugView()
         {
-            var sb = new StringBuilder();
+            var sb = new StringBuilder($"Expression: {ExpressionForThisRule}{Environment.NewLine}");
+            sb.Append($"Expression Tree:{Environment.NewLine}");
             ExpressionForThisRule.TraceNode(sb);
             return sb.ToString();
         }
@@ -40,27 +40,15 @@ namespace RuleEngine.Rules
             ExpressionType.LessThan, ExpressionType.LessThanOrEqual
         };
 
-        public static Expression[] GetArgumentsExpressions(ParameterExpression param, List<Rule> paramList, Type[] paramTypes)
-        {
-            var argumentsExpressions = new Expression[paramList.Count];
-            for (var index = 0; index < paramList.Count; index++)
-            {
-                var paramRule = paramList[index];
-                argumentsExpressions[index] = paramRule.BuildExpression(param);
-                paramTypes[index] = argumentsExpressions[index].Type;
-            }
-            return argumentsExpressions;
-        }
-
         public static Expression GetExpressionWithSubProperty(ParameterExpression param, string objectToValidate)
         {
             if (string.IsNullOrEmpty(objectToValidate))
                 return param;
 
-            var partsAndPieces = objectToValidate.Split('.');
+            var fieldsOrProperties = objectToValidate.Split('.');
             Expression bodyWithSubProperty = param;
-            foreach (var partsAndPiece in partsAndPieces)
-                bodyWithSubProperty = Expression.PropertyOrField(bodyWithSubProperty, partsAndPiece);
+            foreach (var fieldOrProperty in fieldsOrProperties)
+                bodyWithSubProperty = Expression.PropertyOrField(bodyWithSubProperty, fieldOrProperty);
 
             return bodyWithSubProperty;
         }

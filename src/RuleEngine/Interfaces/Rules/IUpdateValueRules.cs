@@ -9,4 +9,10 @@
     {
         void UpdateFieldOrPropertyValue(T targetObject);
     }
+
+    public interface IUpdateRefValueRule<T>
+    {
+        void RefUpdate(ref T target);
+        void RefUpdate(ref T target, T source);
+    }
 }

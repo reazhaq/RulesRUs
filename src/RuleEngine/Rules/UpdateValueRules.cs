@@ -6,12 +6,9 @@ using RuleEngine.Interfaces.Rules;
 
 namespace RuleEngine.Rules
 {
-    public class UpdateValueRuleBase : Rule
+    public abstract class UpdateValueRuleBase : Rule
     {
         public string ObjectToUpdate;
-
-        public override Expression BuildExpression(params ParameterExpression[] parameters) => throw new NotImplementedException();
-        public override bool Compile() => throw new NotImplementedException();
     }
 
     public class UpdateValueRule<T> : UpdateValueRuleBase, IUpdateValueRule<T>
@@ -33,14 +30,14 @@ namespace RuleEngine.Rules
 
         public override bool Compile()
         {
-            var paramObjectToValidate = Expression.Parameter(typeof(T));
-            ExpressionForThisRule = BuildExpression(paramObjectToValidate);
+            var paramObjectToUpdate = Expression.Parameter(typeof(T));
+            ExpressionForThisRule = BuildExpression(paramObjectToUpdate);
             if (ExpressionForThisRule == null) return false;
 
             Debug.WriteLine($"Expression for UpdateRule<{typeof(T)}>:" +
                             $"{Environment.NewLine}{ExpressionDebugView()}`");
 
-            CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, paramObjectToValidate).Compile();
+            CompiledDelegate = Expression.Lambda<Action<T>>(ExpressionForThisRule, paramObjectToUpdate).Compile();
             return CompiledDelegate != null;
         }
 
@@ -72,15 +69,15 @@ namespace RuleEngine.Rules
 
         public override bool Compile()
         {
-            var paramObjectToValidate = Expression.Parameter(typeof(T1));
+            var paramObjectToUpdate = Expression.Parameter(typeof(T1));
             var paramSourceValue = Expression.Parameter(typeof(T2));
-            ExpressionForThisRule = BuildExpression(paramObjectToValidate, paramSourceValue);
+            ExpressionForThisRule = BuildExpression(paramObjectToUpdate, paramSourceValue);
             if (ExpressionForThisRule == null) return false;
 
             Debug.WriteLine($"Expression for UpdateRule<{typeof(T1)},{typeof(T2)}>:" +
                             $"{Environment.NewLine}{ExpressionDebugView()}");
 
-            CompiledDelegate = Expression.Lambda<Action<T1, T2>>(ExpressionForThisRule, paramObjectToValidate, paramSourceValue).Compile();
+            CompiledDelegate = Expression.Lambda<Action<T1, T2>>(ExpressionForThisRule, paramObjectToUpdate, paramSourceValue).Compile();
             return CompiledDelegate != null;
         }
 
@@ -90,6 +87,64 @@ namespace RuleEngine.Rules
                 throw new RuleEngineException("A Rule must be compiled first");
 
             CompiledDelegate(targetObject, source);
+        }
+    }
+
+    public class UpdateRefValueRule<T> : Rule, IUpdateRefValueRule<T>
+    {
+        private delegate void UpdateAction2(ref T target, T source);
+        private UpdateAction2 CompiledDelegate2 { get; set; }
+
+        private delegate void UpdateAction(ref T target);
+        private UpdateAction CompiledDelegate { get; set; }
+        public Rule SourceDataRule;
+
+        public override Expression BuildExpression(params ParameterExpression[] parameters)
+        {
+            if (parameters == null || (parameters.Length != 1 && parameters.Length != 2) ||
+                (parameters[0].Type != typeof(T) && parameters[1].Type != typeof(T)))
+                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one or two parameter of {typeof(T)}");
+
+            var target = parameters[0];
+            var sourceExpression = SourceDataRule != null ? SourceDataRule.BuildExpression(target) : parameters[1];
+            ExpressionForThisRule = Expression.Assign(target, sourceExpression);
+            return ExpressionForThisRule;
+        }
+
+        public override bool Compile()
+        {
+            var param = Expression.Parameter(typeof(T).MakeByRefType());
+            var paramSourceValue = Expression.Parameter(typeof(T));
+            ExpressionForThisRule = SourceDataRule != null ?
+                                        BuildExpression(param) :
+                                        BuildExpression(param, paramSourceValue);
+            if (ExpressionForThisRule == null) return false;
+
+            Debug.WriteLine($"Expression for RefUpdateRule<{typeof(T)}>:" +
+                            $"{Environment.NewLine}{ExpressionDebugView()}`");
+
+            if (SourceDataRule != null)
+                CompiledDelegate = Expression.Lambda<UpdateAction>(ExpressionForThisRule, param).Compile();
+            else
+                CompiledDelegate2 = Expression.Lambda<UpdateAction2>(ExpressionForThisRule, param, paramSourceValue).Compile();
+
+            return (CompiledDelegate != null || CompiledDelegate2 != null);
+        }
+
+        public void RefUpdate(ref T target)
+        {
+            if (CompiledDelegate == null)
+                throw new RuleEngineException("A Rule must be compiled first");
+
+            CompiledDelegate(ref target);
+        }
+
+        public void RefUpdate(ref T target, T source)
+        {
+            if (CompiledDelegate2 == null)
+                throw new RuleEngineException("A Rule must be compiled first");
+
+            CompiledDelegate2(ref target, source);
         }
     }
 }

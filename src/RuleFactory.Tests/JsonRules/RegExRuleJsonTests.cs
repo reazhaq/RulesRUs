@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
-using RuleFactory.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -41,10 +41,10 @@ namespace RuleFactory.Tests.JsonRules
             executeResult.Should().Be(expectedResult);
 
             // convert to json
-            var ruleJson = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             var compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +

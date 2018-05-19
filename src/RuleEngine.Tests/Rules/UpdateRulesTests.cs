@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
 using RuleEngine.Rules;
-using RuleEngine.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -56,5 +56,62 @@ namespace RuleEngine.Tests.Rules
             game.Name.Should().Be("name from constant rule");
             _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
         }
+
+        [Fact]
+        public void UpdateStringRef()
+        {
+            // source value is fixed with a constant rule
+            var rule = new UpdateRefValueRule<string>
+            {
+                SourceDataRule = new ConstantRule<string>{Value = "something"}
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string>:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var string1 = "one";
+            rule.RefUpdate(ref string1);
+            string1.Should().Be("something");
+
+            // source value shall come as argument
+            var rule2 = new UpdateRefValueRule<string>();
+            compileResult = rule2.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<string, string>:{Environment.NewLine}" +
+                                        $"{rule2.ExpressionDebugView()}");
+
+            string1 = null;
+            rule2.RefUpdate(ref string1, "some other value");
+            string1.Should().Be("some other value");
+        }
+
+        [Fact]
+        public void UpdateIntRef()
+        {
+            var rule = new UpdateRefValueRule<int>
+            {
+                SourceDataRule = new ConstantRule<int>{Value = "99"}
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");
+
+            var myInt = 0;
+            rule.RefUpdate(ref myInt);
+            myInt.Should().Be(99);
+
+            var rule2 = new UpdateRefValueRule<int>();
+            compileResult = rule2.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<int, int>:{Environment.NewLine}" +
+                                        $"{rule2.ExpressionDebugView()}");
+
+            rule2.RefUpdate(ref myInt, -99);
+            myInt.Should().Be(-99);
+        }
+
     }
 }

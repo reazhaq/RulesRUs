@@ -56,24 +56,31 @@ namespace Sample4RuleCreateMadeEasy
             Debug.WriteLine($"compiledResult: {compiledResult}"); // true
 
             var order = new Order();
-            var ruleResult = orderCustomerAndProductCannotBeNullRule.IsValid(order);
-            Debug.WriteLine($"ruleResult: {ruleResult}"); // false
+            var isValidOrder = orderCustomerAndProductCannotBeNullRule.IsValid(order);
+            if(!isValidOrder)
+                Debug.WriteLine($"orderCustomerAndProductCannotBeNullRule not valid: " +
+                                $"{orderCustomerAndProductCannotBeNullRule.RuleError}");
+            
 
             // add a customer object
             order.Customer = new Customer();
-            ruleResult = orderCustomerAndProductCannotBeNullRule.IsValid(order);
-            Debug.WriteLine($"ruleResult: {ruleResult}"); // false - because product is null
+            isValidOrder = orderCustomerAndProductCannotBeNullRule.IsValid(order);
+            if(!isValidOrder)
+                Debug.WriteLine($"orderCustomerAndProductCannotBeNullRule not valid: " +
+                                $"{orderCustomerAndProductCannotBeNullRule.RuleError}");
 
             // add a product object
             order.Product = new Product();
-            ruleResult = orderCustomerAndProductCannotBeNullRule.IsValid(order);
-            Debug.WriteLine($"ruleResult: {ruleResult}"); // true - because both are non-null
+            isValidOrder = orderCustomerAndProductCannotBeNullRule.IsValid(order);
+            if(!isValidOrder)
+                Debug.WriteLine($"orderCustomerAndProductCannotBeNullRule not valid: " +
+                                $"{orderCustomerAndProductCannotBeNullRule.RuleError}");
 
-            var converter = new CustomRuleJsonConverter();
+            var converter = new JsonConverterForRule();
             var jsonDoc = JsonConvert.SerializeObject(orderCustomerAndProductCannotBeNullRule, Formatting.Indented, converter);
-            Debug.WriteLine(jsonDoc);
+            Debug.WriteLine($"orderCustomerAndProductCannotBeNullRule converted to Json:{Environment.NewLine}{jsonDoc}");
 
-            // this shall throw and null exception
+            // this shall throw a null exception
             //orderCustomerAndProductCannotBeNullRule.IsValid(null);
         }
     }

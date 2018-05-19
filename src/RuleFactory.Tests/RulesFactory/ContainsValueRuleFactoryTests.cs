@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
-using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
 using Xunit;
 using Xunit.Abstractions;
@@ -27,7 +26,7 @@ namespace RuleFactory.Tests.RulesFactory
         public void ContainsValueTestWithIgnoreCase(string valueToSearch, bool expectedResult)
         {
             IList<string> collectionToSearch = new List<string> { "one", "two", "three", "four", "five", "six" };
-            var containsRule = ContainsValueRuleFactory.CreateContainsValueRule<string>(collectionToSearch,
+            var containsRule = ContainsValueRuleFactory.CreateContainsValueRule(collectionToSearch,
                                                     "System.StringComparer", "OrdinalIgnoreCase");
 
             var compileResult = containsRule.Compile();
@@ -50,7 +49,7 @@ namespace RuleFactory.Tests.RulesFactory
         public void ContainsValueTestCaseSensitive(string valueToSearch, bool expectedResult)
         {
             IList<string> collectionToSearch = new List<string> { "one", "two", "three", "four", "five", "six" };
-            var containsRule = ContainsValueRuleFactory.CreateContainsValueRule<string>(collectionToSearch, null, null);
+            var containsRule = ContainsValueRuleFactory.CreateContainsValueRule(collectionToSearch, null, null);
 
             var compileResult = containsRule.Compile();
             compileResult.Should().BeTrue();
@@ -68,7 +67,7 @@ namespace RuleFactory.Tests.RulesFactory
         [InlineData(7, false)]
         public void ContainsValueTestForIntCollection(int valueToSearch, bool expectedResult)
         {
-            var containsRule = ContainsValueRuleFactory.CreateContainsValueRule<int>(new List<int>{ 1, 2, 3, 4, 5, 6 },
+            var containsRule = ContainsValueRuleFactory.CreateContainsValueRule(new List<int>{ 1, 2, 3, 4, 5, 6 },
                                                                                         null,null);
 
             var compileResult = containsRule.Compile();

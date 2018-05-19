@@ -43,10 +43,10 @@ namespace RuleFactory.Tests.JsonRules
             containsValue.Should().Be(expectedResult);
 
             // convert to Json
-            var ruleJson = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
@@ -83,10 +83,10 @@ namespace RuleFactory.Tests.JsonRules
             containsValue.Should().Be(expectedResult);
 
             // convert to Json
-            var ruleJson = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
@@ -119,10 +119,10 @@ namespace RuleFactory.Tests.JsonRules
             containsValue.Should().Be(expectedResult);
 
             // convert to Json
-            var ruleJson = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +

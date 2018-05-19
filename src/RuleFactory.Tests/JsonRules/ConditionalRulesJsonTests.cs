@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
-using RuleFactory.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -44,10 +44,10 @@ namespace RuleFactory.Tests.JsonRules
             ruleResult.Should().BeEquivalentTo(expectedOutput);
 
             // convert to json
-            var ruleJson = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
@@ -90,10 +90,10 @@ namespace RuleFactory.Tests.JsonRules
             game.Name.Should().Be("updated name");
 
             // convert to json
-            var ruleJson = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = (ConditionalIfThActionRule<Game>)JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = (ConditionalIfThActionRule<Game>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             var compileResult2 = ruleFromJson.Compile();
             compileResult2.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
@@ -137,10 +137,10 @@ namespace RuleFactory.Tests.JsonRules
             _testOutputHelper.WriteLine($"expected: 999 - actual: {player.CurrentCoOrdinates.X}");
 
             // convert to json
-            var ruleJson = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = (ConditionalIfThActionRule<Player>)JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = (ConditionalIfThActionRule<Player>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             var compileResult2 = ruleFromJson.Compile();
             compileResult2.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
@@ -192,10 +192,10 @@ namespace RuleFactory.Tests.JsonRules
             game.Name.Should().Be("false name");
 
             // convert to json
-            var ruleJson = JsonConvert.SerializeObject(rule, new CustomRuleJsonConverter());
+            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = (ConditionalIfThElActionRule<Game>)JsonConvert.DeserializeObject<Rule>(ruleJson, new CustomRuleJsonConverter());
+            var ruleFromJson = (ConditionalIfThElActionRule<Game>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
             var compileResult2 = ruleFromJson.Compile();
             compileResult2.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +

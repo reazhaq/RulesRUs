@@ -20,9 +20,15 @@ namespace RuleFactory
                 case "UpdateValueRule`1":
                 case "UpdateValueRule`2":
                     return CreateUpdateValueRule(boundingTypes);
+                case "UpdateRefValueRule`1":
+                    return CreateUpdateRefValueRule(boundingTypes);
                 case "MethodVoidCallRule`1":
                 case "MethodCallRule`2":
                     return CreateMethodVoidCallRule(boundingTypes);
+                case "StaticMethodCallRule`1":
+                    return CreateStaticMethodCallRule(boundingTypes);
+                case "StaticVoidMethodCallRule":
+                    return CreateStaticVoidMethodCallRule();
                 case "ConditionalIfThActionRule`1":
                     return CreateConditionalIfThActionRule(boundingTypes);
                 case "ConditionalIfThElActionRule`1":
@@ -33,11 +39,37 @@ namespace RuleFactory
                     return CreateContainsValueRule(boundingTypes);
                 case "RegExRule`1":
                     return CreateRegExRule(boundingTypes);
-                default:
-                    break;
+                case "SelfReturnRule`1":
+                    return CreateSelfReturnRule(boundingTypes);
             }
 
             return null;
+        }
+
+        private static Rule CreateStaticVoidMethodCallRule()
+        {
+            return CreateRule(typeof(StaticVoidMethodCallRule));
+        }
+
+        private static Rule CreateStaticMethodCallRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length != 1) return null;
+            return CreateRule(typeof(StaticMethodCallRule<>),
+                new[] { ReflectionExtensions.GetTypeFor(boundingTypes[0]) });
+        }
+
+        private static Rule CreateUpdateRefValueRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length != 1) return null;
+            return CreateRule(typeof(UpdateRefValueRule<>),
+                new[] { ReflectionExtensions.GetTypeFor(boundingTypes[0]) });
+        }
+
+        private static Rule CreateSelfReturnRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length != 1) return null;
+            return CreateRule(typeof(SelfReturnRule<>),
+                new[] { ReflectionExtensions.GetTypeFor(boundingTypes[0]) });
         }
 
         private static Rule CreateRegExRule(string[] boundingTypes)
@@ -137,12 +169,22 @@ namespace RuleFactory
 
         }
 
-        private static Rule CreateRule(Type genericType, Type[] typesToBoundTo)
+        private static Rule CreateRule(Type ruleType, Type[] typesToBindTo)
         {
-            if (genericType == null || typesToBoundTo == null) return null;
-            var boundedGenericType = genericType.MakeGenericType(typesToBoundTo);
+            // make sure we are trying to create a bounded generic object drived from Rule
+            if (ruleType == null || typesToBindTo == null || !ruleType.IsSubclassOf(typeof(Rule))) return null;
+
+            var boundedGenericType = ruleType.MakeGenericType(typesToBindTo);
             var instance = Activator.CreateInstance(boundedGenericType);
             return (Rule)instance;
+        }
+
+        private static Rule CreateRule(Type ruleType)
+        {
+            if (ruleType == null || !ruleType.IsSubclassOf(typeof(Rule))) return null;
+
+            var instance = Activator.CreateInstance(ruleType);
+            return (Rule) instance;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace RuleEngine.Tests.Model
+namespace SampleModel
 {
     public class Game
     {
@@ -16,5 +16,12 @@ namespace RuleEngine.Tests.Model
         public bool HasPlayer(int id) => Players.Any(p => p.Id == id);
 
         public void FlipActive() => Active = !Active;
+
+        public static Game CreateGame() => new Game {Active = false, Name = "new"};
+        public static Game CreateGame(string name) => new Game {Active = false, Name = name};
+
+        public static int SomeStaticIntValue = 0;
+        public static void SomeVoidStaticMethod() => SomeStaticIntValue++;
+        public static void SomeVoidStaticMethod(int newValue) => SomeStaticIntValue = newValue;
     }
 }

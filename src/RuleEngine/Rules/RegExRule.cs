@@ -4,7 +4,6 @@ using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using RuleEngine.Common;
 using RuleEngine.Interfaces.Rules;
-using System.Linq;
 
 namespace RuleEngine.Rules
 {
@@ -49,7 +48,8 @@ namespace RuleEngine.Rules
         private Expression GetExpressionWithSubPropertyForIsMatch(ParameterExpression parameterExpression)
         {
             var fieldOrProperty = GetExpressionWithSubProperty(parameterExpression, ObjectToValidate);
-            var isMatchMethod = typeof(Regex).GetMethod("IsMatch", new[] { typeof(string), typeof(string), typeof(RegexOptions) });
+            var isMatchParameters = new[] {typeof(string), typeof(string), typeof(RegexOptions)};
+            var isMatchMethod = typeof(Regex).GetMethod("IsMatch", isMatchParameters);
 
             return Expression.Call(isMatchMethod, fieldOrProperty,
                 Expression.Constant(RegExToUse, typeof(string)),

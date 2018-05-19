@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using FluentAssertions;
 using RuleEngine.Rules;
-using RuleEngine.Tests.Model;
+using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -33,6 +33,34 @@ namespace RuleEngine.Tests.Rules
                 },
                 TrueRule = new ExpressionFuncRule<string, string>(s => "six-six-six"),
                 FalseRule = new ExpressionFuncRule<string, string>(s => s)
+            };
+
+            var compileResult = valueReplacementIfBad.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
+                                        $"{valueReplacementIfBad.ExpressionDebugView()}");
+
+            searchValue = valueReplacementIfBad.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {searchValue}");
+            searchValue.Should().Be(expectedValue);
+        }
+
+        [Theory]
+        [InlineData("one", "six-six-six")]
+        [InlineData("tWo", "six-six-six")]
+        [InlineData("blah", "blah")]
+        [InlineData("nine", "nine")]
+        public void IfValueContainsReturnDiffValue2(string searchValue, string expectedValue)
+        {
+            var valueReplacementIfBad = new ConditionalFuncRule<string, string>
+            {
+                ConditionRule = new ContainsValueRule<string>
+                {
+                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+                },
+                TrueRule = new ConstantRule<string,string>{Value = "six-six-six"},
+                FalseRule = new SelfReturnRule<string>()
             };
 
             var compileResult = valueReplacementIfBad.Compile();
