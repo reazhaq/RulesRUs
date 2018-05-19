@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using FluentAssertions;
-using Microsoft.CSharp.RuntimeBinder;
 using RuleEngine.Utils;
 using Xunit;
 using Xunit.Abstractions;
-using Binder = Microsoft.CSharp.RuntimeBinder.Binder;
 
 namespace RuleEngine.Tests.Utils.ExressionExtensions
 {

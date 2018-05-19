@@ -104,7 +104,7 @@ Debug.WriteLine($"ruleResult: {ruleResult}"); // true - because both are non-nul
 ## Convert to Json
 You can convert this to Json doc and save it or later use.
 ```
-var converter = new CustomRuleJsonConverter();
+var converter = new JsonConverterForRule();
 var jsonDoc = JsonConvert.SerializeObject(orderCustomerAndProductCannotBeNullRule, Formatting.Indented, converter);
 Debug.WriteLine(jsonDoc);
 ```
@@ -153,4 +153,4 @@ And the Json looks like:
 ```
 
 ## Note
-Introduing null check in the chain is very important.  If you call the rule IsValid and pass a null parameter - it is going to fail with null ref exception.  Just add a Order null check validation rule as the first child to take care of it.  Remember, these rules are loaded at run time; and null ref exception or any other silly error can bring down your app.
+Introduing null check in the chain is very important.  If you call the rule IsValid and pass a null parameter - it is going to fail with null ref exception.  Just add a Order null check validation rule as the first child rule to take care of it.  Remember, these rules are loaded at run time; and null ref exception or any other silly error can bring down your app.

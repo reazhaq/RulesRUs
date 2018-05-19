@@ -14,7 +14,7 @@ namespace Sample1PlaceOrder
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Simple Place Order example");
+            Console.WriteLine("Validate an Order example");
             Console.WriteLine("Rule: order cannot be null, customer can't be null and product can't be null");
             Console.WriteLine("Rule: first name can't be null and has to be 3+ chars");
             Console.WriteLine("Rule: last name can't be null and has to be 4+ chars");
@@ -92,7 +92,11 @@ namespace Sample1PlaceOrder
             var orderProductIdPositiveOrNameGreaterThan5 = new ValidationRule<Order>
             {
                 OperatorToUse = "OrElse",
-                RuleError = new RuleError { Code = "c5", Message = "id must be greater than zero or name has to be non-null and 5+ chars"},
+                RuleError = new RuleError
+                {
+                    Code = "c5",
+                    Message = "product id must be greater than zero or name has to be 5+ chars"
+                },
                 ChildrenRules =
                 {
                     new ValidationRule<Order>{OperatorToUse = "GreaterThan", ObjectToValidate = "Product.Id", ValueToValidateAgainst = new ConstantRule<int>{Value = "0"}},
