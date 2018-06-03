@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using FluentAssertions;
 using RuleEngine.Utils;
+using SampleModel;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace RuleEngine.Tests.Utils
 {
@@ -16,6 +18,13 @@ namespace RuleEngine.Tests.Utils
 
     public class ReflectionExtensionsTests
     {
+        private readonly ITestOutputHelper _testOutputHelper;
+
+        public ReflectionExtensionsTests(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public void GetNativeMethodInfoFromMethodName()
         {
@@ -50,6 +59,27 @@ namespace RuleEngine.Tests.Utils
             var mi = type.GetMethodInfo("ContainsValue", parameters, new[] { typeof(string) });
             var result = mi.Invoke(null, new object[] {list, "one", StringComparer.OrdinalIgnoreCase});
             result.Should().BeOfType<bool>().And.Be(true);
+        }
+
+        [Fact]
+        public void GetExtensionMethodInfoForGenericTypeWithoutParameterTypesReturnNull()
+        {
+            var type = typeof(ListExtensions);
+
+            var expectedException = Assert.Throws<ArgumentNullException>(() => type.GetMethodInfo("ContainsValue"));
+            expectedException.Should().BeOfType<ArgumentNullException>();
+            _testOutputHelper.WriteLine($"expectedException.Source: {expectedException.Source}");
+            _testOutputHelper.WriteLine($"expectedException.Message: {expectedException.Message}");
+        }
+
+        [Fact]
+        public void GetMethodInfoWithNoParam()
+        {
+            var type = typeof(Game);
+            var flipActiveMethodInfo = type.GetMethodInfo("FlipActive");
+            var game = new Game {Active = false};
+            var result = flipActiveMethodInfo.Invoke(game, new object[] { });
+            game.Active.Should().BeTrue();
         }
     }
 }
