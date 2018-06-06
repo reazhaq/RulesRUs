@@ -29,7 +29,7 @@ namespace RuleEngine.Tests.Utils
         public void GetNativeMethodInfoFromMethodName()
         {
             var type = ReflectionExtensions.GetTypeFor("System.String");
-            var mi = type.GetMethodInfo("ToUpper", null);
+            var mi = type.GetMethodInfo("ToUpper");
             mi.Should().NotBeNull();
 
             var someString = Activator.CreateInstance(type, new[] { 's', 'o', 'm', 'e', 'S', 't', 'r', 'i', 'n', 'g' });
@@ -68,6 +68,7 @@ namespace RuleEngine.Tests.Utils
 
             var expectedException = Assert.Throws<ArgumentNullException>(() => type.GetMethodInfo("ContainsValue"));
             expectedException.Should().BeOfType<ArgumentNullException>();
+            expectedException.Source.Should().Be("RuleEngine");
             _testOutputHelper.WriteLine($"expectedException.Source: {expectedException.Source}");
             _testOutputHelper.WriteLine($"expectedException.Message: {expectedException.Message}");
         }
@@ -78,7 +79,7 @@ namespace RuleEngine.Tests.Utils
             var type = typeof(Game);
             var flipActiveMethodInfo = type.GetMethodInfo("FlipActive");
             var game = new Game {Active = false};
-            var result = flipActiveMethodInfo.Invoke(game, new object[] { });
+            flipActiveMethodInfo.Invoke(game, new object[] { });
             game.Active.Should().BeTrue();
         }
     }

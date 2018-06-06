@@ -29,6 +29,9 @@ namespace RuleEngine.Utils
                         lastFieldOrProperty = memberExpression.Member.Name;
                         keepLooping = false;
                         break;
+                    default:
+                        keepLooping = false;
+                        break;
                 }
             }
 
