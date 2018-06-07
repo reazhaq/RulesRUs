@@ -4,13 +4,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Reaz</Authors>
     <Company>Bluebonnet Software</Company>
-    <Description>Rule factory to create expression tree based rules.</Description>
+    <Description>Rule factory to create expression tree based rules.  Rules Factory can help create rules; since there may be too many details to keep track for a complex rule.</Description>
     <PackageLicenseUrl>https://github.com/reazhaq/RulesRUs/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/reazhaq/RulesRUs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/reazhaq/RulesRUs</RepositoryUrl>
     <Version>1.1.0</Version>
-    <PackageReleaseNotes>- new factory methods for new rules: Self Return, Ref Update, Static Call</PackageReleaseNotes>
+    <PackageReleaseNotes>- new factory methods for new rules: Self Return, Ref Update, Static Call
+</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>RuleFactory Rule Factory</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

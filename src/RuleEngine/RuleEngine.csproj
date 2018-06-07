@@ -4,18 +4,20 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Authors>Reaz</Authors>
     <Company>Bluebonnet Software</Company>
-    <Description>Run simple expression tree based rules.</Description>
+    <Description>Run simple expression tree based rules.  Built using Expression Tree; create-compile-execute simple business rules at runtime.</Description>
     <PackageLicenseUrl>https://github.com/reazhaq/RulesRUs/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/reazhaq/RulesRUs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/reazhaq/RulesRUs</RepositoryUrl>
     <Version>1.1.0</Version>
     <PackageReleaseNotes>- New rules:
-  - Self Return Rule; returns the same typed value
-  - Ref Update Value Rule; can be used to update a variable by ref
-  - Static Method Call Rule
-  - Static Void Call Rule
+        - Self Return Rule; returns the same typed value
+        - Ref Update Value Rule; can be used to update a variable by ref
+        - Static Method Call Rule
+        - Static Void Call Rule
+        - utility method bug fix
 </PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>RuleEngine Rule Engine Expression Tree</PackageTags>
   </PropertyGroup>
 
 </Project>
