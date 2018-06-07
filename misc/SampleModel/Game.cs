@@ -20,7 +20,7 @@ namespace SampleModel
         public static Game CreateGame() => new Game {Active = false, Name = "new"};
         public static Game CreateGame(string name) => new Game {Active = false, Name = name};
 
-        public static int SomeStaticIntValue = 0;
+        public static int SomeStaticIntValue;
         public static void SomeVoidStaticMethod() => SomeStaticIntValue++;
         public static void SomeVoidStaticMethod(int newValue) => SomeStaticIntValue = newValue;
     }

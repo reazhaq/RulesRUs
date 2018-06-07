@@ -8,7 +8,7 @@ namespace RuleEngine.Utils
 {
     public static class ReflectionExtensions
     {
-        public static MethodInfo GetMethodInfo(this Type type, string methodName, Type[] parameters, Type[] genericTypes = null)
+        public static MethodInfo GetMethodInfo(this Type type, string methodName, Type[] parameters = null, Type[] genericTypes = null)
         {
             if (string.IsNullOrEmpty(methodName))
                 throw new ArgumentNullException($"{nameof(methodName)} can't be null/empty");
@@ -16,6 +16,10 @@ namespace RuleEngine.Utils
             foreach (var methodInfo in type.GetMethods().Where(m => m.Name.Equals(methodName)))
             {
                 var isGenericMethod = methodInfo.IsGenericMethod;
+
+                // genericTypes being passed in has to have non-null genericTypes
+                if (isGenericMethod && (genericTypes == null || genericTypes.Any(gt => gt == null)))
+                    throw new ArgumentNullException($"{nameof(genericTypes)} can't be null and/or contain null element");
 
                 var parametersForTheMethod = isGenericMethod ?
                     methodInfo.MakeGenericMethod(genericTypes).GetParameters() :
