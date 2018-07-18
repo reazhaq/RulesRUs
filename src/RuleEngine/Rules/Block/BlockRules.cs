@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Linq.Expressions;
-using RuleEngine.Common;
-using RuleEngine.Interfaces.Rules;
 
 namespace RuleEngine.Rules
 {
