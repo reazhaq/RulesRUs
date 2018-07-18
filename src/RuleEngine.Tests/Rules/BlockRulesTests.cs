@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using FluentAssertions;
 using RuleEngine.Rules;
+using RuleEngine.Rules.Block;
 using RuleEngine.Utils;
 using SampleModel;
 using Xunit;
@@ -40,7 +41,7 @@ namespace RuleEngine.Tests.Rules
                 SourceDataRule = new ConstantRule<string>{Value = "some cool description"}
             };
 
-            var blockRule = new VoidBlockRule<Game>();
+            var blockRule = new ActionBlockRule<Game>();
             blockRule.Rules.Add(nameChangeRule);
             blockRule.Rules.Add(rankingChangeRule);
             blockRule.Rules.Add(descriptionChangeRule);
