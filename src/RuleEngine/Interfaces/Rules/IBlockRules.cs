@@ -1,9 +1,9 @@
 ﻿namespace RuleEngine.Interfaces.Rules
 {
-    //public interface IVoidBlockRule<in T>
-    //{
-    //    void Exectue(T param);
-    //}
+    public interface IVoidBlockRule<in T>
+    {
+        void Exectue(T param);
+    }
 
     //public interface IActionBlockRule<in T>
     //{
@@ -15,8 +15,8 @@
     //    void Execute(T1 param1, T2 param2);
     //}
 
-    public interface IFuncBlockRule<out T>
-    {
-        T Execute();
-    }
+    //public interface IFuncBlockRule<out T>
+    //{
+    //    T Execute();
+    //}
 }

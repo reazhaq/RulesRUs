@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace SampleModel
 {
@@ -23,5 +24,10 @@ namespace SampleModel
         public static int SomeStaticIntValue;
         public static void SomeVoidStaticMethod() => SomeStaticIntValue++;
         public static void SomeVoidStaticMethod(int newValue) => SomeStaticIntValue = newValue;
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
+        }
     }
 }
