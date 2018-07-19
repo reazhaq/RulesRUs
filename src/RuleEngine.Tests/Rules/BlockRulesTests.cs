@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using FluentAssertions;
 using RuleEngine.Rules;
-using RuleEngine.Rules.Block;
-using RuleEngine.Utils;
 using SampleModel;
 using Xunit;
 using Xunit.Abstractions;

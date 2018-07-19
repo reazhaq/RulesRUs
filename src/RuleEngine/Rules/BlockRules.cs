@@ -1,11 +1,18 @@
-﻿using RuleEngine.Common;
-using RuleEngine.Interfaces.Rules;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
+using RuleEngine.Common;
+using RuleEngine.Interfaces.Rules;
 
-namespace RuleEngine.Rules.Block
+namespace RuleEngine.Rules
 {
+    public abstract class BlockRules : Rule
+    {
+        public IList<Rule> Rules { get; } = new List<Rule>();
+        protected IList<Expression> Expressions { get; } = new List<Expression>();
+    }
+
     public class ActionBlockRule<T> : BlockRules, IActionBlockRule<T>
     {
         private Action<T> CompiledDelegate { get; set; }

@@ -1,5 +1,4 @@
 ﻿using RuleEngine.Rules;
-using RuleEngine.Rules.Conditional;
 using RuleEngine.Utils;
 using System;
 

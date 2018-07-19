@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using RuleEngine.Rules;
-using RuleEngine.Rules.Conditional;
 using SampleModel;
 using System;
 using System.Linq.Expressions;

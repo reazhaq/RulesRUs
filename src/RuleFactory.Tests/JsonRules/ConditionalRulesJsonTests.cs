@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
-using RuleEngine.Rules.Conditional;
 using SampleModel;
 using System;
 using Xunit;
