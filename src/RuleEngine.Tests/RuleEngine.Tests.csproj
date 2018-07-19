@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\misc\SampleModel\SampleModel.csproj" />
     <ProjectReference Include="..\RuleEngine\RuleEngine.csproj" />
+    <ProjectReference Include="..\RuleFactory\RuleFactory.csproj" />
   </ItemGroup>
 
 </Project>

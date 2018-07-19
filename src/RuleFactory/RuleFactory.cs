@@ -40,6 +40,8 @@ namespace RuleFactory
                     return CreateRegExRule(boundingTypes);
                 case "SelfReturnRule`1":
                     return CreateSelfReturnRule(boundingTypes);
+                case "ActionBlockRule`1":
+                    return CreateActionBlockRule(boundingTypes);
             }
 
             return null;
@@ -166,6 +168,14 @@ namespace RuleFactory
                         ReflectionExtensions.GetTypeFor(boundingTypes[1])
                     }));
 
+        }
+
+        public static Rule CreateActionBlockRule(string[] boundingTypes)
+        {
+            if (boundingTypes == null || boundingTypes.Length != 1) return null;
+
+            return CreateRule(typeof(ActionBlockRule<>),
+                new[] { ReflectionExtensions.GetTypeFor(boundingTypes[0]) });
         }
 
         private static Rule CreateRule(Type ruleType, Type[] typesToBindTo)
