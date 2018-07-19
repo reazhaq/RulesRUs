@@ -174,6 +174,34 @@ namespace RuleEngine.Tests.Rules
         }
 
         [Fact]
+        public void CallCreateGameStaticMethod3()
+        {
+            //var game = Game.CreateGame("game", "description", 1, true);
+            var rule = new StaticMethodCallRule<Game>
+            {
+                MethodClassName = "SampleModel.Game",
+                MethodToCall = "CreateGame",
+                MethodParameters =
+                {
+                    new ConstantRule<string> {Value = "game"},
+                    new ConstantRule<string> {Value = "description"},
+                    new ConstantRule<int> {Value = "1"},
+                    new ConstantRule<bool> {Value = "true"}
+                }
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var game = rule.Execute();
+            game.Should().NotBeNull();
+            game.Name.Should().Be("game");
+            _testOutputHelper.WriteLine($"{game}");
+        }
+
+        [Fact]
         public void CallStaticVoidMethod()
         {
             var rule = new StaticVoidMethodCallRule

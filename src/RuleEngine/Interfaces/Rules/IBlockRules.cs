@@ -5,10 +5,10 @@
         void Exectue(T param);
     }
 
-    public interface IFuncBlockRule<out T>
-    {
-        T Execute();
-    }
+    //public interface IFuncBlockRule<out T>
+    //{
+    //    T Execute();
+    //}
 
     //public interface IVoidBlockRule<in T>
     //{

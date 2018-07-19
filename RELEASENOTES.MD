@@ -1,3 +1,7 @@
+# Version 1.2.0
+- New rules:
+  - Block rule; simple way to combine number of similar rules into one rule
+
 # Version 1.1.0
 - New rules:
   - Self Return Rule; returns the same typed value
