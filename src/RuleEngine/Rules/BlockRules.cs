@@ -26,7 +26,7 @@ namespace RuleEngine.Rules
             foreach (var rule in Rules)
                 Expressions.Add(rule.BuildExpression(param));
 
-            ExpressionForThisRule = Expression.Block(new ParameterExpression[]{}, Expressions);
+            ExpressionForThisRule = Expression.Block(Expressions);
             return ExpressionForThisRule;
         }
 
