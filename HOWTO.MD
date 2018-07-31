@@ -98,7 +98,7 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   Successfully created package 'C:\nuget-local\RuleEngine.___.nupkg'.
   Successfully created package 'C:\nuget-local\RuleEngine.___.symbols.nupkg'.
 ```
-- include ```--version-suffix blah``` to create a pre-release version
+- include ```--version-suffix "-pre1"``` to create a pre-release version
 
 ## Push to Nuget
 - Open command prompt; change directory to c:\nuget-local (because my nuget.exe is there and dotnet-pack outputs are there)
