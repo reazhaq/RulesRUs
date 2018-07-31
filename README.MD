@@ -135,7 +135,7 @@ public void CallToUpper()
 }
 ```
 
-## Static Method Call Rule:
+### Static Method Call Rule:
 Similar to method call rule; but works with static methods that returns a value.  Note, class name has to include complete namespace.
 ```c#
 [Fact]
@@ -160,7 +160,7 @@ public void CallCreateGameStaticMethod2()
 }
 ```
 
-## Static Void Method Call Rule:
+### Static Void Method Call Rule:
 Same as Static call; but doesn't return any value, not it is generic.
 ```c#
 [Fact]
@@ -543,6 +543,61 @@ Expression Tree:
 |    |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
 |    |- parameterExpression.Name: null
 |    |- parameterExpression.IsByRef: False
+```
+
+## Block Rule
+Idea was to group couple of rules together and execute as one rule. As of now, we only have Action Block Rule. This might get expanded to cover more scenarios.
+
+### Action Block Rule
+Like execute couple of update value rule to update various properties of a game object (see unit tests) - glue together bunch of action rules where all the rules take one parameter.
+```c#
+[Fact]
+public void UpdateMultiplePropertiesOfaGameObject()
+{
+    var nameChangeRule = new UpdateValueRule<Game>
+    {
+        ObjectToUpdate = "Name",
+        SourceDataRule = new ConstantRule<string> {Value = "some fancy name"}
+    };
+    var rankingChangeRule = new UpdateValueRule<Game>
+    {
+        ObjectToUpdate = "Ranking",
+        SourceDataRule = new ConstantRule<int>{Value = "1000"}
+    };
+    var descriptionChangeRule = new UpdateValueRule<Game>
+    {
+        ObjectToUpdate = "Description",
+        SourceDataRule = new ConstantRule<string>{Value = "some cool description"}
+    };
+
+    var blockRule = new ActionBlockRule<Game>();
+    blockRule.Rules.Add(nameChangeRule);
+    blockRule.Rules.Add(rankingChangeRule);
+    blockRule.Rules.Add(descriptionChangeRule);
+
+    var compileResult = blockRule.Compile();
+    compileResult.Should().BeTrue();
+
+    _testOutputHelper.WriteLine(blockRule.ExpressionDebugView());
+
+    var game = new Game();
+    blockRule.Exectue(game);
+    _testOutputHelper.WriteLine($"game object updated:{Environment.NewLine}{game}");
+}
+```
+resultant expression:
+```
+Expression: { ... }
+Expression Tree:
+||- System.Linq.Expressions.Block3.NodeType: Block
+||- System.Linq.Expressions.Block3.Type: System.String
+||- System.Linq.Expressions.Block3.DebugView: .Block() {
+    $var1.Name = (System.String)"some fancy name";
+    $var1.Ranking = (System.Int32)1000;
+    $var1.Description = (System.String)"some cool description"
+}
+.
+.
 ```
 
 # [Rule Factory](/src/RuleFactory)

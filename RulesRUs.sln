@@ -38,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample4RuleCreateMadeEasy",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{8A3FB0F0-6E0F-4F9D-AECA-D6ACB663E959}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleModel", "misc\SampleModel\SampleModel.csproj", "{C5742060-DDFC-4E2B-8118-F35DDEFCAD7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleModel", "misc\SampleModel\SampleModel.csproj", "{C5742060-DDFC-4E2B-8118-F35DDEFCAD7A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

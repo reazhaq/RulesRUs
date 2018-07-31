@@ -8,16 +8,13 @@
     <PackageLicenseUrl>https://github.com/reazhaq/RulesRUs/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/reazhaq/RulesRUs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/reazhaq/RulesRUs</RepositoryUrl>
-    <Version>1.1.1</Version>
-    <PackageReleaseNotes>- New rules:
-        - Self Return Rule; returns the same typed value
-        - Ref Update Value Rule; can be used to update a variable by ref
-        - Static Method Call Rule
-        - Static Void Call Rule
-        - utility method bug fix
-</PackageReleaseNotes>
+    <Version>1.2.0</Version>
+    <PackageReleaseNotes>- New rule:
+        - Action Block rule; simple way to combine number of similar rules into one rule</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>RuleEngine Rule Engine Expression Tree</PackageTags>
+    <AssemblyVersion>1.2.0.0</AssemblyVersion>
+    <FileVersion>1.2.0.0</FileVersion>
   </PropertyGroup>
 
 </Project>
