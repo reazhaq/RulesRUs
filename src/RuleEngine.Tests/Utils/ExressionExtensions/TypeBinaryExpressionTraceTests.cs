@@ -22,20 +22,21 @@ namespace RuleEngine.Tests.Utils.ExressionExtensions
         {
             var param = Expression.Parameter(typeof(object));
 
-            var typeIsExpression = Expression.TypeIs(param, typeof(int));
-            _testOutputHelper.WriteLine($"typeIsExpression: {typeIsExpression}");
+            var typeIsIntExpression = Expression.TypeIs(param, typeof(int));
+            _testOutputHelper.WriteLine($"typeIsExpression: {typeIsIntExpression}");
 
             var sb = new StringBuilder();
-            typeIsExpression.TraceNode(sb);
+            typeIsIntExpression.TraceNode(sb);
             _testOutputHelper.WriteLine(sb.ToString());
 
-            var lambda = Expression.Lambda<Func<object, bool>>(typeIsExpression, param);
-            var compiled = lambda.Compile(); // compiled becomes p=>p is int;
-            compiled.Should().NotBeNull();
+            var typeIsLambda = Expression.Lambda<Func<object, bool>>(typeIsIntExpression, param);
+            var compiledLambda = typeIsLambda.Compile(); // compiled becomes p=>p is int;
+            compiledLambda.Should().NotBeNull();
 
-            compiled("blah").Should().BeFalse();
-            compiled(5).Should().BeTrue();
-            compiled((object) 55).Should().BeTrue();
+            compiledLambda("blah").Should().BeFalse();
+            compiledLambda(5).Should().BeTrue();
+            object fiftyFive = 55;
+            compiledLambda(fiftyFive).Should().BeTrue();
         }
 
         [Fact]

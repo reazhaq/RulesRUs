@@ -1,3 +1,12 @@
+# Version 1.2.0
+- New rule:
+  - Action Block rule; simple way to combine number of similar rules into one rule
+  - Action Block rule factory; works with Json converter
+
+# Version 1.1.1
+- New rules:
+  - :bug: utility method bug fix - get method info was vulnerable to some null parameters
+
 # Version 1.1.0
 - New rules:
   - Self Return Rule; returns the same typed value

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq.Expressions;
-using FluentAssertions;
+﻿using FluentAssertions;
 using RuleEngine.Rules;
 using SampleModel;
+using System;
+using System.Linq.Expressions;
 using Xunit;
 using Xunit.Abstractions;
 

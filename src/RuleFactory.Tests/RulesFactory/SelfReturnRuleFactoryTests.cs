@@ -19,6 +19,7 @@ namespace RuleFactory.Tests.RulesFactory
         {
             var rule = SelfReturnRuleFactory.CreateSelfReturnRule<string>();
             var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"rule: {rule}");
 
             var result = rule.Get("one");
@@ -36,6 +37,7 @@ namespace RuleFactory.Tests.RulesFactory
         {
             var rule = SelfReturnRuleFactory.CreateSelfReturnRule<int?>();
             var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"rule: {rule}");
 
             var result = rule.Get(5);

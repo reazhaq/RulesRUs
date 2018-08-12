@@ -8,11 +8,13 @@
     <PackageLicenseUrl>https://github.com/reazhaq/RulesRUs/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/reazhaq/RulesRUs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/reazhaq/RulesRUs</RepositoryUrl>
-    <Version>1.1.0</Version>
-    <PackageReleaseNotes>- new factory methods for new rules: Self Return, Ref Update, Static Call
-</PackageReleaseNotes>
+    <Version>1.2.0$(VersionSuffix)</Version>
+    <PackageReleaseNotes>- New Factory Method:
+  - Action Block Rule
+
+https://github.com/reazhaq/RulesRUs/blob/master/RELEASENOTES.MD</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>RuleFactory Rule Factory</PackageTags>
+    <PackageTags>RuleFactory Rule-Factory RuleEngineFactory RuleEngine Rule-Engine Expression-Tree Rule Engine</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

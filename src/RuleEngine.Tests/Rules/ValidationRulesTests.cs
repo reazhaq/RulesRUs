@@ -285,20 +285,21 @@ namespace RuleEngine.Tests.Rules
         [Fact]
         public void ValidationRuleWithTwoTypes()
         {
-            var twoPlayersScoreRule = new ValidationRule<Player, Player>
+            var twoPlayersScoreGreaterThanRule = new ValidationRule<Player, Player>
             {
                 OperatorToUse = "GreaterThan",
                 ObjectToValidate1 = "CurrentScore",
                 ObjectToValidate2 = "CurrentScore"
             };
 
-            var compileResult = twoPlayersScoreRule.Compile();
+            var compileResult = twoPlayersScoreGreaterThanRule.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(twoPlayersScoreRule)}:{Environment.NewLine}{twoPlayersScoreRule.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(twoPlayersScoreGreaterThanRule)}:{Environment.NewLine}" +
+                                        $"{twoPlayersScoreGreaterThanRule.ExpressionDebugView()}");
 
-            var validationResult = twoPlayersScoreRule.IsValid(_game.Players[0], _game.Players[1]);
+            var validationResult = twoPlayersScoreGreaterThanRule.IsValid(_game.Players[0], _game.Players[1]);
             validationResult.Should().BeTrue();
-            validationResult = twoPlayersScoreRule.IsValid(_game.Players[1], _game.Players[0]);
+            validationResult = twoPlayersScoreGreaterThanRule.IsValid(_game.Players[1], _game.Players[0]);
             validationResult.Should().BeFalse();
         }
     }
