@@ -66,6 +66,7 @@ namespace RuleFactory.Tests.JsonRules
             var value = ((SelfReturnRule<string>)ruleAfter).Get(someValue);
             value.Should().Be(someValue);
 
+            // both objects should be pointing to same objects
             var referenceEquals = object.ReferenceEquals(someValue, value);
             referenceEquals.Should().BeTrue();
         }
@@ -92,6 +93,7 @@ namespace RuleFactory.Tests.JsonRules
             var value = ((SelfReturnRule<Game>)ruleAfter).Get(someGame);
             value.Should().Be(someGame);
 
+            // both objects should be pointing to same objects
             var referenceEquals = object.ReferenceEquals(someGame, value);
             referenceEquals.Should().BeTrue();
         }

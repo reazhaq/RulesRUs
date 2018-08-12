@@ -67,6 +67,7 @@ namespace RuleFactory.Tests.RulesFactory
 
             var conditionalUpdateValue2 = JsonConvert.DeserializeObject<Rule>(json, jsonConverterForRule);
             compileResult = conditionalUpdateValue2.Compile();
+            compileResult.Should().BeTrue();
 
             var game2 = new Game { Name = "some name" };
             _testOutputHelper.WriteLine($"before game2.Name: {game2.Name}");

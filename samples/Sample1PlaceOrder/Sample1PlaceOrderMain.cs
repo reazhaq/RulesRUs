@@ -137,7 +137,7 @@ namespace Sample1PlaceOrder
             var ruleErrors = new List<RuleError>();
             foreach (var orderRule in OrderRules)
             {
-                if (orderRule is IValidationRule<Order> && !((orderRule as IValidationRule<Order>).IsValid(order)))
+                if (orderRule is IValidationRule<Order> rule && !(rule.IsValid(order)))
                     ruleErrors.Add(orderRule.RuleError);
             }
 

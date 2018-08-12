@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FluentAssertions;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RuleEngine.Rules;
 using SampleModel;
@@ -26,6 +27,7 @@ namespace RuleFactory.Tests
             //var rule2 = JsonConvert.DeserializeObject<Rule>(json, settings);
             var rule2 = JsonConvert.DeserializeObject<Rule>(json, new JsonConverterForRule());
             var foo = rule2.Compile();
+            foo.Should().BeTrue();
             _testOutputHelper.WriteLine(rule2.ExpressionDebugView());
         }
 
@@ -43,6 +45,7 @@ namespace RuleFactory.Tests
 
             var rule2 = JsonConvert.DeserializeObject<Rule>(json, new JsonConverterForRule());
             var foo = rule2.Compile();
+            foo.Should().BeTrue();
             _testOutputHelper.WriteLine(rule2.ExpressionDebugView());
         }
 
@@ -86,6 +89,7 @@ namespace RuleFactory.Tests
 
             var rule2 = JsonConvert.DeserializeObject<Rule>(json, settings);
             var foo = rule2.Compile();
+            foo.Should().BeTrue();
             _testOutputHelper.WriteLine(rule2.ExpressionDebugView());
         }
     }
