@@ -46,7 +46,7 @@ namespace RuleEngine.Tests.Rules
             _testOutputHelper.WriteLine(blockRule.ExpressionDebugView());
 
             var game = new Game();
-            blockRule.Exectue(game);
+            blockRule.Execute(game);
             _testOutputHelper.WriteLine($"game object updated:{Environment.NewLine}{game}");
         }
 
@@ -97,6 +97,8 @@ namespace RuleEngine.Tests.Rules
             conditionalUpdateValue.Execute(game);
             _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
             game.Name.Should().Be("some fancy name");
+            game.Ranking.Should().Be(1000);
+            game.Description.Should().Be("some cool description");
             _testOutputHelper.WriteLine($"{game}");
         }
     }

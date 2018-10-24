@@ -26,7 +26,7 @@ namespace RuleEngine.Rules
             if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T1))
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T1)}");
 
-            var returnLabel = Expression.Label(typeof(T2), "returnLable");
+            var returnLabel = Expression.Label(typeof(T2), "returnLabel");
 
             var conditionalExpression = ConditionRule.BuildExpression(parameters);
 
