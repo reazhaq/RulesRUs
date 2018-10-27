@@ -72,8 +72,7 @@ namespace RuleEngine.Rules
             if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(TIn))
                 throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(TIn)}");
 
-            var lastRule = Rules.Last();
-            if (lastRule == null || lastRule.RuleReturnsValueOfTOut<TIn, TOut>())
+            if (Rules.Count == 0 || !Rules.Last().RuleReturnsValueOfTOut<TIn, TOut>())
                 throw new RuleEngineException($"last rule must return a value of {typeof(TOut)}");
 
             var param = parameters[0];
