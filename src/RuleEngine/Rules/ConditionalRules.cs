@@ -29,6 +29,8 @@ namespace RuleEngine.Rules
             var returnLabel = Expression.Label(typeof(T2), "returnLabel");
 
             var conditionalExpression = ConditionRule.BuildExpression(parameters);
+            if (!(conditionalExpression is LambdaExpression))
+                conditionalExpression = Expression.Lambda(conditionalExpression, parameters);
 
             var trueExpression = TrueRule.BuildExpression(parameters);
             if (!(trueExpression is LambdaExpression))

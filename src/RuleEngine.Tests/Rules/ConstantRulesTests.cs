@@ -45,7 +45,7 @@ namespace RuleEngine.Tests.Rules
         }
 
         [Fact]
-        public void CosntantRuleThrowsExceptionForNullValueType()
+        public void ConstantRuleThrowsExceptionForNullValueType()
         {
             var rule = new ConstantRule<int> {Value = "null"};
             var exception = Assert.Throws<RuleEngineException>(() => rule.Compile());
@@ -112,7 +112,7 @@ namespace RuleEngine.Tests.Rules
         }
 
         [Fact]
-        public void ContantRuleOfTypeIntThatReturnsString()
+        public void ConstantRuleOfTypeIntThatReturnsString()
         {
             var stringValue = "55";
             var ruleReturningString = new ConstantRule<int, string> {Value = stringValue};

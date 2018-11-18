@@ -205,7 +205,7 @@ namespace RuleEngine.Tests.Rules
         }
 
         [Fact]
-        public void ValidataionRuleWithOneNotChild()
+        public void ValidationRuleWithOneNotChild()
         {
             var gameNullRuleByUsingNotWithNotEqualToNullChild = new ValidationRule<Game>
             {
