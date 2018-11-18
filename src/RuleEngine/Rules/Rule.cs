@@ -63,11 +63,27 @@ namespace RuleEngine.Rules
                 case MethodCallRule<TIn, TOut> methodCallRule:
                 case ExpressionFuncRule<TIn, TOut> expressionFuncRule:
                     return true;
+           }
 
+            return RuleReturnsValueOfTOut<TOut>() || RuleReturnsBool<TIn, TOut>();
+        }
+
+        public bool RuleReturnsValueOfTOut<TOut>()
+        {
+            switch(this)
+            {
                 case ConstantRule<TOut> constantRule:
                 case StaticMethodCallRule<TOut> staticMethodCallRule:
                     return true;
+            }
 
+            return false;
+        }
+
+        public bool RuleReturnsBool<TIn, TOut>()
+        {
+            switch (this)
+            {
                 case ContainsValueRule<TIn> containsValueRule when (typeof(TOut) == typeof(bool)):
                 case RegExRule<TIn> regExRule when (typeof(TOut) == typeof(bool)):
                 case SelfReturnRule<TIn> selfReturnRule when (typeof(TIn) == typeof(TOut)):

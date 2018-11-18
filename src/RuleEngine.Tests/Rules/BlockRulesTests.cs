@@ -116,7 +116,7 @@ namespace RuleEngine.Tests.Rules
         {
             var someRule = new ConditionalIfThActionRule<object>();
             var someBlockRule = new FuncBlockRule<object, object>();
-            someBlockRule.Rules.Add(someBlockRule);
+            someBlockRule.Rules.Add(someRule);
             var exception = Assert.Throws<RuleEngineException>(() => someBlockRule.Compile());
             exception.Message.Should().Be("last rule must return a value of System.Object");
         }
@@ -163,6 +163,74 @@ namespace RuleEngine.Tests.Rules
             var compileResult = blockRule.Compile();
             compileResult.Should().BeTrue();
 
+            var game = blockRule.Execute(new Game());
+            game.Name.Should().Be("some fancy name");
+            game.Ranking.Should().Be(1000);
+            game.Description.Should().Be("some cool description");
+            _testOutputHelper.WriteLine($"{game}");
+        }
+
+        [Fact]
+        public void ReturnsNewOrUpdatedGame()
+        {
+            var nullGame = new ConstantRule<Game>{Value = "null"};
+            var nullGameCheckRule = new ValidationRule<Game>
+            {
+                ValueToValidateAgainst = nullGame,
+                OperatorToUse = "Equal"
+            };
+            //var compileResult = nullGameCheckRule.Compile();
+            //compileResult.Should().BeTrue();
+
+            var newGameRule = new StaticMethodCallRule<Game>
+            {
+                MethodClassName = "SampleModel.Game",
+                MethodToCall = "CreateGame"
+            };
+
+            var gameObjectRule = new ConditionalFuncRule<Game, Game>
+            {
+                ConditionRule = nullGameCheckRule,
+                TrueRule = newGameRule,
+                FalseRule = new SelfReturnRule<Game>()
+            };
+            //var compileResult = gameObjectRule.Compile();
+            //compileResult.Should().BeTrue();
+
+            //var game = gameObjectRule.Execute(null);
+
+            //game.Description = "blah blah blah";
+            //var foo = gameObjectRule.Execute(game);
+            //object.ReferenceEquals(game, foo).Should().BeTrue();
+
+            var nameChangeRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Name",
+                SourceDataRule = new ConstantRule<string> {Value = "some fancy name"}
+            };
+            var rankingChangeRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Ranking",
+                SourceDataRule = new ConstantRule<int>{Value = "1000"}
+            };
+            var descriptionChangeRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Description",
+                SourceDataRule = new ConstantRule<string>{Value = "some cool description"}
+            };
+            var selfReturnRule = new SelfReturnRule<Game>();
+
+            var blockRule = new FuncBlockRule<Game, Game>();
+            blockRule.Rules.Add(gameObjectRule);
+            blockRule.Rules.Add(nameChangeRule);
+            blockRule.Rules.Add(rankingChangeRule);
+            blockRule.Rules.Add(descriptionChangeRule);
+            blockRule.Rules.Add(selfReturnRule);
+
+            var compileResult = blockRule.Compile();
+            compileResult.Should().BeTrue();
+
+            //var game = blockRule.Execute(null);
             var game = blockRule.Execute(new Game());
             game.Name.Should().Be("some fancy name");
             game.Ranking.Should().Be(1000);
