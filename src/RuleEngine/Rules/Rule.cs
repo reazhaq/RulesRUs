@@ -57,11 +57,11 @@ namespace RuleEngine.Rules
         {
             switch (this)
             {
-                case FuncBlockRule<TIn, TOut> funcBlockRule:
-                case ConditionalFuncRule<TIn, TOut> conditionalFuncRule:
-                case ConstantRule<TIn, TOut> constantRule:
-                case MethodCallRule<TIn, TOut> methodCallRule:
-                case ExpressionFuncRule<TIn, TOut> expressionFuncRule:
+                case FuncBlockRule<TIn, TOut> _:
+                case ConditionalFuncRule<TIn, TOut> _:
+                case ConstantRule<TIn, TOut> _:
+                case MethodCallRule<TIn, TOut> _:
+                case ExpressionFuncRule<TIn, TOut> _:
                     return true;
            }
 
@@ -72,8 +72,8 @@ namespace RuleEngine.Rules
         {
             switch(this)
             {
-                case ConstantRule<TOut> constantRule:
-                case StaticMethodCallRule<TOut> staticMethodCallRule:
+                case ConstantRule<TOut> _:
+                case StaticMethodCallRule<TOut> _:
                     return true;
             }
 
@@ -84,10 +84,10 @@ namespace RuleEngine.Rules
         {
             switch (this)
             {
-                case ContainsValueRule<TIn> containsValueRule when (typeof(TOut) == typeof(bool)):
-                case RegExRule<TIn> regExRule when (typeof(TOut) == typeof(bool)):
-                case SelfReturnRule<TIn> selfReturnRule when (typeof(TIn) == typeof(TOut)):
-                case ValidationRule<TIn> validationRule when (typeof(TOut) == typeof(bool)):
+                case ContainsValueRule<TIn> _ when (typeof(TOut) == typeof(bool)):
+                case RegExRule<TIn> _ when (typeof(TOut) == typeof(bool)):
+                case SelfReturnRule<TIn> _ when (typeof(TIn) == typeof(TOut)):
+                case ValidationRule<TIn> _ when (typeof(TOut) == typeof(bool)):
                     return true;
             }
 

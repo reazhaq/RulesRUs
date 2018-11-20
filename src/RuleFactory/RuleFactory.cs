@@ -180,7 +180,7 @@ namespace RuleFactory
 
         private static Rule CreateRule(Type ruleType, Type[] typesToBindTo)
         {
-            // make sure we are trying to create a bounded generic object drived from Rule
+            // make sure we are trying to create a bounded generic object inherited from Rule
             if (ruleType == null || typesToBindTo == null || !ruleType.IsSubclassOf(typeof(Rule))) return null;
 
             var boundedGenericType = ruleType.MakeGenericType(typesToBindTo);
