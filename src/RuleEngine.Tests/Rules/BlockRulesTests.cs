@@ -23,17 +23,17 @@ namespace RuleEngine.Tests.Rules
             var nameChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Name",
-                SourceDataRule = new ConstantRule<string> {Value = "some fancy name"}
+                SourceDataRule = new ConstantRule<string> { Value = "some fancy name" }
             };
             var rankingChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Ranking",
-                SourceDataRule = new ConstantRule<int>{Value = "1000"}
+                SourceDataRule = new ConstantRule<int> { Value = "1000" }
             };
             var descriptionChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Description",
-                SourceDataRule = new ConstantRule<string>{Value = "some cool description"}
+                SourceDataRule = new ConstantRule<string> { Value = "some cool description" }
             };
 
             var blockRule = new ActionBlockRule<Game>();
@@ -57,17 +57,17 @@ namespace RuleEngine.Tests.Rules
             var nameChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Name",
-                SourceDataRule = new ConstantRule<string> {Value = "some fancy name"}
+                SourceDataRule = new ConstantRule<string> { Value = "some fancy name" }
             };
             var rankingChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Ranking",
-                SourceDataRule = new ConstantRule<int>{Value = "1000"}
+                SourceDataRule = new ConstantRule<int> { Value = "1000" }
             };
             var descriptionChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Description",
-                SourceDataRule = new ConstantRule<string>{Value = "some cool description"}
+                SourceDataRule = new ConstantRule<string> { Value = "some cool description" }
             };
 
             var blockRule = new ActionBlockRule<Game>();
@@ -81,7 +81,7 @@ namespace RuleEngine.Tests.Rules
                 {
                     ObjectToCallMethodOn = "Name",
                     MethodToCall = "Equals",
-                    MethodParameters = { new ConstantRule<string> { Value = "some name" }, 
+                    MethodParameters = { new ConstantRule<string> { Value = "some name" },
                             new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
                     }
                 },
@@ -124,8 +124,8 @@ namespace RuleEngine.Tests.Rules
         [Fact]
         public void FuncBlockRuleReturnsLastRuleResult()
         {
-            var ruleReturning5 = new ConstantRule<int, int> {Value = "5"};
-            var blockRule = new FuncBlockRule<int,int>();
+            var ruleReturning5 = new ConstantRule<int, int> { Value = "5" };
+            var blockRule = new FuncBlockRule<int, int>();
             blockRule.Rules.Add(ruleReturning5);
             var compileResult = blockRule.Compile();
             compileResult.Should().BeTrue();
@@ -140,17 +140,17 @@ namespace RuleEngine.Tests.Rules
             var nameChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Name",
-                SourceDataRule = new ConstantRule<string> {Value = "some fancy name"}
+                SourceDataRule = new ConstantRule<string> { Value = "some fancy name" }
             };
             var rankingChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Ranking",
-                SourceDataRule = new ConstantRule<int>{Value = "1000"}
+                SourceDataRule = new ConstantRule<int> { Value = "1000" }
             };
             var descriptionChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Description",
-                SourceDataRule = new ConstantRule<string>{Value = "some cool description"}
+                SourceDataRule = new ConstantRule<string> { Value = "some cool description" }
             };
             var selfReturnRule = new SelfReturnRule<Game>();
 
@@ -173,7 +173,7 @@ namespace RuleEngine.Tests.Rules
         [Fact]
         public void ReturnsNewOrUpdatedGame()
         {
-            var nullGame = new ConstantRule<Game>{Value = "null"};
+            var nullGame = new ConstantRule<Game> { Value = "null" };
             var nullGameCheckRule = new ValidationRule<Game>
             {
                 ValueToValidateAgainst = nullGame,
@@ -192,26 +192,27 @@ namespace RuleEngine.Tests.Rules
                 TrueRule = newGameRule,
                 FalseRule = new SelfReturnRule<Game>()
             };
+            var assignRule = new UpdateValueRule<Game> { SourceDataRule = gameObjectRule };
 
             var nameChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Name",
-                SourceDataRule = new ConstantRule<string> {Value = "some fancy name"}
+                SourceDataRule = new ConstantRule<string> { Value = "some fancy name" }
             };
             var rankingChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Ranking",
-                SourceDataRule = new ConstantRule<int>{Value = "1000"}
+                SourceDataRule = new ConstantRule<int> { Value = "1000" }
             };
             var descriptionChangeRule = new UpdateValueRule<Game>
             {
                 ObjectToUpdate = "Description",
-                SourceDataRule = new ConstantRule<string>{Value = "some cool description"}
+                SourceDataRule = new ConstantRule<string> { Value = "some cool description" }
             };
             var selfReturnRule = new SelfReturnRule<Game>();
 
             var blockRule = new FuncBlockRule<Game, Game>();
-            blockRule.Rules.Add(gameObjectRule);
+            blockRule.Rules.Add(assignRule);
             blockRule.Rules.Add(nameChangeRule);
             blockRule.Rules.Add(rankingChangeRule);
             blockRule.Rules.Add(descriptionChangeRule);
@@ -224,14 +225,17 @@ namespace RuleEngine.Tests.Rules
             game.Name.Should().Be("some fancy name");
             game.Ranking.Should().Be(1000);
             game.Description.Should().Be("some cool description");
+            game.Rating.Should().BeNullOrEmpty();
             _testOutputHelper.WriteLine($"{game}");
 
-            var newGame = new Game();
+            var newGame = new Game { Rating = "high" };
             // newGame is not same as game object
-            object.ReferenceEquals(game, newGame).Should().BeFalse();
+            ReferenceEquals(game, newGame).Should().BeFalse();
             game = blockRule.Execute(newGame);
-            // this call shall return the same newGame object
-            object.ReferenceEquals(game, newGame).Should().BeTrue();
+            // this call shall return the same newGame object with updated values
+            ReferenceEquals(game, newGame).Should().BeTrue();
+            game.Rating.Should().Be("high");
+            _testOutputHelper.WriteLine($"newGame: {game}");
         }
     }
 }
