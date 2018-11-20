@@ -179,8 +179,6 @@ namespace RuleEngine.Tests.Rules
                 ValueToValidateAgainst = nullGame,
                 OperatorToUse = "Equal"
             };
-            //var compileResult = nullGameCheckRule.Compile();
-            //compileResult.Should().BeTrue();
 
             var newGameRule = new StaticMethodCallRule<Game>
             {
@@ -194,14 +192,6 @@ namespace RuleEngine.Tests.Rules
                 TrueRule = newGameRule,
                 FalseRule = new SelfReturnRule<Game>()
             };
-            //var compileResult = gameObjectRule.Compile();
-            //compileResult.Should().BeTrue();
-
-            //var game = gameObjectRule.Execute(null);
-
-            //game.Description = "blah blah blah";
-            //var foo = gameObjectRule.Execute(game);
-            //object.ReferenceEquals(game, foo).Should().BeTrue();
 
             var nameChangeRule = new UpdateValueRule<Game>
             {
@@ -230,12 +220,18 @@ namespace RuleEngine.Tests.Rules
             var compileResult = blockRule.Compile();
             compileResult.Should().BeTrue();
 
-            //var game = blockRule.Execute(null);
-            var game = blockRule.Execute(new Game());
+            var game = blockRule.Execute(null);
             game.Name.Should().Be("some fancy name");
             game.Ranking.Should().Be(1000);
             game.Description.Should().Be("some cool description");
             _testOutputHelper.WriteLine($"{game}");
+
+            var newGame = new Game();
+            // newGame is not same as game object
+            object.ReferenceEquals(game, newGame).Should().BeFalse();
+            game = blockRule.Execute(newGame);
+            // this call shall return the same newGame object
+            object.ReferenceEquals(game, newGame).Should().BeTrue();
         }
     }
 }
