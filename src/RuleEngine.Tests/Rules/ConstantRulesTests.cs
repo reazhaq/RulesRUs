@@ -97,7 +97,7 @@ namespace RuleEngine.Tests.Rules
             _testOutputHelper.WriteLine($"value = {value ?? "null"}");
 
             object expectedTypedResult;
-            var underyingType = Nullable.GetUnderlyingType(constantType) ?? constantType;
+            var underlyingType = Nullable.GetUnderlyingType(constantType) ?? constantType;
             if (expectedResult == null)
             {
                 if (constantType.IsValueType && Nullable.GetUnderlyingType(constantType) != null)
@@ -106,7 +106,7 @@ namespace RuleEngine.Tests.Rules
                     expectedTypedResult = Convert.ChangeType(null, constantType);
             }
             else
-                expectedTypedResult = Convert.ChangeType(expectedResult, underyingType);
+                expectedTypedResult = Convert.ChangeType(expectedResult, underlyingType);
 
             Assert.True(value?.Equals(expectedTypedResult) ?? expectedTypedResult == null);
         }
@@ -126,7 +126,7 @@ namespace RuleEngine.Tests.Rules
         }
 
         [Fact]
-        public void ConstantRuleOfTypeIntNullableBoolRetursNull()
+        public void ConstantRuleOfTypeIntNullableBoolReturnsNull()
         {
             var rule = new ConstantRule<int, bool?> {Value = "null"};
             var compileResult = rule.Compile();
@@ -176,10 +176,10 @@ namespace RuleEngine.Tests.Rules
                 $"{instanceOfConstantRule.GetType().GetMethod("ExpressionDebugView").Invoke(instanceOfConstantRule, null)}");
 
             var getResult = instanceOfConstantRule.GetType().GetMethod("Get").Invoke(instanceOfConstantRule, new[]{paramValue});
-            _testOutputHelper.WriteLine($"result from Get({paramValue}): {getResult ?? "nulll"}");
+            _testOutputHelper.WriteLine($"result from Get({paramValue}): {getResult ?? "null"}");
 
             object expectedTypedResult;
-            var underyingType = Nullable.GetUnderlyingType(type2) ?? type2;
+            var underlyingType = Nullable.GetUnderlyingType(type2) ?? type2;
             if (expectedResult == null)
             {
                 if (type2.IsValueType && Nullable.GetUnderlyingType(type2) != null)
@@ -188,7 +188,7 @@ namespace RuleEngine.Tests.Rules
                     expectedTypedResult = Convert.ChangeType(null, type2);
             }
             else
-                expectedTypedResult = Convert.ChangeType(expectedResult, underyingType);
+                expectedTypedResult = Convert.ChangeType(expectedResult, underlyingType);
 
             Assert.True(getResult?.Equals(expectedTypedResult) ?? expectedTypedResult == null);
         }

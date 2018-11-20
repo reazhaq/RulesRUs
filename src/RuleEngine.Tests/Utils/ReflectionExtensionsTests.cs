@@ -32,9 +32,9 @@ namespace RuleEngine.Tests.Utils
             var mi = type.GetMethodInfo("ToUpper");
             mi.Should().NotBeNull();
 
-            var someString = Activator.CreateInstance(type, new[] { 's', 'o', 'm', 'e', 'S', 't', 'r', 'i', 'n', 'g' });
+            var someString = Activator.CreateInstance(type, new[] { 's', 'o', 'm', 'e', '-', 'S', 't', 'r', 'i', 'n', 'g' });
             var length = mi.Invoke(someString, null);
-            length.Should().Be("SOMESTRING");
+            length.Should().Be("SOME-STRING");
         }
 
         [Fact]

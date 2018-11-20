@@ -166,7 +166,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ValidataionRuleWithOneNotChild()
+        public void ValidationRuleWithOneNotChild()
         {
             var constRule = ConstantRulesFactory.CreateConstantRule<Game>("null");
             var child1 =

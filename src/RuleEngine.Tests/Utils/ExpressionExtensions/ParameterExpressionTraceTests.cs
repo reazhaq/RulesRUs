@@ -4,25 +4,25 @@ using RuleEngine.Utils;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleEngine.Tests.Utils.ExressionExtensions
+namespace RuleEngine.Tests.Utils.ExpressionExtensions
 {
-    public class ConstantExpressionTraceTests
+    public class ParameterExpressionTraceTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public ConstantExpressionTraceTests(ITestOutputHelper testOutputHelper)
+        public ParameterExpressionTraceTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
 
         [Fact]
-        public void TraceConstantExpression()
+        public void TraceParameterExpression()
         {
-            var c1 = Expression.Constant(5);
-            _testOutputHelper.WriteLine($"c1: {c1}");
+            var p0 = Expression.Parameter(typeof(int));
+            _testOutputHelper.WriteLine($"p0: {p0}");
 
             var sb = new StringBuilder();
-            c1.TraceNode(sb);
+            p0.TraceNode(sb);
             _testOutputHelper.WriteLine(sb.ToString());
         }
     }

@@ -93,19 +93,20 @@ namespace RuleFactory.Tests.RulesFactory
             // Description is a string - Call Contains method on Description
             // compiles to: Param_0.Description.Contains("cool")
             var const1 = ConstantRulesFactory.CreateConstantRule<string>("cool");
-            var gameNameContainsKeyWrodCool = MethodCallRulesFactory.CreateMethodCallRule<Game, bool>("Contains",
+            var gameNameContainsKeyWordCool = MethodCallRulesFactory.CreateMethodCallRule<Game, bool>("Contains",
                                 null, (g => g.Description), new List<Rule> {const1});
 
-            var compileResult = gameNameContainsKeyWrodCool.Compile();
+            var compileResult = gameNameContainsKeyWordCool.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(gameNameContainsKeyWrodCool)}:{Environment.NewLine}{gameNameContainsKeyWrodCool.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(gameNameContainsKeyWordCool)}:{Environment.NewLine}" +
+                                        $"{gameNameContainsKeyWordCool.ExpressionDebugView()}");
 
             // check to see if _game1 description contains keyword "cool"
-            var executeResult = gameNameContainsKeyWrodCool.Execute(_game1);
+            var executeResult = gameNameContainsKeyWordCool.Execute(_game1);
             executeResult.Should().BeFalse();
 
             // check to see if _game2 description contains keyword "cool"
-            executeResult = gameNameContainsKeyWrodCool.Execute(_game2);
+            executeResult = gameNameContainsKeyWordCool.Execute(_game2);
             executeResult.Should().BeTrue();
         }
 

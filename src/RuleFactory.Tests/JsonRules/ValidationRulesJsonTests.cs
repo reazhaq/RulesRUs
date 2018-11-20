@@ -282,7 +282,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void ValidataionRuleWithOneNotChild()
+        public void ValidationRuleWithOneNotChild()
         {
             var rule = new ValidationRule<Game>
             {

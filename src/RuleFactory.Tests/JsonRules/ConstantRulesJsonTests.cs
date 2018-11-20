@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using FluentAssertions;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
@@ -144,7 +143,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void ContantRuleOfTypeIntThatReturnsString()
+        public void ConstantRuleOfTypeIntThatReturnsString()
         {
             var stringValue = "55";
             var rule = new ConstantRule<int, string> {Value = stringValue};
@@ -171,7 +170,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void ConstantRuleOfTypeIntNullableBoolRetursNull()
+        public void ConstantRuleOfTypeIntNullableBoolReturnsNull()
         {
             var rule = new ConstantRule<int, bool?> {Value = "null"};
             var compileResult = rule.Compile();
@@ -250,7 +249,7 @@ namespace RuleFactory.Tests.JsonRules
             _testOutputHelper.WriteLine($"result from Get({paramValue}): {getResult ?? "nulll"}");
 
             object expectedTypedResult;
-            var underyingType = Nullable.GetUnderlyingType(type2) ?? type2;
+            var underlyingType = Nullable.GetUnderlyingType(type2) ?? type2;
             if (expectedResult == null)
             {
                 if (type2.IsValueType && Nullable.GetUnderlyingType(type2) != null)
@@ -259,7 +258,7 @@ namespace RuleFactory.Tests.JsonRules
                     expectedTypedResult = Convert.ChangeType(null, type2);
             }
             else
-                expectedTypedResult = Convert.ChangeType(expectedResult, underyingType);
+                expectedTypedResult = Convert.ChangeType(expectedResult, underlyingType);
 
             Assert.True(getResult?.Equals(expectedTypedResult) ?? expectedTypedResult == null);
 

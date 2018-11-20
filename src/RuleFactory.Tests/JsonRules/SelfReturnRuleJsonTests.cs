@@ -30,7 +30,7 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(ruleBefore, customJsonConverter);
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
 
-            // de-hyrate from json
+            // de-hydrate from json
             var ruleAfter = JsonConvert.DeserializeObject<Rule>(ruleJson, customJsonConverter);
 
             var compileResult = ruleAfter.Compile();
@@ -55,7 +55,7 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(ruleBefore, customJsonConverter);
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
 
-            // de-hyrate from json
+            // de-hydrate from json
             var ruleAfter = JsonConvert.DeserializeObject<Rule>(ruleJson, customJsonConverter);
 
             var compileResult = ruleAfter.Compile();
@@ -67,7 +67,7 @@ namespace RuleFactory.Tests.JsonRules
             value.Should().Be(someValue);
 
             // both objects should be pointing to same objects
-            var referenceEquals = object.ReferenceEquals(someValue, value);
+            var referenceEquals = ReferenceEquals(someValue, value);
             referenceEquals.Should().BeTrue();
         }
 
@@ -81,7 +81,7 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(ruleBefore, customJsonConverter);
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
 
-            // de-hyrate from json
+            // de-hydrate from json
             var ruleAfter = JsonConvert.DeserializeObject<Rule>(ruleJson, customJsonConverter);
 
             var compileResult = ruleAfter.Compile();
@@ -94,7 +94,7 @@ namespace RuleFactory.Tests.JsonRules
             value.Should().Be(someGame);
 
             // both objects should be pointing to same objects
-            var referenceEquals = object.ReferenceEquals(someGame, value);
+            var referenceEquals = ReferenceEquals(someGame, value);
             referenceEquals.Should().BeTrue();
         }
     }
