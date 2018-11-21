@@ -4,7 +4,7 @@ using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Rules;
-using Sample1PlaceOrder.Model;
+using SampleModel;
 
 namespace Sample1PlaceOrder
 {

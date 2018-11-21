@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
 using RuleFactory.Tests.Fixture;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -114,7 +114,7 @@ namespace RuleFactory.Tests.RulesFactory
         public void CallCreateGameStaticMethod()
         {
             //var game = Game.CreateGame();
-            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "SampleModel.Game", null);
+            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "ModelForUnitTests.Game", null);
 
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
@@ -129,7 +129,7 @@ namespace RuleFactory.Tests.RulesFactory
         public void CallCreateGameStaticMethod2()
         {
             //var game = Game.CreateGame("cool game");
-            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "SampleModel.Game", 
+            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "ModelForUnitTests.Game", 
                                                         new List<Rule>{new ConstantRule<string> {Value = "cool game"}});
 
             var compileResult = rule.Compile();
@@ -145,7 +145,7 @@ namespace RuleFactory.Tests.RulesFactory
         [Fact]
         public void CallStaticVoidMethod()
         {
-            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", null);
+            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "ModelForUnitTests.Game", null);
  
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
@@ -160,7 +160,7 @@ namespace RuleFactory.Tests.RulesFactory
         [Fact]
         public void CallStaticVoidMethod2()
         {
-            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", 
+            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "ModelForUnitTests.Game", 
                                                                             new List<Rule>{new ConstantRule<int> {Value = "99"}});
 
             var compileResult = rule.Compile();

@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
 using RuleEngine.Tests.Fixture;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -139,7 +139,7 @@ namespace RuleEngine.Tests.Rules
             //var game = Game.CreateGame();
             var rule = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "CreateGame"
             };
 
@@ -158,7 +158,7 @@ namespace RuleEngine.Tests.Rules
             //var game = Game.CreateGame("cool game");
             var rule = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "CreateGame",
                 MethodParameters = { new ConstantRule<string> { Value = "cool game" } }
             };
@@ -179,7 +179,7 @@ namespace RuleEngine.Tests.Rules
             //var game = Game.CreateGame("game", "description", 1, true);
             var rule = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "CreateGame",
                 MethodParameters =
                 {
@@ -206,7 +206,7 @@ namespace RuleEngine.Tests.Rules
         {
             var rule = new StaticVoidMethodCallRule
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "SomeVoidStaticMethod"
             };
 
@@ -225,7 +225,7 @@ namespace RuleEngine.Tests.Rules
         {
             var rule = new StaticVoidMethodCallRule
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "SomeVoidStaticMethod",
                 MethodParameters = {new ConstantRule<int> {Value = "99"}}
             };

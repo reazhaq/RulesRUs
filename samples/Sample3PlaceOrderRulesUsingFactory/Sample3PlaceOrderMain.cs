@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
-using Sample3PlaceOrderRulesUsingFactory.Model;
+using SampleModel;
 
 namespace Sample3PlaceOrderRulesUsingFactory
 {

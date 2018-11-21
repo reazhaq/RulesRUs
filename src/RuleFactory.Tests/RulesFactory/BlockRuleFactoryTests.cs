@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
-using SampleModel;
 using System;
 using System.Collections.Generic;
+using ModelForUnitTests;
 using Newtonsoft.Json;
 using Xunit;
 using Xunit.Abstractions;

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
 using RuleFactory.Tests.Fixture;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 

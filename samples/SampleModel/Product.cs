@@ -1,4 +1,4 @@
-﻿namespace Sample2PlaceOrderRulesFromJsonFile.Model
+﻿namespace SampleModel
 {
     public class Product
     {

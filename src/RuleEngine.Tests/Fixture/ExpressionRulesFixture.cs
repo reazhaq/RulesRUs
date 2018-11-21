@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using SampleModel;
+using ModelForUnitTests;
 
 namespace RuleEngine.Tests.Fixture
 {

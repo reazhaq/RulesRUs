@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Sample3PlaceOrderRulesUsingFactory.Model
+namespace SampleModel
 {
     public class Order
     {

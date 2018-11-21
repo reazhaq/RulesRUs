@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleFactory.RulesFactory;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 

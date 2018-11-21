@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Utils;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 

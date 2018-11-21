@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
+using ModelForUnitTests;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using RuleEngine.Rules;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 

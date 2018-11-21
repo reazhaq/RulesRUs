@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Linq;
 
-namespace SampleModel
+namespace ModelForUnitTests
 {
     public class Country
     {

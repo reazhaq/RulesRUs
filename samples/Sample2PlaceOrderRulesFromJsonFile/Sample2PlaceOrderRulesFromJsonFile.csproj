@@ -13,6 +13,13 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\RuleEngine\RuleEngine.csproj" />
     <ProjectReference Include="..\..\src\RuleFactory\RuleFactory.csproj" />
+    <ProjectReference Include="..\SampleModel\SampleModel.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="order-rule.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

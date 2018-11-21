@@ -144,7 +144,7 @@ public void CallCreateGameStaticMethod2()
     //var game = Game.CreateGame("cool game");
     var rule = new StaticMethodCallRule<Game>
     {
-        MethodClassName = "SampleModel.Game",
+        MethodClassName = "ModelForUnitTests.Game",
         MethodToCall = "CreateGame",
         MethodParameters = { new ConstantRule<string> { Value = "cool game" } }
     };
@@ -168,7 +168,7 @@ public void CallStaticVoidMethod2()
 {
     var rule = new StaticVoidMethodCallRule
     {
-        MethodClassName = "SampleModel.Game",
+        MethodClassName = "ModelForUnitTests.Game",
         MethodToCall = "SomeVoidStaticMethod",
         MethodParameters = {new ConstantRule<int> {Value = "99"}}
     };
@@ -392,24 +392,24 @@ Expression Tree:
 ||- System.Linq.Expressions.FullConditionalExpression.NodeType: Conditional
 ||- System.Linq.Expressions.FullConditionalExpression.Type: System.String
 ||- System.Linq.Expressions.FullConditionalExpression.DebugView: .If (
-    .Invoke (.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.Boolean]>)($var1)
+    .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>)($var1)
 ) {
-    .Invoke (.Lambda #Lambda2<System.Func`2[SampleModel.Game,System.String]>)($var1)
+    .Invoke (.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,System.String]>)($var1)
 } .Else {
-    .Invoke (.Lambda #Lambda3<System.Func`2[SampleModel.Game,System.String]>)($var1)
+    .Invoke (.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,System.String]>)($var1)
 }
 
-.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.Boolean]>(SampleModel.Game $var1) {
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>(ModelForUnitTests.Game $var1) {
     .Call ($var1.Name).Equals(
         (System.String)"some name",
         (System.StringComparison).Constant<System.StringComparison>(CurrentCultureIgnoreCase))
 }
 
-.Lambda #Lambda2<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"true name"
 }
 
-.Lambda #Lambda3<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"false name"
 }
 ||- System.Linq.Expressions.FullConditionalExpression.CanReduce: False
@@ -417,24 +417,24 @@ Expression Tree:
 ||- IfTrue:
 |  |- System.Linq.Expressions.InvocationExpression1.NodeType: Invoke
 |  |- System.Linq.Expressions.InvocationExpression1.Type: System.String
-|  |- System.Linq.Expressions.InvocationExpression1.DebugView: .Invoke (.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>)($var1)
+|  |- System.Linq.Expressions.InvocationExpression1.DebugView: .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>)($var1)
 
-.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"true name"
 }
 |  |- System.Linq.Expressions.InvocationExpression1.CanReduce: False
 |  |
 |  |- Expression:
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].NodeType: Lambda
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].Type: System.Func`2[SampleModel.Game,System.String]
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].DebugView: .Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].NodeType: Lambda
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].Type: System.Func`2[ModelForUnitTests.Game,System.String]
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].DebugView: .Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"true name"
 }
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].CanReduce: False
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].CanReduce: False
 |    |
 |    |- Parameters count: 1
 |      |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
-|      |- System.Linq.Expressions.TypedParameterExpression.Type: SampleModel.Game
+|      |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
 |      |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
 |      |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
 |      |- parameterExpression.Name: null
@@ -473,7 +473,7 @@ Expression Tree:
 |  |
 |  |- Arguments count: 1
 |    |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
-|    |- System.Linq.Expressions.TypedParameterExpression.Type: SampleModel.Game
+|    |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
 |    |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
 |    |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
 |    |- parameterExpression.Name: null
@@ -482,24 +482,24 @@ Expression Tree:
 ||- IfFalse:
 |  |- System.Linq.Expressions.InvocationExpression1.NodeType: Invoke
 |  |- System.Linq.Expressions.InvocationExpression1.Type: System.String
-|  |- System.Linq.Expressions.InvocationExpression1.DebugView: .Invoke (.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>)($var1)
+|  |- System.Linq.Expressions.InvocationExpression1.DebugView: .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>)($var1)
 
-.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"false name"
 }
 |  |- System.Linq.Expressions.InvocationExpression1.CanReduce: False
 |  |
 |  |- Expression:
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].NodeType: Lambda
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].Type: System.Func`2[SampleModel.Game,System.String]
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].DebugView: .Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].NodeType: Lambda
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].Type: System.Func`2[ModelForUnitTests.Game,System.String]
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].DebugView: .Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"false name"
 }
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].CanReduce: False
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].CanReduce: False
 |    |
 |    |- Parameters count: 1
 |      |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
-|      |- System.Linq.Expressions.TypedParameterExpression.Type: SampleModel.Game
+|      |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
 |      |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
 |      |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
 |      |- parameterExpression.Name: null
@@ -538,7 +538,7 @@ Expression Tree:
 |  |
 |  |- Arguments count: 1
 |    |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
-|    |- System.Linq.Expressions.TypedParameterExpression.Type: SampleModel.Game
+|    |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
 |    |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
 |    |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
 |    |- parameterExpression.Name: null

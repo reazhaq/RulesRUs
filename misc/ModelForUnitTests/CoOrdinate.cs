@@ -1,4 +1,4 @@
-﻿namespace SampleModel
+﻿namespace ModelForUnitTests
 {
     public class CoOrdinate
     {

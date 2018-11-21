@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
-using SampleModel;
 using System;
+using ModelForUnitTests;
 using Xunit;
 using Xunit.Abstractions;
 

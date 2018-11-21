@@ -2,7 +2,7 @@
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace SampleModel
+namespace ModelForUnitTests
 {
     public class Game
     {

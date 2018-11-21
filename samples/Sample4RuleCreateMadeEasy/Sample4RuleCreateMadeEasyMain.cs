@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using RuleEngine.Rules;
 using RuleFactory;
 using RuleFactory.RulesFactory;
-using Sample4RuleCreateMadeEasy.Model;
+using SampleModel;
 
 namespace Sample4RuleCreateMadeEasy
 {

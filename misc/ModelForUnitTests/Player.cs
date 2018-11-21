@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SampleModel
+namespace ModelForUnitTests
 {
     public class Player
     {
@@ -16,7 +16,7 @@ namespace SampleModel
     {
         public bool Equals(Player x, Player y)
         {
-            if (object.ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, y)) return true;
             return x?.Country?.CountryCode == y?.Country?.CountryCode;
         }
 

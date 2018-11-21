@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Common;
 using RuleEngine.Rules;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -182,7 +182,7 @@ namespace RuleEngine.Tests.Rules
 
             var newGameRule = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "CreateGame"
             };
 

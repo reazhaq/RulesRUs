@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Rules;
 using RuleFactory;
-using Sample2PlaceOrderRulesFromJsonFile.Model;
+using SampleModel;
 
 namespace Sample2PlaceOrderRulesFromJsonFile
 {

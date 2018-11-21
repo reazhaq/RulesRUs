@@ -1,5 +1,5 @@
 ﻿# Quick Start - How To
-How to create a rule - it may seem too much.  But breaking the problems into small parts and gluing them together is the way to go.  It says tutorial, but it is more like quick and dirty 'get started' how-to doc.  Once a rule is created, either instantiating classes directly or using factory methods, save them somewhere as JSON [using custom json converter] - you are home free.
+How to create a rule - it may seem too much.  But breaking the problems into small parts and gluing them together is the way to go.  It says tutorial, but it is more like quick and dirty 'get started' how-to.  Once a rule is created, either instantiating classes directly or using factory methods, save them somewhere as JSON [using custom json converter] - you are home free.
 
 Step-by-step to create a rule - we shall create the following rule using Factory methods.
 ```
@@ -65,18 +65,18 @@ ExpressionForThisRule ready to compile:
 |    |- memberExpression.NodeType: MemberAccess
 |    |- memberExpression.DebugView: $var1.Customer
 |    |- memberExpression.Member - field: 
-|    |- memberExpression.Member - prop: Sample4RuleCreateMadeEasy.Model.Customer Customer
+|    |- memberExpression.Member - prop: SampleModel.Customer Customer
 |    |- constantExpression.Value: null
-|    |- constantExpression.Type: Sample4RuleCreateMadeEasy.Model.Customer
+|    |- constantExpression.Type: SampleModel.Customer
 |    |- constantExpression.DebugView: null
 |  |- binaryExpression.NodeType: NotEqual
 |  |- binaryExpression.DebugView: $var1.Product != null
 |    |- memberExpression.NodeType: MemberAccess
 |    |- memberExpression.DebugView: $var1.Product
 |    |- memberExpression.Member - field: 
-|    |- memberExpression.Member - prop: Sample4RuleCreateMadeEasy.Model.Product Product
+|    |- memberExpression.Member - prop: SampleModel.Product Product
 |    |- constantExpression.Value: null
-|    |- constantExpression.Type: Sample4RuleCreateMadeEasy.Model.Product
+|    |- constantExpression.Type: SampleModel.Product
 |    |- constantExpression.DebugView: null
 ```
 
@@ -112,17 +112,17 @@ And the Json looks like:
 ```
 {
   "RuleType": "ValidationRule`1",
-  "BoundingTypes": "Sample4RuleCreateMadeEasy.Model.Order",
+  "BoundingTypes": "SampleModel.Order",
   "ChildrenRules": [
     {
       "RuleType": "ValidationRule`1",
-      "BoundingTypes": "Sample4RuleCreateMadeEasy.Model.Order",
+      "BoundingTypes": "SampleModel.Order",
       "ObjectToValidate": "Customer",
       "ChildrenRules": [],
       "Id": 0,
       "ValueToValidateAgainst": {
         "RuleType": "ConstantRule`1",
-        "BoundingTypes": "Sample4RuleCreateMadeEasy.Model.Customer",
+        "BoundingTypes": "SampleModel.Customer",
         "Value": "null",
         "Id": 0
       },
@@ -130,13 +130,13 @@ And the Json looks like:
     },
     {
       "RuleType": "ValidationRule`1",
-      "BoundingTypes": "Sample4RuleCreateMadeEasy.Model.Order",
+      "BoundingTypes": "SampleModel.Order",
       "ObjectToValidate": "Product",
       "ChildrenRules": [],
       "Id": 0,
       "ValueToValidateAgainst": {
         "RuleType": "ConstantRule`1",
-        "BoundingTypes": "Sample4RuleCreateMadeEasy.Model.Product",
+        "BoundingTypes": "SampleModel.Product",
         "Value": "null",
         "Id": 0
       },

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using ModelForUnitTests;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
 using RuleFactory.Tests.Fixture;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -182,7 +182,7 @@ namespace RuleFactory.Tests.JsonRules
             //var game = Game.CreateGame();
             var ruleBefore = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "CreateGame"
             };
 
@@ -208,7 +208,7 @@ namespace RuleFactory.Tests.JsonRules
             //var game = Game.CreateGame("cool game");
             var ruleBefore = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "CreateGame",
                 MethodParameters = { new ConstantRule<string> { Value = "cool game" } }
             };
@@ -233,7 +233,7 @@ namespace RuleFactory.Tests.JsonRules
         [Fact]
         public void CallStaticVoidMethod()
         {
-            var ruleBefore = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", null);
+            var ruleBefore = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "ModelForUnitTests.Game", null);
  
             var jsonConverterForRule = new JsonConverterForRule();
             // convert to json
@@ -255,7 +255,7 @@ namespace RuleFactory.Tests.JsonRules
         [Fact]
         public void CallStaticVoidMethod2()
         {
-            var ruleBefore = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", 
+            var ruleBefore = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "ModelForUnitTests.Game", 
                 new List<Rule>{new ConstantRule<int> {Value = "99"}});
  
             var jsonConverterForRule = new JsonConverterForRule();
