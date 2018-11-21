@@ -1,3 +1,8 @@
+# Version 1.3.0
+- New rule:
+  - Func Block rule; simple way to combine number of similar rules into one rule - return the result of the last rule's result
+  - Func Block rule factory; works with Json converter
+
 # Version 1.2.0
 - New rule:
   - Action Block rule; simple way to combine number of similar rules into one rule

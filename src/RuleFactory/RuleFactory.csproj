@@ -8,11 +8,12 @@
     <PackageLicenseUrl>https://github.com/reazhaq/RulesRUs/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/reazhaq/RulesRUs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/reazhaq/RulesRUs</RepositoryUrl>
-    <Version>1.2.0$(VersionSuffix)</Version>
+    <Version>1.3.0$(VersionSuffix)</Version>
     <PackageReleaseNotes>- New Factory Method:
-  - Action Block Rule
+  - Func Block Rule
 
-https://github.com/reazhaq/RulesRUs/blob/master/RELEASENOTES.MD</PackageReleaseNotes>
+https://github.com/reazhaq/RulesRUs/blob/master/RELEASENOTES.MD
+    </PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>RuleFactory Rule-Factory RuleEngineFactory RuleEngine Rule-Engine Expression-Tree Rule Engine</PackageTags>
     <LangVersion>latest</LangVersion>
