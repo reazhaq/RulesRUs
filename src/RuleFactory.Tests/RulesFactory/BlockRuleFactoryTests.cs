@@ -76,5 +76,55 @@ namespace RuleFactory.Tests.RulesFactory
             game.Name.Should().Be("some fancy name");
             _testOutputHelper.WriteLine($"{game2}");
         }
+
+        [Fact]
+        public void ReturnsUpdatedGameUsingFactory()
+        {
+            var nameChangeRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Name",
+                SourceDataRule = new ConstantRule<string> { Value = "some fancy name" }
+            };
+            var rankingChangeRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Ranking",
+                SourceDataRule = new ConstantRule<int> { Value = "1000" }
+            };
+            var descriptionChangeRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Description",
+                SourceDataRule = new ConstantRule<string> { Value = "some cool description" }
+            };
+            var selfReturnRule = new SelfReturnRule<Game>();
+
+            var blockRule = new FuncBlockRule<Game, Game>();
+            blockRule.Rules.Add(nameChangeRule);
+            blockRule.Rules.Add(rankingChangeRule);
+            blockRule.Rules.Add(descriptionChangeRule);
+            blockRule.Rules.Add(selfReturnRule);
+
+            var compileResult = blockRule.Compile();
+            compileResult.Should().BeTrue();
+
+            var game = blockRule.Execute(new Game());
+            game.Name.Should().Be("some fancy name");
+            game.Ranking.Should().Be(1000);
+            game.Description.Should().Be("some cool description");
+            _testOutputHelper.WriteLine($"{game}");
+
+            var jsonConverterForRule = new JsonConverterForRule();
+            var json = JsonConvert.SerializeObject(blockRule, jsonConverterForRule);
+            _testOutputHelper.WriteLine(json);
+
+            var blockRule2 = JsonConvert.DeserializeObject<Rule>(json, jsonConverterForRule);
+            compileResult = blockRule2.Compile();
+            compileResult.Should().BeTrue();
+
+            var game2 = (blockRule2 as FuncBlockRule<Game, Game>)?.Execute(new Game());
+            game2?.Name.Should().Be("some fancy name");
+            game2?.Ranking.Should().Be(1000);
+            game2?.Description.Should().Be("some cool description");
+            _testOutputHelper.WriteLine($"{game2}");
+        }
     }
 }
