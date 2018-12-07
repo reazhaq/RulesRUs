@@ -18,6 +18,52 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Theory]
+        [InlineData("one", "six-six-six")]
+        [InlineData("tWo", "six-six-six")]
+        [InlineData("blah", "blah")]
+        [InlineData("nine", "nine")]
+        public void IfValueContainsReturnDiffValue2(string searchValue, string expectedValue)
+        {
+            var valueReplacementIfBad = new ConditionalFuncRule<string, string>
+            {
+                ConditionRule = new ContainsValueRule<string>
+                {
+                    EqualityComparerClassName = "System.StringComparer",
+                    EqualityComparerPropertyName = "OrdinalIgnoreCase",
+                    // todo: come back and investigate - json convert doesn't like the line below; but prev two lines work
+                    //EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+                },
+                TrueRule = new ConstantRule<string,string>{Value = "six-six-six"},
+                FalseRule = new SelfReturnRule<string>()
+            };
+
+            var compileResult = valueReplacementIfBad.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
+                                        $"{valueReplacementIfBad.ExpressionDebugView()}");
+
+            var ruleResult = valueReplacementIfBad.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
+            ruleResult.Should().Be(expectedValue);
+
+            var converter = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(valueReplacementIfBad, converter);
+            _testOutputHelper.WriteLine(ruleJson);
+            // re-hydrate
+            var ruleFromJson = JsonConvert.DeserializeObject<ConditionalFuncRule<string, string>>(ruleJson, converter);
+
+            var compileResult2 = ruleFromJson.Compile();
+            compileResult2.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
+                                        $"{ruleFromJson.ExpressionDebugView()}");
+            var ruleResult2 = ruleFromJson.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult2}");
+            ruleResult2.Should().Be(expectedValue);
+        }
+
+        [Theory]
         [InlineData("one", "element is present in the collection")]
         [InlineData("nine", "element is not present in the collection")]
         public void ConditionalWithConstantRule(string valueToCheck, string expectedOutput)

@@ -40,9 +40,9 @@ namespace RuleEngine.Tests.Rules
             _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
                                         $"{valueReplacementIfBad.ExpressionDebugView()}");
 
-            searchValue = valueReplacementIfBad.Execute(searchValue);
-            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {searchValue}");
-            searchValue.Should().Be(expectedValue);
+            var ruleResult = valueReplacementIfBad.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
+            ruleResult.Should().Be(expectedValue);
         }
 
         [Theory]
@@ -68,9 +68,9 @@ namespace RuleEngine.Tests.Rules
             _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
                                         $"{valueReplacementIfBad.ExpressionDebugView()}");
 
-            searchValue = valueReplacementIfBad.Execute(searchValue);
-            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {searchValue}");
-            searchValue.Should().Be(expectedValue);
+            var ruleResult = valueReplacementIfBad.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
+            ruleResult.Should().Be(expectedValue);
         }
 
         [Theory]
