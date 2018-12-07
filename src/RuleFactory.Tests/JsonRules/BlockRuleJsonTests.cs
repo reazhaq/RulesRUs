@@ -1,18 +1,19 @@
 ﻿using System;
 using FluentAssertions;
 using ModelForUnitTests;
+using Newtonsoft.Json;
 using RuleEngine.Common;
 using RuleEngine.Rules;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleEngine.Tests.Rules
+namespace RuleFactory.Tests.JsonRules
 {
-    public class BlockRulesTests
+    public class BlockRuleJsonTests
     {
         private readonly ITestOutputHelper _testOutputHelper;
 
-        public BlockRulesTests(ITestOutputHelper testOutputHelper)
+        public BlockRuleJsonTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
@@ -52,6 +53,22 @@ namespace RuleEngine.Tests.Rules
             game.Name.Should().Be("some fancy name");
             game.Ranking.Should().Be(1000);
             game.Description.Should().Be("some cool description");
+
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(blockRule, new JsonConverterForRule());
+            _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
+            // re-hydrate from json
+            var ruleFromJson = (ActionBlockRule<Game>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var compileResult2 = ruleFromJson.Compile();
+            compileResult2.Should().BeTrue();
+            _testOutputHelper.WriteLine(ruleFromJson.ExpressionDebugView());
+
+            var game2 = new Game();
+            ruleFromJson.Execute(game2);
+            _testOutputHelper.WriteLine($"game object updated:{Environment.NewLine}{game2}");
+            game2.Name.Should().Be("some fancy name");
+            game2.Ranking.Should().Be(1000);
+            game2.Description.Should().Be("some cool description");
         }
 
         [Fact]
@@ -104,6 +121,25 @@ namespace RuleEngine.Tests.Rules
             game.Ranking.Should().Be(1000);
             game.Description.Should().Be("some cool description");
             _testOutputHelper.WriteLine($"{game}");
+
+            var converter = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(conditionalUpdateValue, converter);
+            _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
+            // re-hydrate from json
+            var ruleFromJson = JsonConvert.DeserializeObject<ConditionalIfThActionRule<Game>>(ruleJson, converter);
+
+            var compileResult2 = ruleFromJson.Compile();
+            compileResult2.Should().BeTrue();
+
+            var game2 = new Game {Name = "some name"};
+            _testOutputHelper.WriteLine($"before game2.Name: {game2.Name}");
+            ruleFromJson.Execute(game2);
+            _testOutputHelper.WriteLine($"after game2.Name: {game2.Name}");
+            game2.Name.Should().Be("some fancy name");
+            game2.Ranking.Should().Be(1000);
+            game2.Description.Should().Be("some cool description");
+            _testOutputHelper.WriteLine($"{game2}");
         }
 
         [Fact]
@@ -112,6 +148,16 @@ namespace RuleEngine.Tests.Rules
             var emptyBlockRule = new FuncBlockRule<object, object>();
             var exception = Assert.Throws<RuleEngineException>(() => emptyBlockRule.Compile());
             exception.Message.Should().Be("last rule must return a value of System.Object");
+
+            var converter = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(emptyBlockRule, converter);
+            _testOutputHelper.WriteLine(ruleJson);
+            // re-hydrate from json
+            var ruleFromJson = JsonConvert.DeserializeObject<FuncBlockRule<object, object>>(ruleJson, converter);
+
+            var exception2 = Assert.Throws<RuleEngineException>(() => ruleFromJson.Compile());
+            exception2.Message.Should().Be("last rule must return a value of System.Object");
         }
 
         [Fact]
@@ -122,6 +168,16 @@ namespace RuleEngine.Tests.Rules
             someBlockRule.Rules.Add(someRule);
             var exception = Assert.Throws<RuleEngineException>(() => someBlockRule.Compile());
             exception.Message.Should().Be("last rule must return a value of System.Object");
+
+            var converter = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(someBlockRule, converter);
+            _testOutputHelper.WriteLine(ruleJson);
+            // re-hydrate from json
+            var ruleFromJson = JsonConvert.DeserializeObject<FuncBlockRule<object, object>>(ruleJson, converter);
+
+            var exception2 = Assert.Throws<RuleEngineException>(() => ruleFromJson.Compile());
+            exception2.Message.Should().Be("last rule must return a value of System.Object");
         }
 
         [Fact]
@@ -135,6 +191,18 @@ namespace RuleEngine.Tests.Rules
 
             var five = blockRule.Execute(99);
             five.Should().Be(5);
+
+            var converter = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(blockRule, converter);
+            _testOutputHelper.WriteLine(ruleJson);
+            // re-hydrate from json
+            var ruleFromJson = JsonConvert.DeserializeObject<FuncBlockRule<int, int>>(ruleJson, converter);
+            var compileResult2 = ruleFromJson.Compile();
+            compileResult2.Should().BeTrue();
+
+            var five2 = ruleFromJson.Execute(99);
+            five2.Should().Be(5);
         }
 
         [Fact]
@@ -171,6 +239,20 @@ namespace RuleEngine.Tests.Rules
             game.Ranking.Should().Be(1000);
             game.Description.Should().Be("some cool description");
             _testOutputHelper.WriteLine($"{game}");
+
+            var jsonConverterForRule = new JsonConverterForRule();
+            var json = JsonConvert.SerializeObject(blockRule, jsonConverterForRule);
+            _testOutputHelper.WriteLine(json);
+
+            var blockRule2 = JsonConvert.DeserializeObject<FuncBlockRule<Game, Game>>(json, jsonConverterForRule);
+            compileResult = blockRule2.Compile();
+            compileResult.Should().BeTrue();
+
+            var game2 = blockRule2.Execute(new Game());
+            game2.Name.Should().Be("some fancy name");
+            game2.Ranking.Should().Be(1000);
+            game2.Description.Should().Be("some cool description");
+            _testOutputHelper.WriteLine($"{game2}");
         }
 
         [Fact]
@@ -239,6 +321,20 @@ namespace RuleEngine.Tests.Rules
             ReferenceEquals(game, newGame).Should().BeTrue();
             game.Rating.Should().Be("high");
             _testOutputHelper.WriteLine($"newGame: {game}");
+
+            var jsonConverterForRule = new JsonConverterForRule();
+            var json = JsonConvert.SerializeObject(blockRule, jsonConverterForRule);
+            _testOutputHelper.WriteLine(json);
+
+            var blockRule2 = JsonConvert.DeserializeObject<FuncBlockRule<Game, Game>>(json, jsonConverterForRule);
+            compileResult = blockRule2.Compile();
+            compileResult.Should().BeTrue();
+
+            var game2 = blockRule2.Execute(new Game());
+            game2.Name.Should().Be("some fancy name");
+            game2.Ranking.Should().Be(1000);
+            game2.Description.Should().Be("some cool description");
+            _testOutputHelper.WriteLine($"{game2}");
         }
     }
 }

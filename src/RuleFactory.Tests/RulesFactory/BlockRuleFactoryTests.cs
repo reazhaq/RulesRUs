@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using ModelForUnitTests;
 using Newtonsoft.Json;
+using RuleEngine.Common;
 using Xunit;
 using Xunit.Abstractions;
 using ConstantRulesFactory = RuleFactory.RulesFactory.ConstantRulesFactory;
@@ -18,6 +19,37 @@ namespace RuleFactory.Tests.RulesFactory
         public BlockRuleFactoryTests(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
+        }
+
+        [Fact]
+        public void UpdateMultiplePropertiesOfaGameObjectUsingFactory()
+        {
+            var nameConstRule = ConstantRulesFactory.CreateConstantRule<string>("some fancy name");
+            var nameChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Name, nameConstRule);
+            var rankConstRule = ConstantRulesFactory.CreateConstantRule<int>("1000");
+            var rankingChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Ranking, rankConstRule);
+            var descConstRule = ConstantRulesFactory.CreateConstantRule<string>("some cool description");
+            var descriptionChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g=>g.Description, descConstRule);
+
+            IList<Rule> rules = new List<Rule>
+            {
+                nameChangeRule,
+                rankingChangeRule,
+                descriptionChangeRule
+            };
+            var blockRule = BlockRulesFactory.CreateActionBlockRule<Game>(rules);
+
+            var compileResult = blockRule.Compile();
+            compileResult.Should().BeTrue();
+
+            _testOutputHelper.WriteLine(blockRule.ExpressionDebugView());
+
+            var game = new Game();
+            blockRule.Execute(game);
+            _testOutputHelper.WriteLine($"game object updated:{Environment.NewLine}{game}");
+            game.Name.Should().Be("some fancy name");
+            game.Ranking.Should().Be(1000);
+            game.Description.Should().Be("some cool description");
         }
 
         [Fact]
@@ -48,7 +80,6 @@ namespace RuleFactory.Tests.RulesFactory
             var conditionalUpdateValue =
                 ConditionalRulesFactory.CreateConditionalIfThActionRule<Game>(nameEqualsRule, blockRule);
 
-
             var compileResult = conditionalUpdateValue.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(conditionalUpdateValue)}:{Environment.NewLine}" +
@@ -78,30 +109,57 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
+        public void EmptyBlockRuleThrowsExceptionUsingFactory()
+        {
+            var emptyBlockRule = BlockRulesFactory.CreateFuncBlockRule<object, object>();
+            var exception = Assert.Throws<RuleEngineException>(() => emptyBlockRule.Compile());
+            exception.Message.Should().Be("last rule must return a value of System.Object");
+        }
+
+        [Fact]
+        public void ExceptionWhenLastRuleReturnsNoValueUsingFactory()
+        {
+            var someRule = new ConditionalIfThActionRule<object>();
+            var someBlockRule = BlockRulesFactory.CreateFuncBlockRule<object, object>(new List<Rule> {someRule});
+            var exception = Assert.Throws<RuleEngineException>(() => someBlockRule.Compile());
+            exception.Message.Should().Be("last rule must return a value of System.Object");
+        }
+
+        [Fact]
+        public void FuncBlockRuleReturnsLastRuleResultUsingFactory()
+        {
+            var ruleReturning5 = ConstantRulesFactory.CreateConstantRule<int, int>("5");
+            var blockRule = BlockRulesFactory.CreateFuncBlockRule<int, int>(new List<Rule> {ruleReturning5});
+            var compileResult = blockRule.Compile();
+            compileResult.Should().BeTrue();
+
+            var five = blockRule.Execute(99);
+            five.Should().Be(5);
+        }
+
+        [Fact]
         public void ReturnsUpdatedGameUsingFactory()
         {
-            var nameChangeRule = new UpdateValueRule<Game>
-            {
-                ObjectToUpdate = "Name",
-                SourceDataRule = new ConstantRule<string> { Value = "some fancy name" }
-            };
-            var rankingChangeRule = new UpdateValueRule<Game>
-            {
-                ObjectToUpdate = "Ranking",
-                SourceDataRule = new ConstantRule<int> { Value = "1000" }
-            };
-            var descriptionChangeRule = new UpdateValueRule<Game>
-            {
-                ObjectToUpdate = "Description",
-                SourceDataRule = new ConstantRule<string> { Value = "some cool description" }
-            };
+            var sourceNameRule = ConstantRulesFactory.CreateConstantRule<string>("some fancy name");
+            var nameChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Name, sourceNameRule);
+
+            var sourceRankRule = ConstantRulesFactory.CreateConstantRule<int>("1000");
+            var rankingChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Ranking, sourceRankRule);
+
+            var sourceDescRule = ConstantRulesFactory.CreateConstantRule<string>("some cool description");
+            var descriptionChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g=>g.Description, sourceDescRule);
+
             var selfReturnRule = new SelfReturnRule<Game>();
 
-            var blockRule = new FuncBlockRule<Game, Game>();
-            blockRule.Rules.Add(nameChangeRule);
-            blockRule.Rules.Add(rankingChangeRule);
-            blockRule.Rules.Add(descriptionChangeRule);
-            blockRule.Rules.Add(selfReturnRule);
+            var subRules = new List<Rule>
+            {
+                nameChangeRule,
+                rankingChangeRule,
+                descriptionChangeRule,
+                selfReturnRule
+            };
+
+            var blockRule = BlockRulesFactory.CreateFuncBlockRule<Game, Game>(subRules);
 
             var compileResult = blockRule.Compile();
             compileResult.Should().BeTrue();
@@ -111,20 +169,58 @@ namespace RuleFactory.Tests.RulesFactory
             game.Ranking.Should().Be(1000);
             game.Description.Should().Be("some cool description");
             _testOutputHelper.WriteLine($"{game}");
+        }
 
-            var jsonConverterForRule = new JsonConverterForRule();
-            var json = JsonConvert.SerializeObject(blockRule, jsonConverterForRule);
-            _testOutputHelper.WriteLine(json);
+        [Fact]
+        public void ReturnsNewOrUpdatedGameUsingFactory()
+        {
+            var nullGame = ConstantRulesFactory.CreateConstantRule<Game>("null");
+            var nullGameCheckRule =
+                ValidationRulesFactory.CreateValidationRule<Game>(LogicalOperatorAtTheRootLevel.Equal, nullGame);
 
-            var blockRule2 = JsonConvert.DeserializeObject<Rule>(json, jsonConverterForRule);
-            compileResult = blockRule2.Compile();
+            var newGameRule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "ModelForUnitTests.Game", null);
+
+            var selfReturnRule = SelfReturnRuleFactory.CreateSelfReturnRule<Game>();
+            var gameObjectRule = ConditionalRulesFactory.CreateConditionalFuncRule<Game, Game>(nullGameCheckRule, newGameRule,
+                    selfReturnRule);
+
+            var assignRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(gameObjectRule);
+
+            var nameConstRule = ConstantRulesFactory.CreateConstantRule<string>("some fancy name");
+            var nameChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Name, nameConstRule);
+            var rankConstRule = ConstantRulesFactory.CreateConstantRule<int>("1000");
+            var rankingChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Ranking, rankConstRule);
+            var descConstRule = ConstantRulesFactory.CreateConstantRule<string>("some cool description");
+            var descriptionChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g=>g.Description, descConstRule);
+
+            IList<Rule> rules = new List<Rule>
+            {
+                assignRule,
+                nameChangeRule,
+                rankingChangeRule,
+                descriptionChangeRule,
+                selfReturnRule
+            };
+            var blockRule = BlockRulesFactory.CreateFuncBlockRule<Game, Game>(rules);
+
+            var compileResult = blockRule.Compile();
             compileResult.Should().BeTrue();
 
-            var game2 = (blockRule2 as FuncBlockRule<Game, Game>)?.Execute(new Game());
-            game2?.Name.Should().Be("some fancy name");
-            game2?.Ranking.Should().Be(1000);
-            game2?.Description.Should().Be("some cool description");
-            _testOutputHelper.WriteLine($"{game2}");
+            var game = blockRule.Execute(null);
+            game.Name.Should().Be("some fancy name");
+            game.Ranking.Should().Be(1000);
+            game.Description.Should().Be("some cool description");
+            game.Rating.Should().BeNullOrEmpty();
+            _testOutputHelper.WriteLine($"{game}");
+
+            var newGame = new Game { Rating = "high" };
+            // newGame is not same as game object
+            ReferenceEquals(game, newGame).Should().BeFalse();
+            game = blockRule.Execute(newGame);
+            // this call shall return the same newGame object with updated values
+            ReferenceEquals(game, newGame).Should().BeTrue();
+            game.Rating.Should().Be("high");
+            _testOutputHelper.WriteLine($"newGame: {game}");
         }
     }
 }
