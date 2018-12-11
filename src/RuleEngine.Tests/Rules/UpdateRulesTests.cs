@@ -112,6 +112,5 @@ namespace RuleEngine.Tests.Rules
             rule2.RefUpdate(ref myInt, -99);
             myInt.Should().Be(-99);
         }
-
     }
 }
