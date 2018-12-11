@@ -22,7 +22,7 @@ namespace RuleFactory.Tests.JsonRules
         [InlineData("BadName1", @"^[a-zA-Z]*$", false)]
         [InlineData("AnotherBadName#", @"^[a-zA-Z]*$", false)]
         [InlineData("BadName1", @"^[a-zA-Z0-9]*$", true)]
-        public void NameMatchesRegEx(string nameToUse, string regExToUse, bool expectedResult)
+        public void NameMatchesRegExToAndFromJson(string nameToUse, string regExToUse, bool expectedResult)
         {
             var rule = new RegExRule<Game>
             {
@@ -44,14 +44,14 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var ruleFromJson = JsonConvert.DeserializeObject<RegExRule<Game>>(ruleJson, new JsonConverterForRule());
             var compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
             game.Name = nameToUse;
-            executeResult = ((RegExRule<Game>)ruleFromJson).IsMatch(game);
+            executeResult = ruleFromJson.IsMatch(game);
             _testOutputHelper.WriteLine($"executeResult={executeResult}; expectedResult={expectedResult} for nameToUse={nameToUse}");
             executeResult.Should().Be(expectedResult);
         }

@@ -21,7 +21,7 @@ namespace RuleFactory.Tests.RulesFactory
         [InlineData("BadName1", @"^[a-zA-Z]*$", false)]
         [InlineData("AnotherBadName#", @"^[a-zA-Z]*$", false)]
         [InlineData("BadName1", @"^[a-zA-Z0-9]*$", true)]
-        public void NameMatchesRegEx(string nameToUse, string regExToUse, bool expectedResult)
+        public void NameMatchesRegExUsingFactory(string nameToUse, string regExToUse, bool expectedResult)
         {
             var alphaRule = RegExRuleFactory.CreateRegExRule<Game>(g => g.Name, regExToUse);
 
