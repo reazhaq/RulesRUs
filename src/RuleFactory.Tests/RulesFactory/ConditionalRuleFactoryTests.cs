@@ -71,7 +71,7 @@ namespace RuleFactory.Tests.RulesFactory
         [Theory]
         [InlineData("one", "element is present in the collection")]
         [InlineData("nine", "element is not present in the collection")]
-        public void ConditionalWithConstantRule(string valueToCheck, string expectedOutput)
+        public void ConditionalWithConstantRuleUsingFactory(string valueToCheck, string expectedOutput)
         {
             var trueRule =
                 ConstantRulesFactory.CreateConstantRule<string, string>("element is present in the collection");
@@ -97,7 +97,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ConditionalRuleToUpdateName()
+        public void ConditionalRuleToUpdateNameUsingFactory()
         {
             var trueRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Name,
                 ConstantRulesFactory.CreateConstantRule<string>("updated name"));
@@ -125,7 +125,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ConditionalRuleToUpdateNameToSomethingElse()
+        public void ConditionalRuleToUpdateNameToSomethingElseUsingFactory()
         {
             var const1 = ConstantRulesFactory.CreateConstantRule<string>("true name");
             var trueRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Name, const1);
@@ -160,7 +160,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ConditionalRuleLookAtOneValueUpdateAnother()
+        public void ConditionalRuleLookAtOneValueUpdateAnotherUsingFactory()
         {
             var const1 = ConstantRulesFactory.CreateConstantRule<int>("999");
             var trueRule = UpdateValueRulesFactory.CreateUpdateValueRule<Player>(p => p.CurrentCoOrdinates.X, const1);
