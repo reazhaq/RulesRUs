@@ -24,7 +24,7 @@ namespace RuleFactory.Tests.JsonRules
         [InlineData("fIVe", true)]
         [InlineData("Six", true)]
         [InlineData("seven", false)]
-        public void ContainsValueTestWithIgnoreCase(string valueToSearch, bool expectedResult)
+        public void ContainsValueTestWithIgnoreCaseToAndFromJson(string valueToSearch, bool expectedResult)
         {
             var rule = new ContainsValueRule<string>
             {
@@ -33,26 +33,15 @@ namespace RuleFactory.Tests.JsonRules
                 CollectionToSearch = {"one", "two", "three", "four", "five", "six"}
             };
 
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
-                                        $"{rule.ExpressionDebugView()}");
-
-            var containsValue = rule.ContainsValue(valueToSearch);
-            _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {containsValue}");
-            containsValue.Should().Be(expectedResult);
-
             // convert to Json
-            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
+            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
-            compileResult = ruleFromJson.Compile();
+            var ruleFromJson = JsonConvert.DeserializeObject<ContainsValueRule<string>>(ruleJson, new JsonConverterForRule());
+            var compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
-                                        $"{ruleFromJson.ExpressionDebugView()}");
 
-            containsValue = ((ContainsValueRule<string>)ruleFromJson).ContainsValue(valueToSearch);
+            var containsValue = ruleFromJson.ContainsValue(valueToSearch);
             _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {containsValue}");
             containsValue.Should().Be(expectedResult);
         }
@@ -64,7 +53,7 @@ namespace RuleFactory.Tests.JsonRules
         [InlineData("fIVe", false)]
         [InlineData("Six", false)]
         [InlineData("seven", false)]
-        public void ContainsValueTestCaseSensitive(string valueToSearch, bool expectedResult)
+        public void ContainsValueTestCaseSensitiveToAndFromJson(string valueToSearch, bool expectedResult)
         {
             var rule = new ContainsValueRule<string>
             {
@@ -73,26 +62,17 @@ namespace RuleFactory.Tests.JsonRules
                 CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
             };
 
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
-                                        $"{rule.ExpressionDebugView()}");
-
-            var containsValue = rule.ContainsValue(valueToSearch);
-            _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {containsValue}");
-            containsValue.Should().Be(expectedResult);
-
             // convert to Json
-            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
+            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
-            compileResult = ruleFromJson.Compile();
+            var ruleFromJson = JsonConvert.DeserializeObject<ContainsValueRule<string>>(ruleJson, new JsonConverterForRule());
+            var compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
-            containsValue = ((ContainsValueRule<string>)ruleFromJson).ContainsValue(valueToSearch);
+            var containsValue = ruleFromJson.ContainsValue(valueToSearch);
             _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {containsValue}");
             containsValue.Should().Be(expectedResult);
         }
@@ -101,7 +81,7 @@ namespace RuleFactory.Tests.JsonRules
         [InlineData(1, true)]
         [InlineData(2, true)]
         [InlineData(7, false)]
-        public void ContainsValueTestForIntCollection(int valueToSearch, bool expectedResult)
+        public void ContainsValueTestForIntCollectionToAndFromJson(int valueToSearch, bool expectedResult)
         {
             var rule = new ContainsValueRule<int>
             {
@@ -109,28 +89,44 @@ namespace RuleFactory.Tests.JsonRules
                 CollectionToSearch = {1, 2, 3, 4, 5, 6}
             };
 
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
-                                        $"{rule.ExpressionDebugView()}");
-
-            var containsValue = rule.ContainsValue(valueToSearch);
-            _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {containsValue}");
-            containsValue.Should().Be(expectedResult);
-
             // convert to Json
-            var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
+            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
-            compileResult = ruleFromJson.Compile();
+            var ruleFromJson = JsonConvert.DeserializeObject<ContainsValueRule<int>>(ruleJson, new JsonConverterForRule());
+            var compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
-                                        $"{ruleFromJson.ExpressionDebugView()}");
 
-            containsValue = ((ContainsValueRule<int>)ruleFromJson).ContainsValue(valueToSearch);
+            var containsValue = ruleFromJson.ContainsValue(valueToSearch);
             _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {containsValue}");
             containsValue.Should().Be(expectedResult);
+        }
+
+        [Fact]
+        public void CreateComparerOnTheFlyUsingReflectionToAndFromJson()
+        {
+            var containsRule = new ContainsValueRule<string>
+            {
+                EqualityComparerClassName = "System.StringComparer",
+                EqualityComparerPropertyName = "OrdinalIgnoreCase",
+                CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+            };
+
+            var converter = new JsonConverterForRule();
+            // convert to json
+            var json = JsonConvert.SerializeObject(containsRule, Formatting.Indented, converter);
+            _testOutputHelper.WriteLine($"rule in json:{Environment.NewLine}{json}");
+            // bring back from json
+            var ruleFromJson = JsonConvert.DeserializeObject<ContainsValueRule<string>>(json, converter);
+            var compileResult = ruleFromJson.Compile();
+            compileResult.Should().BeTrue();
+
+            var a1 = ruleFromJson.ContainsValue("One");
+            a1.Should().BeTrue();
+            var a2 = ruleFromJson.ContainsValue("tWo");
+            a2.Should().BeTrue();
+            var a7 = ruleFromJson.ContainsValue("seven");
+            a7.Should().BeFalse();
         }
     }
 }
