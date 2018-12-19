@@ -14,7 +14,7 @@ namespace RuleEngine.Rules
         public string MethodToCall;
         // MethodClassName needed for extension methods...
         public string MethodClassName { get; set; }
-        public List<Rule> MethodParameters { get; } = new List<Rule>();
+        public IList<Rule> MethodParameters { get; } = new List<Rule>();
 
         protected MethodInfo GetMethodInfo(string methodClassName, string methodToCall,
                                         Type[] methodArgumentTypes, Expression expression)

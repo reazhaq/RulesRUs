@@ -17,8 +17,7 @@ namespace RuleFactory.RulesFactory
                 MethodClassName = methodClassName,
                 ObjectToCallMethodOn = objectToCallMethodOn?.GetObjectToWorkOnFromExpression()
             };
-            if (methodParams != null)
-                rule.MethodParameters.AddRange(methodParams);
+            rule.MethodParameters.AddRange(methodParams);
             return rule;
         }
 
@@ -31,8 +30,7 @@ namespace RuleFactory.RulesFactory
                 MethodClassName = methodClassName,
                 ObjectToCallMethodOn = objectToCallMethodOn?.GetObjectToWorkOnFromExpression()
             };
-            if (methodParams != null)
-                rule.MethodParameters.AddRange(methodParams);
+            rule.MethodParameters.AddRange(methodParams);
             return rule;
         }
 
@@ -43,8 +41,7 @@ namespace RuleFactory.RulesFactory
                 MethodToCall = methodToCall,
                 MethodClassName = methodClassName
             };
-            if (methodParams != null)
-                rule.MethodParameters.AddRange(methodParams);
+            rule.MethodParameters.AddRange(methodParams);
 
             return rule;
         }
@@ -56,8 +53,7 @@ namespace RuleFactory.RulesFactory
                 MethodToCall = methodToCall,
                 MethodClassName = methodClassName
             };
-            if (methodParams != null)
-                rule.MethodParameters.AddRange(methodParams);
+            rule.MethodParameters.AddRange(methodParams);
 
             return rule;
         }

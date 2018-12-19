@@ -29,7 +29,7 @@ namespace RuleFactory.Tests.JsonRules
         [InlineData("game 1", true)]
         [InlineData("game 2", false)]
         [InlineData("gaMe 2", false)]
-        public void CallEqualsMethodOnNameUsingConstantRule(string param1, bool expectedResult)
+        public void CallEqualsMethodOnNameUsingConstantRuleToAndFromJson(string param1, bool expectedResult)
         {
             // call Equals method on Name string object
             // compiles to: Param_0.Name.Equals("Game 1", CurrentCultureIgnoreCase)
@@ -41,22 +41,12 @@ namespace RuleFactory.Tests.JsonRules
                     new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" } }
             };
 
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}{rule.ExpressionDebugView()}");
-
-            var executeResult = rule.Execute(_game1);
-            executeResult.Should().Be(expectedResult);
-
-            executeResult = rule.Execute(_game2);
-            executeResult.Should().Be(!expectedResult);
-
             // convert to json
             var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
             var ruleFromJson = (MethodCallRule<Game, bool>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
-            compileResult = ruleFromJson.Compile();
+            var compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
@@ -68,7 +58,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void CallAVoidMethod()
+        public void CallAVoidMethodToAndFromJson()
         {
             // call FlipActive method on the game object
             // compiles to: Param_0.FlipActive()
@@ -77,20 +67,12 @@ namespace RuleFactory.Tests.JsonRules
                 MethodToCall = "FlipActive"
             };
 
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}{rule.ExpressionDebugView()}");
-
-            var currentActiveState = _game1.Active;
-            rule.Execute(_game1);
-            _game1.Active.Should().Be(!currentActiveState);
-
             // convert to json
             var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
             var ruleFromJson = (MethodVoidCallRule<Game>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
-            compileResult = ruleFromJson.Compile();
+            var compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
@@ -99,10 +81,30 @@ namespace RuleFactory.Tests.JsonRules
             _game1.Active.Should().Be(!currentActiveState2);
         }
 
+        [Fact]
+        public void CallToUpperToAndFromJson()
+        {
+            var rule = new MethodCallRule<string, string>{MethodToCall = "ToUpper"};
+
+            var converter = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, converter);
+            _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
+            // re-hydrate from json
+            var ruleFromJson = JsonConvert.DeserializeObject<MethodCallRule<string, string>>(ruleJson, converter);
+
+            var compileResult = ruleFromJson.Compile();
+            compileResult.Should().BeTrue();
+
+            var foo = "foo";
+            var FOO = ruleFromJson.Execute(foo);
+            FOO.Should().Be("FOO");
+        }
+
         [Theory]
         [InlineData(1, true)]
         [InlineData(1000, false)]
-        public void CheckToSeeIfPlayerExistsInAGame(int id, bool expectedResult)
+        public void CheckToSeeIfPlayerExistsInAGameToAndFromJson(int id, bool expectedResult)
         {
             // call HasPlayer method on the game object
             // compiles to: Param_0.HasPlayer(1000)
@@ -112,20 +114,12 @@ namespace RuleFactory.Tests.JsonRules
                 MethodParameters = { new ConstantRule<int> { Value = id.ToString() } }
             };
 
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
-                                        $"{rule.ExpressionDebugView()}");
-
-            var executeResult = rule.Execute(_game1);
-            executeResult.Should().Be(expectedResult);
-
             // convert to json
             var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
             var ruleFromJson = (MethodCallRule<Game, bool>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
-            compileResult = ruleFromJson.Compile();
+            var compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
@@ -134,7 +128,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void CallAStringMethodOnDescriptionObject()
+        public void CallAStringMethodOnDescriptionObjectToAndFromJson()
         {
             // Description is a string - Call Contains method on Description
             // compiles to: Param_0.Description.Contains("cool")
@@ -145,25 +139,12 @@ namespace RuleFactory.Tests.JsonRules
                 MethodParameters = { new ConstantRule<string> { Value = "cool" } }
             };
 
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
-                                        $"{rule.ExpressionDebugView()}");
-
-            // check to see if _game1 description contains keyword "cool"
-            var executeResult = rule.Execute(_game1);
-            executeResult.Should().BeFalse();
-
-            // check to see if _game2 description contains keyword "cool"
-            executeResult = rule.Execute(_game2);
-            executeResult.Should().BeTrue();
-
             // convert to json
             var ruleJson = JsonConvert.SerializeObject(rule, Formatting.Indented, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
             var ruleFromJson = (MethodCallRule<Game, bool>)JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
-            compileResult = ruleFromJson.Compile();
+            var compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
@@ -177,7 +158,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void CallCreateGameStaticMethod()
+        public void CallCreateGameStaticMethodToAndFromJson()
         {
             //var game = Game.CreateGame();
             var ruleBefore = new StaticMethodCallRule<Game>
@@ -203,7 +184,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void CallCreateGameStaticMethod2()
+        public void CallCreateGameStaticMethod2ToAndFromJson()
         {
             //var game = Game.CreateGame("cool game");
             var ruleBefore = new StaticMethodCallRule<Game>
@@ -231,7 +212,42 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void CallStaticVoidMethod()
+        public void CallCreateGameStaticMethod3ToAndFromJson()
+        {
+            //var game = Game.CreateGame("game", "description", 1, true);
+            var ruleBefore = new StaticMethodCallRule<Game>
+            {
+                MethodClassName = "ModelForUnitTests.Game",
+                MethodToCall = "CreateGame",
+                MethodParameters =
+                {
+                    new ConstantRule<string> {Value = "game"},
+                    new ConstantRule<string> {Value = "description"},
+                    new ConstantRule<int> {Value = "1"},
+                    new ConstantRule<bool> {Value = "true"}
+                }
+            };
+
+            var jsonConverterForRule = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(ruleBefore, jsonConverterForRule);
+            _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
+            // read from json
+            var ruleAfter = JsonConvert.DeserializeObject<StaticMethodCallRule<Game>>(ruleJson, jsonConverterForRule);
+
+            var compileResult = ruleAfter.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{ruleAfter.ExpressionDebugView()}");
+
+            var game = ruleAfter.Execute();
+            game.Should().NotBeNull();
+            game.Name.Should().Be("game");
+            _testOutputHelper.WriteLine($"{game}");
+        }
+
+        [Fact]
+        public void CallStaticVoidMethodToAndFromJson()
         {
             var ruleBefore = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "ModelForUnitTests.Game", null);
  
@@ -253,7 +269,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void CallStaticVoidMethod2()
+        public void CallStaticVoidMethod2ToAndFromJson()
         {
             var ruleBefore = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "ModelForUnitTests.Game", 
                 new List<Rule>{new ConstantRule<int> {Value = "99"}});
