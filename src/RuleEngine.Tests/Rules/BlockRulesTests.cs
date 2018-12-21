@@ -43,7 +43,6 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = blockRule.Compile();
             compileResult.Should().BeTrue();
-
             _testOutputHelper.WriteLine(blockRule.ExpressionDebugView());
 
             var game = new Game();
@@ -132,6 +131,8 @@ namespace RuleEngine.Tests.Rules
             blockRule.Rules.Add(ruleReturning5);
             var compileResult = blockRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(ruleReturning5)}:{Environment.NewLine}" +
+                                        $"{ruleReturning5.ExpressionDebugView()}");
 
             var five = blockRule.Execute(99);
             five.Should().Be(5);
@@ -165,6 +166,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = blockRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(blockRule)}:{Environment.NewLine}" +
+                                        $"{blockRule.ExpressionDebugView()}");
 
             var game = blockRule.Execute(new Game());
             game.Name.Should().Be("some fancy name");
@@ -223,6 +226,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = blockRule.Compile();
             compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(blockRule)}:{Environment.NewLine}" +
+                                        $"{blockRule.ExpressionDebugView()}");
 
             var game = blockRule.Execute(null);
             game.Name.Should().Be("some fancy name");
