@@ -144,7 +144,7 @@ public void CallCreateGameStaticMethod2()
     //var game = Game.CreateGame("cool game");
     var rule = new StaticMethodCallRule<Game>
     {
-        MethodClassName = "SampleModel.Game",
+        MethodClassName = "ModelForUnitTests.Game",
         MethodToCall = "CreateGame",
         MethodParameters = { new ConstantRule<string> { Value = "cool game" } }
     };
@@ -168,7 +168,7 @@ public void CallStaticVoidMethod2()
 {
     var rule = new StaticVoidMethodCallRule
     {
-        MethodClassName = "SampleModel.Game",
+        MethodClassName = "ModelForUnitTests.Game",
         MethodToCall = "SomeVoidStaticMethod",
         MethodParameters = {new ConstantRule<int> {Value = "99"}}
     };
@@ -392,24 +392,24 @@ Expression Tree:
 ||- System.Linq.Expressions.FullConditionalExpression.NodeType: Conditional
 ||- System.Linq.Expressions.FullConditionalExpression.Type: System.String
 ||- System.Linq.Expressions.FullConditionalExpression.DebugView: .If (
-    .Invoke (.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.Boolean]>)($var1)
+    .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>)($var1)
 ) {
-    .Invoke (.Lambda #Lambda2<System.Func`2[SampleModel.Game,System.String]>)($var1)
+    .Invoke (.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,System.String]>)($var1)
 } .Else {
-    .Invoke (.Lambda #Lambda3<System.Func`2[SampleModel.Game,System.String]>)($var1)
+    .Invoke (.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,System.String]>)($var1)
 }
 
-.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.Boolean]>(SampleModel.Game $var1) {
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>(ModelForUnitTests.Game $var1) {
     .Call ($var1.Name).Equals(
         (System.String)"some name",
         (System.StringComparison).Constant<System.StringComparison>(CurrentCultureIgnoreCase))
 }
 
-.Lambda #Lambda2<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"true name"
 }
 
-.Lambda #Lambda3<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"false name"
 }
 ||- System.Linq.Expressions.FullConditionalExpression.CanReduce: False
@@ -417,24 +417,24 @@ Expression Tree:
 ||- IfTrue:
 |  |- System.Linq.Expressions.InvocationExpression1.NodeType: Invoke
 |  |- System.Linq.Expressions.InvocationExpression1.Type: System.String
-|  |- System.Linq.Expressions.InvocationExpression1.DebugView: .Invoke (.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>)($var1)
+|  |- System.Linq.Expressions.InvocationExpression1.DebugView: .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>)($var1)
 
-.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"true name"
 }
 |  |- System.Linq.Expressions.InvocationExpression1.CanReduce: False
 |  |
 |  |- Expression:
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].NodeType: Lambda
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].Type: System.Func`2[SampleModel.Game,System.String]
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].DebugView: .Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].NodeType: Lambda
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].Type: System.Func`2[ModelForUnitTests.Game,System.String]
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].DebugView: .Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"true name"
 }
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].CanReduce: False
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].CanReduce: False
 |    |
 |    |- Parameters count: 1
 |      |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
-|      |- System.Linq.Expressions.TypedParameterExpression.Type: SampleModel.Game
+|      |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
 |      |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
 |      |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
 |      |- parameterExpression.Name: null
@@ -473,7 +473,7 @@ Expression Tree:
 |  |
 |  |- Arguments count: 1
 |    |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
-|    |- System.Linq.Expressions.TypedParameterExpression.Type: SampleModel.Game
+|    |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
 |    |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
 |    |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
 |    |- parameterExpression.Name: null
@@ -482,24 +482,24 @@ Expression Tree:
 ||- IfFalse:
 |  |- System.Linq.Expressions.InvocationExpression1.NodeType: Invoke
 |  |- System.Linq.Expressions.InvocationExpression1.Type: System.String
-|  |- System.Linq.Expressions.InvocationExpression1.DebugView: .Invoke (.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>)($var1)
+|  |- System.Linq.Expressions.InvocationExpression1.DebugView: .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>)($var1)
 
-.Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"false name"
 }
 |  |- System.Linq.Expressions.InvocationExpression1.CanReduce: False
 |  |
 |  |- Expression:
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].NodeType: Lambda
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].Type: System.Func`2[SampleModel.Game,System.String]
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].DebugView: .Lambda #Lambda1<System.Func`2[SampleModel.Game,System.String]>(SampleModel.Game $var1) {
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].NodeType: Lambda
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].Type: System.Func`2[ModelForUnitTests.Game,System.String]
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].DebugView: .Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.String]>(ModelForUnitTests.Game $var1) {
     $var1.Name = (System.String)"false name"
 }
-|    |- System.Linq.Expressions.Expression1`1[System.Func`2[SampleModel.Game,System.String]].CanReduce: False
+|    |- System.Linq.Expressions.Expression1`1[System.Func`2[ModelForUnitTests.Game,System.String]].CanReduce: False
 |    |
 |    |- Parameters count: 1
 |      |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
-|      |- System.Linq.Expressions.TypedParameterExpression.Type: SampleModel.Game
+|      |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
 |      |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
 |      |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
 |      |- parameterExpression.Name: null
@@ -538,7 +538,7 @@ Expression Tree:
 |  |
 |  |- Arguments count: 1
 |    |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
-|    |- System.Linq.Expressions.TypedParameterExpression.Type: SampleModel.Game
+|    |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
 |    |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
 |    |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
 |    |- parameterExpression.Name: null
@@ -599,6 +599,336 @@ Expression Tree:
 .
 .
 ```
+### Func Block Rule
+Similar to Action Block Rule; but the last rule has to return something.  Idea is, group bunch of rules together where all the rules take one parameter; apply them on passed in argument and return some value.
+```c#
+[Fact]
+// if the game object is null; create on
+// updated new game object or passed in object
+public void ReturnsNewOrUpdatedGame()
+{
+    var nullGame = new ConstantRule<Game> { Value = "null" };
+    var nullGameCheckRule = new ValidationRule<Game>
+    {
+        ValueToValidateAgainst = nullGame,
+        OperatorToUse = "Equal"
+    };
+
+    var newGameRule = new StaticMethodCallRule<Game>
+    {
+        MethodClassName = "ModelForUnitTests.Game",
+        MethodToCall = "CreateGame"
+    };
+
+    var selfReturnRule = new SelfReturnRule<Game>();
+    var gameObjectRule = new ConditionalFuncRule<Game, Game>
+    {
+        ConditionRule = nullGameCheckRule,
+        TrueRule = newGameRule,
+        FalseRule = selfReturnRule
+    };
+    var assignRule = new UpdateValueRule<Game> { SourceDataRule = gameObjectRule };
+
+    var nameChangeRule = new UpdateValueRule<Game>
+    {
+        ObjectToUpdate = "Name",
+        SourceDataRule = new ConstantRule<string> { Value = "some fancy name" }
+    };
+    var rankingChangeRule = new UpdateValueRule<Game>
+    {
+        ObjectToUpdate = "Ranking",
+        SourceDataRule = new ConstantRule<int> { Value = "1000" }
+    };
+    var descriptionChangeRule = new UpdateValueRule<Game>
+    {
+        ObjectToUpdate = "Description",
+        SourceDataRule = new ConstantRule<string> { Value = "some cool description" }
+    };
+
+    var blockRule = new FuncBlockRule<Game, Game>();
+    blockRule.Rules.Add(assignRule);
+    blockRule.Rules.Add(nameChangeRule);
+    blockRule.Rules.Add(rankingChangeRule);
+    blockRule.Rules.Add(descriptionChangeRule);
+    blockRule.Rules.Add(selfReturnRule);
+
+    var compileResult = blockRule.Compile();
+    compileResult.Should().BeTrue();
+    _testOutputHelper.WriteLine($"{nameof(blockRule)}:{Environment.NewLine}" +
+                                $"{blockRule.ExpressionDebugView()}");
+
+    var game = blockRule.Execute(null);
+    game.Name.Should().Be("some fancy name");
+    game.Ranking.Should().Be(1000);
+    game.Description.Should().Be("some cool description");
+    game.Rating.Should().BeNullOrEmpty();
+    _testOutputHelper.WriteLine($"{game}");
+
+    var newGame = new Game { Rating = "high" };
+    // newGame is not same as game object
+    ReferenceEquals(game, newGame).Should().BeFalse();
+    game = blockRule.Execute(newGame);
+    // this call shall return the same newGame object with updated values
+    ReferenceEquals(game, newGame).Should().BeTrue();
+    game.Rating.Should().Be("high");
+    _testOutputHelper.WriteLine($"newGame: {game}");
+}
+```
+
+resultant expression:
+```
+Expression: { ... }
+Expression Tree:
+||- System.Linq.Expressions.Block5.NodeType: Block
+||- System.Linq.Expressions.Block5.Type: ModelForUnitTests.Game
+||- System.Linq.Expressions.Block5.DebugView: .Block() {
+    $var1 = .Block() {
+        .If (
+            .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>)($var1)
+        ) {
+            .Return returnLabel { .Invoke (.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+        } .Else {
+            .Return returnLabel { .Invoke (.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+        };
+        .Label
+            (ModelForUnitTests.Game)null
+        .LabelTarget returnLabel:
+    };
+    $var1.Name = (System.String)"some fancy name";
+    $var1.Ranking = (System.Int32)1000;
+    $var1.Description = (System.String)"some cool description";
+    $var1
+}
+
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>(ModelForUnitTests.Game $var1) {
+    $var1 == null
+}
+
+.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    .Call ModelForUnitTests.Game.CreateGame()
+}
+
+.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    $var1
+}
+||- System.Linq.Expressions.Block5.CanReduce: False
+||
+||- Variables count: 0
+||
+||- Expressions count: 5
+|  |- System.Linq.Expressions.AssignBinaryExpression.NodeType: Assign
+|  |- System.Linq.Expressions.AssignBinaryExpression.Type: ModelForUnitTests.Game
+|  |- System.Linq.Expressions.AssignBinaryExpression.DebugView: $var1 = .Block() {
+    .If (
+        .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>)($var1)
+    ) {
+        .Return returnLabel { .Invoke (.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+    } .Else {
+        .Return returnLabel { .Invoke (.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+    };
+    .Label
+        (ModelForUnitTests.Game)null
+    .LabelTarget returnLabel:
+}
+
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>(ModelForUnitTests.Game $var1) {
+    $var1 == null
+}
+
+.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    .Call ModelForUnitTests.Game.CreateGame()
+}
+
+.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    $var1
+}
+|  |- System.Linq.Expressions.AssignBinaryExpression.CanReduce: False
+|  |
+|  |- Left:
+|    |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
+|    |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
+|    |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
+|    |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
+|    |- parameterExpression.Name: null
+|    |- parameterExpression.IsByRef: False
+|  |
+|  |- Right:
+|    |- System.Linq.Expressions.Block2.NodeType: Block
+|    |- System.Linq.Expressions.Block2.Type: ModelForUnitTests.Game
+|    |- System.Linq.Expressions.Block2.DebugView: .Block() {
+    .If (
+        .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>)($var1)
+    ) {
+        .Return returnLabel { .Invoke (.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+    } .Else {
+        .Return returnLabel { .Invoke (.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+    };
+    .Label
+        (ModelForUnitTests.Game)null
+    .LabelTarget returnLabel:
+}
+
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>(ModelForUnitTests.Game $var1) {
+    $var1 == null
+}
+
+.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    .Call ModelForUnitTests.Game.CreateGame()
+}
+
+.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    $var1
+}
+|    |- System.Linq.Expressions.Block2.CanReduce: False
+|    |
+|    |- Variables count: 0
+|    |
+|    |- Expressions count: 2
+|      |- System.Linq.Expressions.FullConditionalExpression.NodeType: Conditional
+|      |- System.Linq.Expressions.FullConditionalExpression.Type: System.Void
+|      |- System.Linq.Expressions.FullConditionalExpression.DebugView: .If (
+    .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>)($var1)
+) {
+    .Return returnLabel { .Invoke (.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+} .Else {
+    .Return returnLabel { .Invoke (.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+}
+
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,System.Boolean]>(ModelForUnitTests.Game $var1) {
+    $var1 == null
+}
+
+.Lambda #Lambda2<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    .Call ModelForUnitTests.Game.CreateGame()
+}
+
+.Lambda #Lambda3<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    $var1
+}
+|      |- System.Linq.Expressions.FullConditionalExpression.CanReduce: False
+|      |
+|      |- IfTrue:
+|        |- Default Trace:
+|        |- Expression.GetType(): GotoExpression
+|        |- Expression.Type: System.Void
+|        |- Expression.NodeType: Goto
+|        |- Expression.DebugView: .Return returnLabel { .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    .Call ModelForUnitTests.Game.CreateGame()
+}
+|      |
+|      |- IfFalse:
+|        |- Default Trace:
+|        |- Expression.GetType(): GotoExpression
+|        |- Expression.Type: System.Void
+|        |- Expression.NodeType: Goto
+|        |- Expression.DebugView: .Return returnLabel { .Invoke (.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>)($var1) }
+
+.Lambda #Lambda1<System.Func`2[ModelForUnitTests.Game,ModelForUnitTests.Game]>(ModelForUnitTests.Game $var1) {
+    $var1
+}
+|      |- Default Trace:
+|      |- Expression.GetType(): LabelExpression
+|      |- Expression.Type: ModelForUnitTests.Game
+|      |- Expression.NodeType: Label
+|      |- Expression.DebugView: .Label
+    (ModelForUnitTests.Game)null
+.LabelTarget returnLabel:
+|  |- System.Linq.Expressions.AssignBinaryExpression.NodeType: Assign
+|  |- System.Linq.Expressions.AssignBinaryExpression.Type: System.String
+|  |- System.Linq.Expressions.AssignBinaryExpression.DebugView: $var1.Name = (System.String)"some fancy name"
+|  |- System.Linq.Expressions.AssignBinaryExpression.CanReduce: False
+|  |
+|  |- Left:
+|    |- System.Linq.Expressions.PropertyExpression.NodeType: MemberAccess
+|    |- System.Linq.Expressions.PropertyExpression.Type: System.String
+|    |- System.Linq.Expressions.PropertyExpression.DebugView: $var1.Name
+|    |- System.Linq.Expressions.PropertyExpression.CanReduce: False
+|    |- memberExpression.Member - field: 
+|    |- memberExpression.Member - prop: System.String Name
+|  |
+|  |- Right:
+|    |- System.Linq.Expressions.UnaryExpression.NodeType: Convert
+|    |- System.Linq.Expressions.UnaryExpression.Type: System.String
+|    |- System.Linq.Expressions.UnaryExpression.DebugView: (System.String)"some fancy name"
+|    |- System.Linq.Expressions.UnaryExpression.CanReduce: False
+|    |- unaryExpression.Method: 
+|    |- unaryExpression.IsLifted: False
+|    |- unaryExpression.IsLiftedToNull: False
+|    |
+|    |- unaryExpression.Operand:
+|      |- System.Linq.Expressions.ConstantExpression.NodeType: Constant
+|      |- System.Linq.Expressions.ConstantExpression.Type: System.String
+|      |- System.Linq.Expressions.ConstantExpression.DebugView: "some fancy name"
+|      |- System.Linq.Expressions.ConstantExpression.CanReduce: False
+|    |
+|    |- innerExpression:
+|  |- System.Linq.Expressions.AssignBinaryExpression.NodeType: Assign
+|  |- System.Linq.Expressions.AssignBinaryExpression.Type: System.Int32
+|  |- System.Linq.Expressions.AssignBinaryExpression.DebugView: $var1.Ranking = (System.Int32)1000
+|  |- System.Linq.Expressions.AssignBinaryExpression.CanReduce: False
+|  |
+|  |- Left:
+|    |- System.Linq.Expressions.PropertyExpression.NodeType: MemberAccess
+|    |- System.Linq.Expressions.PropertyExpression.Type: System.Int32
+|    |- System.Linq.Expressions.PropertyExpression.DebugView: $var1.Ranking
+|    |- System.Linq.Expressions.PropertyExpression.CanReduce: False
+|    |- memberExpression.Member - field: 
+|    |- memberExpression.Member - prop: Int32 Ranking
+|  |
+|  |- Right:
+|    |- System.Linq.Expressions.UnaryExpression.NodeType: Convert
+|    |- System.Linq.Expressions.UnaryExpression.Type: System.Int32
+|    |- System.Linq.Expressions.UnaryExpression.DebugView: (System.Int32)1000
+|    |- System.Linq.Expressions.UnaryExpression.CanReduce: False
+|    |- unaryExpression.Method: 
+|    |- unaryExpression.IsLifted: False
+|    |- unaryExpression.IsLiftedToNull: False
+|    |
+|    |- unaryExpression.Operand:
+|      |- System.Linq.Expressions.ConstantExpression.NodeType: Constant
+|      |- System.Linq.Expressions.ConstantExpression.Type: System.Int32
+|      |- System.Linq.Expressions.ConstantExpression.DebugView: 1000
+|      |- System.Linq.Expressions.ConstantExpression.CanReduce: False
+|    |
+|    |- innerExpression:
+|  |- System.Linq.Expressions.AssignBinaryExpression.NodeType: Assign
+|  |- System.Linq.Expressions.AssignBinaryExpression.Type: System.String
+|  |- System.Linq.Expressions.AssignBinaryExpression.DebugView: $var1.Description = (System.String)"some cool description"
+|  |- System.Linq.Expressions.AssignBinaryExpression.CanReduce: False
+|  |
+|  |- Left:
+|    |- System.Linq.Expressions.PropertyExpression.NodeType: MemberAccess
+|    |- System.Linq.Expressions.PropertyExpression.Type: System.String
+|    |- System.Linq.Expressions.PropertyExpression.DebugView: $var1.Description
+|    |- System.Linq.Expressions.PropertyExpression.CanReduce: False
+|    |- memberExpression.Member - field: 
+|    |- memberExpression.Member - prop: System.String Description
+|  |
+|  |- Right:
+|    |- System.Linq.Expressions.UnaryExpression.NodeType: Convert
+|    |- System.Linq.Expressions.UnaryExpression.Type: System.String
+|    |- System.Linq.Expressions.UnaryExpression.DebugView: (System.String)"some cool description"
+|    |- System.Linq.Expressions.UnaryExpression.CanReduce: False
+|    |- unaryExpression.Method: 
+|    |- unaryExpression.IsLifted: False
+|    |- unaryExpression.IsLiftedToNull: False
+|    |
+|    |- unaryExpression.Operand:
+|      |- System.Linq.Expressions.ConstantExpression.NodeType: Constant
+|      |- System.Linq.Expressions.ConstantExpression.Type: System.String
+|      |- System.Linq.Expressions.ConstantExpression.DebugView: "some cool description"
+|      |- System.Linq.Expressions.ConstantExpression.CanReduce: False
+|    |
+|    |- innerExpression:
+|  |- System.Linq.Expressions.TypedParameterExpression.NodeType: Parameter
+|  |- System.Linq.Expressions.TypedParameterExpression.Type: ModelForUnitTests.Game
+|  |- System.Linq.Expressions.TypedParameterExpression.DebugView: $var1
+|  |- System.Linq.Expressions.TypedParameterExpression.CanReduce: False
+|  |- parameterExpression.Name: null
+|  |- parameterExpression.IsByRef: False
+```
 
 # [Rule Factory](/src/RuleFactory)
 Library to help create rules using bunch of static methods; or use custom json converter to read-write rules from-to json documents.  See [Sample 4](/samples/Sample4RuleCreateMadeEasy) for a simple step-by-step tutorial.
@@ -615,9 +945,6 @@ Same as sample 1, but rules were created using factory methods.
 
 ## [Sample 4](/samples/Sample4RuleCreateMadeEasy)
 Quick how-to sample/tutorial.
-
-# Misc
- - [How to Build/Publish](/HOWTO.MD)
 
 # Thanks to everyone
 Started playing with Expression Tree and had some sample/example code going for some years.  Some of the ideas for rule engine came from [MicroRuleEngine](https://github.com/runxc1/MicroRuleEngine); and [AutoMapper](https://github.com/AutoMapper/AutoMapper) source code.  [CoreFx](https://github.com/dotnet/corefx) code and unit tests - an excellent way to study and understand what's going on under the hood with Expression tree.  Thanks to many more blogs, example codes, SO answers, .....  Thought I would just glue my experiments together and release it into the wild.  Hope this helps...

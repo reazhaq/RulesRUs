@@ -17,6 +17,9 @@ namespace RuleFactory.RulesFactory
             };
         }
 
+        public static UpdateValueRule<T> CreateUpdateValueRule<T>(Rule sourceDataRule) =>
+            new UpdateValueRule<T> {SourceDataRule = sourceDataRule};
+
         public static UpdateValueRule<T1, T2> CreateUpdateValueRule<T1, T2>(
             Expression<Func<T1, object>> objectToValidate)
         {

@@ -1,6 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using RuleEngine.Rules;
+using RuleEngine.Utils;
 
 namespace RuleFactory.RulesFactory
 {
@@ -10,12 +11,18 @@ namespace RuleFactory.RulesFactory
 
         public static ActionBlockRule<T> CreateActionBlockRule<T>(IList<Rule> rules)
         {
-            var actionBlockRule = new ActionBlockRule<T>();
-            foreach (var rule in rules)
-            {
-                actionBlockRule.Rules.Add(rule);
-            }
+            var actionBlockRule = CreateActionBlockRule<T>();
+            actionBlockRule.Rules.AddRange(rules);
             return actionBlockRule;
+        }
+
+        public static FuncBlockRule<TIn, TOut> CreateFuncBlockRule<TIn, TOut>() => new FuncBlockRule<TIn, TOut>();
+
+        public static FuncBlockRule<TIn, TOut> CreateFuncBlockRule<TIn, TOut>(IList<Rule> rules)
+        {
+            var funcBlockRule = CreateFuncBlockRule<TIn, TOut>();
+            funcBlockRule.Rules.AddRange(rules);
+            return funcBlockRule;
         }
     }
 }

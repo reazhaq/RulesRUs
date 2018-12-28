@@ -32,7 +32,7 @@ namespace RuleEngine.Rules
         }
     }
 
-    // creates a typed lambda that takes no paramter and returns a fixed value
+    // creates a typed lambda that takes no parameter and returns a fixed value
     public class ConstantRule<T> : ConstantRuleBase, IConstantRule<T>
     {
         private Func<T> CompiledDelegate { get; set; }

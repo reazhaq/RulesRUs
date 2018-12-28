@@ -16,7 +16,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CreateConstantRuleTest1()
+        public void CreateConstantRuleTest1UsingFactory()
         {
             var rule = ConstantRulesFactory.CreateConstantRule<int>("55");
             var compileResult = rule.Compile();
@@ -30,7 +30,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CreateConstantRuleTest2()
+        public void CreateConstantRuleTest2UsingFactory()
         {
             var rule = ConstantRulesFactory.CreateConstantRule<double>("99.1");
             var compileResult = rule.Compile();
@@ -44,7 +44,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CreateConstantRuleTest3()
+        public void CreateConstantRuleTest3UsingFactory()
         {
             var stringValue = "55";
             var rule = ConstantRulesFactory.CreateConstantRule<int, string>(stringValue);
@@ -59,7 +59,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CreateConstantRuleTest4()
+        public void CreateConstantRuleTest4UsingFactory()
         {
             var rule = ConstantRulesFactory.CreateConstantRule<int, bool?>("null");
             var compileResult = rule.Compile();
@@ -72,7 +72,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CreateConstantRuleTest5()
+        public void CreateConstantRuleTest5UsingFactory()
         {
             var rule = ConstantRulesFactory.CreateConstantRule<int, bool?>("false");
             var compileResult = rule.Compile();

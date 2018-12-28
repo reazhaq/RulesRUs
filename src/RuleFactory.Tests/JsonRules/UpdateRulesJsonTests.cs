@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -18,7 +18,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void UpdatePropertyStingWithDifferentValue()
+        public void UpdatePropertyStingWithDifferentValueToAndFromJson()
         {
             var game = new Game {Name = "game name"};
             var rule = new UpdateValueRule<Game, string>
@@ -52,7 +52,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void UpdatePropertyFromAnotherRule()
+        public void UpdatePropertyFromAnotherRuleToAndFromJson()
         {
             var game = new Game {Name = "game name"};
             var rule = new UpdateValueRule<Game>
@@ -87,7 +87,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void UpdateStringRef()
+        public void UpdateStringRefToAndFromJson()
         {
             // source value is fixed with a constant rule
             var ruleBefore = new UpdateRefValueRule<string>
@@ -114,7 +114,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void UpdateStringRef2()
+        public void UpdateStringRef2ToAndFromJson()
         {
             // source value shall come as argument
             var ruleBefore = new UpdateRefValueRule<string>();
@@ -135,6 +135,54 @@ namespace RuleFactory.Tests.JsonRules
             string string1 = null;
             ((UpdateRefValueRule<string>)ruleAfter).RefUpdate(ref string1, "some other value");
             string1.Should().Be("some other value");
+        }
+
+        [Fact]
+        public void UpdateIntRefToAndFromJson()
+        {
+            var rule = new UpdateRefValueRule<int>
+            {
+                SourceDataRule = new ConstantRule<int>{Value = "99"}
+            };
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+
+            var myInt = 0;
+            rule.RefUpdate(ref myInt);
+            myInt.Should().Be(99);
+
+            var jsonConverterForRule = new JsonConverterForRule();
+            // convert to json
+            var ruleJson = JsonConvert.SerializeObject(rule, jsonConverterForRule);
+            _testOutputHelper.WriteLine($"ruleJson:{Environment.NewLine}{ruleJson}");
+            // new rule from Json
+            var newRule = JsonConvert.DeserializeObject<UpdateRefValueRule<int>>(ruleJson, jsonConverterForRule);
+
+            var compileResult2 = newRule.Compile();
+            compileResult2.Should().BeTrue();
+            var myInt2 = 0;
+            newRule.RefUpdate(ref myInt2);
+            myInt2.Should().Be(99);
+
+            var rule2 = new UpdateRefValueRule<int>();
+            compileResult = rule2.Compile();
+            compileResult.Should().BeTrue();
+
+            rule2.RefUpdate(ref myInt, -99);
+            myInt.Should().Be(-99);
+
+            // convert to json
+            var ruleJson2 = JsonConvert.SerializeObject(rule2, jsonConverterForRule);
+            _testOutputHelper.WriteLine($"ruleJson2:{Environment.NewLine}{ruleJson2}");
+            // new rule from json
+            var newRule2 = JsonConvert.DeserializeObject<UpdateRefValueRule<int>>(ruleJson2, jsonConverterForRule);
+
+            var compileResult3 = newRule2.Compile();
+            compileResult3.Should().BeTrue();
+
+            newRule2.RefUpdate(ref myInt2, -99);
+            myInt2.Should().Be(-99);
         }
     }
 }

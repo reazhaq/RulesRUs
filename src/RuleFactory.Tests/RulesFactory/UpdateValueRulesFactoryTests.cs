@@ -1,7 +1,8 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
+using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -17,7 +18,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void UpdatePropertyStingWithDifferentValue()
+        public void UpdatePropertyStingWithDifferentValueUsingFactory()
         {
             var game = new Game {Name = "game name"};
             var nameChangeRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game, string>((g => g.Name));
@@ -34,7 +35,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void UpdatePropertyFromAnotherRule()
+        public void UpdatePropertyFromAnotherRuleUsingFactory()
         {
             var game = new Game {Name = "game name"};
             var const1 = ConstantRulesFactory.CreateConstantRule<string>("name from constant rule");
@@ -52,7 +53,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void UpdateStringRef()
+        public void UpdateStringRefUsingFactory()
         {
             var sourceDataRule = ConstantRulesFactory.CreateConstantRule<string>("something");
             var rule = UpdateValueRulesFactory.CreateUpdateRefValueRule<string>(sourceDataRule);
@@ -76,6 +77,30 @@ namespace RuleFactory.Tests.RulesFactory
             string1 = null;
             rule2.RefUpdate(ref string1, "some other value");
             string1.Should().Be("some other value");
+        }
+
+        [Fact]
+        public void UpdateIntRefUsingFactory()
+        {
+            var sourceDataRule = ConstantRulesFactory.CreateConstantRule<int>("99");
+            var rule = UpdateValueRulesFactory.CreateUpdateRefValueRule<int>(sourceDataRule);
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");
+
+            var myInt = 0;
+            rule.RefUpdate(ref myInt);
+            myInt.Should().Be(99);
+
+            var rule2 = UpdateValueRulesFactory.CreateUpdateRefValueRule<int>();
+            compileResult = rule2.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"UpdateRefValueRule<int, int>:{Environment.NewLine}" +
+                                        $"{rule2.ExpressionDebugView()}");
+
+            rule2.RefUpdate(ref myInt, -99);
+            myInt.Should().Be(-99);
         }
     }
 }

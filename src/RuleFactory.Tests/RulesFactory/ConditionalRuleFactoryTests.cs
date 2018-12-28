@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -18,11 +18,60 @@ namespace RuleFactory.Tests.RulesFactory
             _testOutputHelper = testOutputHelper;
         }
 
+        [Theory]
+        [InlineData("one", "six-six-six")]
+        [InlineData("tWo", "six-six-six")]
+        [InlineData("blah", "blah")]
+        [InlineData("nine", "nine")]
+        public void IfValueContainsReturnDiffValueUsingFactory(string searchValue, string expectedValue)
+        {
+            IList<string> collectionToSearch = new List<string>{ "one", "two", "three", "four", "five", "six" };
+            var containsValueRule = ContainsValueRuleFactory.CreateContainsValueRule(collectionToSearch,
+                                                                "System.StringComparer", "OrdinalIgnoreCase");
+
+            var trueRule = new ExpressionFuncRule<string, string>(s => "six-six-six");
+            var falseRule = new ExpressionFuncRule<string, string>(s => s);
+            var valueReplacementIfBad = ConditionalRulesFactory.CreateConditionalFuncRule<string, string>(containsValueRule,
+                                                                                                        trueRule, falseRule);
+            var compileResult = valueReplacementIfBad.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
+                                        $"{valueReplacementIfBad.ExpressionDebugView()}");
+
+            var ruleResult = valueReplacementIfBad.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
+            ruleResult.Should().Be(expectedValue);
+        }
+
+        [Theory]
+        [InlineData("one", "six-six-six")]
+        [InlineData("tWo", "six-six-six")]
+        [InlineData("blah", "blah")]
+        [InlineData("nine", "nine")]
+        public void IfValueContainsReturnDiffValue2UsingFactory(string searchValue, string expectedValue)
+        {
+            var collectionToSearch = new List<string>{ "one", "two", "three", "four", "five", "six" };
+            var containsValueRule = ContainsValueRuleFactory.CreateContainsValueRule(collectionToSearch,
+                                                "System.StringComparer", "OrdinalIgnoreCase");
+
+            var trueRule = ConstantRulesFactory.CreateConstantRule<string, string>("six-six-six");
+            var falseRule = SelfReturnRuleFactory.CreateSelfReturnRule<string>();
+            var valueReplacementIfBad = ConditionalRulesFactory.CreateConditionalFuncRule<string,string>(containsValueRule,
+                                                                                                        trueRule, falseRule);
+            var compileResult = valueReplacementIfBad.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
+                                        $"{valueReplacementIfBad.ExpressionDebugView()}");
+
+            var ruleResult = valueReplacementIfBad.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
+            ruleResult.Should().Be(expectedValue);
+        }
 
         [Theory]
         [InlineData("one", "element is present in the collection")]
         [InlineData("nine", "element is not present in the collection")]
-        public void ConditionalWithConstantRule(string valueToCheck, string expectedOutput)
+        public void ConditionalWithConstantRuleUsingFactory(string valueToCheck, string expectedOutput)
         {
             var trueRule =
                 ConstantRulesFactory.CreateConstantRule<string, string>("element is present in the collection");
@@ -48,7 +97,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ConditionalRuleToUpdateName()
+        public void ConditionalRuleToUpdateNameUsingFactory()
         {
             var trueRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Name,
                 ConstantRulesFactory.CreateConstantRule<string>("updated name"));
@@ -76,7 +125,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ConditionalRuleToUpdateNameToSomethingElse()
+        public void ConditionalRuleToUpdateNameToSomethingElseUsingFactory()
         {
             var const1 = ConstantRulesFactory.CreateConstantRule<string>("true name");
             var trueRule = UpdateValueRulesFactory.CreateUpdateValueRule<Game>(g => g.Name, const1);
@@ -111,7 +160,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ConditionalRuleLookAtOneValueUpdateAnother()
+        public void ConditionalRuleLookAtOneValueUpdateAnotherUsingFactory()
         {
             var const1 = ConstantRulesFactory.CreateConstantRule<int>("999");
             var trueRule = UpdateValueRulesFactory.CreateUpdateValueRule<Player>(p => p.CurrentCoOrdinates.X, const1);

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
 using RuleFactory.Tests.Fixture;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -22,7 +22,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void RuleToCheckIfAnIntegerMatchesRuleValueOrNot()
+        public void RuleToCheckIfAnIntegerMatchesRuleValueOrNotUsingFactory()
         {
             var constRule = ConstantRulesFactory.CreateConstantRule<int>("5");
             var numberShouldBe5Rule =
@@ -56,7 +56,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void RuleToCheckIfRootObjectIsNullOrNot()
+        public void RuleToCheckIfRootObjectIsNullOrNotUsingFactory()
         {
             var constRule = ConstantRulesFactory.CreateConstantRule<Game>("null");
             var checkForNotNullRule =
@@ -93,7 +93,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CreateValidationRuleTest1()
+        public void CreateValidationRuleTest1UsingFactory()
         {
             var constRule = ConstantRulesFactory.CreateConstantRule<int>(value: "100");
             var rule = ValidationRulesFactory.CreateValidationRule<Game>((g => g.Ranking),
@@ -115,7 +115,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ApplyRuleToSubFieldOrProperty()
+        public void ApplyRuleToSubFieldOrPropertyUsingFactory()
         {
             var constRule = ConstantRulesFactory.CreateConstantRule<int>("3");
             var nameLengthGreaterThan3Rule = ValidationRulesFactory.CreateValidationRule<Game>((g => g.Name.Length),
@@ -134,7 +134,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ValidationRuleWithAndAlsoChildrenValidationRules()
+        public void ValidationRuleWithAndAlsoChildrenValidationRulesUsingFactory()
         {
             var nullConst = ConstantRulesFactory.CreateConstantRule<Game>("null");
             var nullStringConst = ConstantRulesFactory.CreateConstantRule<string>("null");
@@ -166,7 +166,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ValidataionRuleWithOneNotChild()
+        public void ValidationRuleWithOneNotChildUsingFactory()
         {
             var constRule = ConstantRulesFactory.CreateConstantRule<Game>("null");
             var child1 =
@@ -187,7 +187,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ValidationRuleWithOrElseChildrenValidationRules()
+        public void ValidationRuleWithOrElseChildrenValidationRulesUsingFactory()
         {
             var nullGame = ConstantRulesFactory.CreateConstantRule<Game>("null");
             var child1 =
@@ -228,7 +228,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void ValidationRuleWithTwoTypes()
+        public void ValidationRuleWithTwoTypesUsingFactory()
         {
             var twoPlayersScoreRule = ValidationRulesFactory.CreateValidationRule<Player, Player>(
                                                                 LogicalOperatorAtTheRootLevel.GreaterThan,

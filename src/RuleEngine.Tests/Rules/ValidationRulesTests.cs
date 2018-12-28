@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
 using RuleEngine.Tests.Fixture;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -205,7 +205,7 @@ namespace RuleEngine.Tests.Rules
         }
 
         [Fact]
-        public void ValidataionRuleWithOneNotChild()
+        public void ValidationRuleWithOneNotChild()
         {
             var gameNullRuleByUsingNotWithNotEqualToNullChild = new ValidationRule<Game>
             {

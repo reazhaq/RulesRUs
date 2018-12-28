@@ -1,8 +1,8 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
 using RuleEngine.Tests.Fixture;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -112,24 +112,24 @@ namespace RuleEngine.Tests.Rules
         {
             // Description is a string - Call Contains method on Description
             // compiles to: Param_0.Description.Contains("cool")
-            var gameNameContainsKeyWrodCool = new MethodCallRule<Game, bool>
+            var gameNameContainsKeyWordCool = new MethodCallRule<Game, bool>
             {
                 MethodToCall = "Contains",
                 ObjectToCallMethodOn = "Description",
                 MethodParameters = { new ConstantRule<string> { Value = "cool" } }
             };
 
-            var compileResult = gameNameContainsKeyWrodCool.Compile();
+            var compileResult = gameNameContainsKeyWordCool.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(gameNameContainsKeyWrodCool)}:{Environment.NewLine}" +
-                                        $"{gameNameContainsKeyWrodCool.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(gameNameContainsKeyWordCool)}:{Environment.NewLine}" +
+                                        $"{gameNameContainsKeyWordCool.ExpressionDebugView()}");
 
             // check to see if _game1 description contains keyword "cool"
-            var executeResult = gameNameContainsKeyWrodCool.Execute(_game1);
+            var executeResult = gameNameContainsKeyWordCool.Execute(_game1);
             executeResult.Should().BeFalse();
 
             // check to see if _game2 description contains keyword "cool"
-            executeResult = gameNameContainsKeyWrodCool.Execute(_game2);
+            executeResult = gameNameContainsKeyWordCool.Execute(_game2);
             executeResult.Should().BeTrue();
         }
 
@@ -139,7 +139,7 @@ namespace RuleEngine.Tests.Rules
             //var game = Game.CreateGame();
             var rule = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "CreateGame"
             };
 
@@ -158,7 +158,7 @@ namespace RuleEngine.Tests.Rules
             //var game = Game.CreateGame("cool game");
             var rule = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "CreateGame",
                 MethodParameters = { new ConstantRule<string> { Value = "cool game" } }
             };
@@ -179,7 +179,7 @@ namespace RuleEngine.Tests.Rules
             //var game = Game.CreateGame("game", "description", 1, true);
             var rule = new StaticMethodCallRule<Game>
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "CreateGame",
                 MethodParameters =
                 {
@@ -206,7 +206,7 @@ namespace RuleEngine.Tests.Rules
         {
             var rule = new StaticVoidMethodCallRule
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "SomeVoidStaticMethod"
             };
 
@@ -225,7 +225,7 @@ namespace RuleEngine.Tests.Rules
         {
             var rule = new StaticVoidMethodCallRule
             {
-                MethodClassName = "SampleModel.Game",
+                MethodClassName = "ModelForUnitTests.Game",
                 MethodToCall = "SomeVoidStaticMethod",
                 MethodParameters = {new ConstantRule<int> {Value = "99"}}
             };

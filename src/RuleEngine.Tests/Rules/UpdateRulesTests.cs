@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -112,6 +112,5 @@ namespace RuleEngine.Tests.Rules
             rule2.RefUpdate(ref myInt, -99);
             myInt.Should().Be(-99);
         }
-
     }
 }

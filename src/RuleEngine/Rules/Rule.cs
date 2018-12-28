@@ -13,7 +13,7 @@ namespace RuleEngine.Rules
         public string Description { get; set; }
         // in the event of a rule logic failure - send this error
         public RuleError RuleError { get; set; }
-        // rule expresion
+        // rule expression
         protected Expression ExpressionForThisRule { get; set; }
 
         public virtual string ExpressionDebugView()
@@ -51,6 +51,47 @@ namespace RuleEngine.Rules
                 bodyWithSubProperty = Expression.PropertyOrField(bodyWithSubProperty, fieldOrProperty);
 
             return bodyWithSubProperty;
+        }
+
+        public bool RuleReturnsValueOfTOut<TIn, TOut>()
+        {
+            switch (this)
+            {
+                case FuncBlockRule<TIn, TOut> _:
+                case ConditionalFuncRule<TIn, TOut> _:
+                case ConstantRule<TIn, TOut> _:
+                case MethodCallRule<TIn, TOut> _:
+                case ExpressionFuncRule<TIn, TOut> _:
+                    return true;
+           }
+
+            return RuleReturnsValueOfTOut<TOut>() || RuleReturnsBool<TIn, TOut>();
+        }
+
+        public bool RuleReturnsValueOfTOut<TOut>()
+        {
+            switch(this)
+            {
+                case ConstantRule<TOut> _:
+                case StaticMethodCallRule<TOut> _:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool RuleReturnsBool<TIn, TOut>()
+        {
+            switch (this)
+            {
+                case ContainsValueRule<TIn> _ when (typeof(TOut) == typeof(bool)):
+                case RegExRule<TIn> _ when (typeof(TOut) == typeof(bool)):
+                case SelfReturnRule<TIn> _ when (typeof(TIn) == typeof(TOut)):
+                case ValidationRule<TIn> _ when (typeof(TOut) == typeof(bool)):
+                    return true;
+            }
+
+            return false;
         }
     }
 }

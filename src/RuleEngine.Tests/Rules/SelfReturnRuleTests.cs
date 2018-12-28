@@ -1,7 +1,7 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -47,7 +47,7 @@ namespace RuleEngine.Tests.Rules
             var value = rule.Get(someValue);
             value.Should().Be(someValue);
 
-            var referenceEquals = object.ReferenceEquals(someValue, value);
+            var referenceEquals = ReferenceEquals(someValue, value);
             referenceEquals.Should().BeTrue();
         }
 
@@ -64,7 +64,7 @@ namespace RuleEngine.Tests.Rules
             var value = rule.Get(someGame);
             value.Should().Be(someGame);
 
-            var referenceEquals = object.ReferenceEquals(someGame, value);
+            var referenceEquals = ReferenceEquals(someGame, value);
             referenceEquals.Should().BeTrue();
         }
     }

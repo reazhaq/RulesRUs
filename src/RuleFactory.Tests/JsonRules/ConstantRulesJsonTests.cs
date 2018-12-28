@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using FluentAssertions;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
@@ -19,7 +18,7 @@ namespace RuleFactory.Tests.JsonRules
 
         
         [Fact]
-        public void ConstantRuleOfTypeIntThatReturns55WhenValueIsSetTo55()
+        public void ConstantRuleOfTypeIntThatReturns55WhenValueIsSetTo55ToAndFromJson()
         {
             var rule = new ConstantRule<int>{Value = "55"};
             var compileResult = rule.Compile();
@@ -47,7 +46,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void ConstantRuleOfTypeDoubleThatReturnsWhatIsSetAsValueString()
+        public void ConstantRuleOfTypeDoubleThatReturnsWhatIsSetAsValueStringToAndFromJson()
         {
             var rule = new ConstantRule<double>{Value = "99.1"};
             var compileResult = rule.Compile();
@@ -91,7 +90,7 @@ namespace RuleFactory.Tests.JsonRules
         [InlineData(typeof(float), "1.2", 1.2)]
         [InlineData(typeof(float?), "null", null)]
         [InlineData(typeof(float?), "12.34", 12.34)]
-        public void ConstantRuleChangesStringAssignedValueToTypedLambda(Type constantType, string valueToUse, object expectedResult)
+        public void ConstantRuleChangesStringAssignedValueToTypedLambdaToAndFromJson(Type constantType, string valueToUse, object expectedResult)
         {
             var constantRuleGenericType = typeof(ConstantRule<>);
             var typesToUse = new[] {constantType};
@@ -144,7 +143,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void ContantRuleOfTypeIntThatReturnsString()
+        public void ConstantRuleOfTypeIntThatReturnsStringToAndFromJson()
         {
             var stringValue = "55";
             var rule = new ConstantRule<int, string> {Value = stringValue};
@@ -171,7 +170,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void ConstantRuleOfTypeIntNullableBoolRetursNull()
+        public void ConstantRuleOfTypeIntNullableBoolReturnsNullToAndFromJson()
         {
             var rule = new ConstantRule<int, bool?> {Value = "null"};
             var compileResult = rule.Compile();
@@ -197,7 +196,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void ConstantRuleOfTypeIntNullableBoolReturnsFalse()
+        public void ConstantRuleOfTypeIntNullableBoolReturnsFalseToAndFromJson()
         {
             var rule = new ConstantRule<int, bool?> {Value = "false"};
             var compileResult = rule.Compile();
@@ -227,7 +226,7 @@ namespace RuleFactory.Tests.JsonRules
         [InlineData(typeof(int?), typeof(bool?), null, null, null)]
         [InlineData(typeof(bool), typeof(int), false, "666", 666)]
         [InlineData(typeof(string), typeof(double?), "69", "123.45", 123.45)]
-        public void ConstantRuleTwoTypeReturnsSecondIgnoresParameter(Type type1, Type type2, object paramValue,
+        public void ConstantRuleTwoTypeReturnsSecondIgnoresParameterToAndFromJson(Type type1, Type type2, object paramValue,
             string valueToUse, object expectedResult)
         {
             var constantRuleGenericType = typeof(ConstantRule<,>);
@@ -250,7 +249,7 @@ namespace RuleFactory.Tests.JsonRules
             _testOutputHelper.WriteLine($"result from Get({paramValue}): {getResult ?? "nulll"}");
 
             object expectedTypedResult;
-            var underyingType = Nullable.GetUnderlyingType(type2) ?? type2;
+            var underlyingType = Nullable.GetUnderlyingType(type2) ?? type2;
             if (expectedResult == null)
             {
                 if (type2.IsValueType && Nullable.GetUnderlyingType(type2) != null)
@@ -259,7 +258,7 @@ namespace RuleFactory.Tests.JsonRules
                     expectedTypedResult = Convert.ChangeType(null, type2);
             }
             else
-                expectedTypedResult = Convert.ChangeType(expectedResult, underyingType);
+                expectedTypedResult = Convert.ChangeType(expectedResult, underlyingType);
 
             Assert.True(getResult?.Equals(expectedTypedResult) ?? expectedTypedResult == null);
 

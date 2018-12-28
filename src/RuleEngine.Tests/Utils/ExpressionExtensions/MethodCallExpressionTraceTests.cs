@@ -2,12 +2,12 @@
 using System.Linq.Expressions;
 using System.Text;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Utils;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace RuleEngine.Tests.Utils.ExressionExtensions
+namespace RuleEngine.Tests.Utils.ExpressionExtensions
 {
     public class MethodCallExpressionTraceTests
     {

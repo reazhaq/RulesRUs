@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using RuleEngine.Rules;
-using SampleModel;
 using System;
 using System.Linq.Expressions;
+using ModelForUnitTests;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -40,9 +40,9 @@ namespace RuleEngine.Tests.Rules
             _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
                                         $"{valueReplacementIfBad.ExpressionDebugView()}");
 
-            searchValue = valueReplacementIfBad.Execute(searchValue);
-            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {searchValue}");
-            searchValue.Should().Be(expectedValue);
+            var ruleResult = valueReplacementIfBad.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
+            ruleResult.Should().Be(expectedValue);
         }
 
         [Theory]
@@ -68,9 +68,9 @@ namespace RuleEngine.Tests.Rules
             _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
                                         $"{valueReplacementIfBad.ExpressionDebugView()}");
 
-            searchValue = valueReplacementIfBad.Execute(searchValue);
-            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {searchValue}");
-            searchValue.Should().Be(expectedValue);
+            var ruleResult = valueReplacementIfBad.Execute(searchValue);
+            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
+            ruleResult.Should().Be(expectedValue);
         }
 
         [Theory]
@@ -224,8 +224,9 @@ namespace RuleEngine.Tests.Rules
                 {
                     ObjectToCallMethodOn = "Name",
                     MethodToCall = "Equals",
-                    MethodParameters = { new ConstantRule<string> { Value = "some name" }, 
-                            new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
+                    MethodParameters = {
+                        new ConstantRule<string> { Value = "some name" }, 
+                        new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
                     }
                 },
                 TrueRule = new UpdateValueRule<Game>
@@ -256,7 +257,8 @@ namespace RuleEngine.Tests.Rules
                 {
                     ObjectToCallMethodOn = "Name",
                     MethodToCall = "Equals",
-                    MethodParameters = { new ConstantRule<string> { Value = "some name" }, 
+                    MethodParameters = {
+                        new ConstantRule<string> { Value = "some name" }, 
                         new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
                     }
                 },

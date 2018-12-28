@@ -1,6 +1,6 @@
 ﻿namespace RuleEngine.Interfaces.Rules
 {
-    public interface IRegExRule<T>
+    public interface IRegExRule<in T>
     {
         bool IsMatch(T targetObject);
     }

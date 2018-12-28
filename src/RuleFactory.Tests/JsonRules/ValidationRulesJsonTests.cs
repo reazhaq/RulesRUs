@@ -1,9 +1,9 @@
 ﻿using System;
 using FluentAssertions;
+using ModelForUnitTests;
 using Newtonsoft.Json;
 using RuleEngine.Rules;
 using RuleFactory.Tests.Fixture;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -21,7 +21,7 @@ namespace RuleFactory.Tests.JsonRules
         }
 
         [Fact]
-        public void RuleToCheckIfAnIntegerMatchesRuleValueOrNot()
+        public void RuleToCheckIfAnIntegerMatchesRuleValueOrNotToAndFromJson()
         {
             var rule = new ValidationRule<int>
             {
@@ -64,25 +64,25 @@ namespace RuleFactory.Tests.JsonRules
             _testOutputHelper.WriteLine($"with 5 {nameof(not5Rule)} failed. " +
                                          $"Error code={not5Rule.RuleError.Code}, " +
                                          $"message={not5Rule.RuleError.Message}");
-
+            
             // convert to json
             var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var ruleFromJson = JsonConvert.DeserializeObject<ValidationRule<int>>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
-            var validationResult2 = ((ValidationRule<int>)ruleFromJson).IsValid(5);
+            var validationResult2 = ruleFromJson.IsValid(5);
             validationResult2.Should().BeTrue();
-            validationResult2 = ((ValidationRule<int>)ruleFromJson).IsValid(6);
+            validationResult2 = ruleFromJson.IsValid(6);
             validationResult2.Should().BeFalse();
         }
 
         [Fact]
-        public void RuleToCheckIfRootObjectIsNullOrNot()
+        public void RuleToCheckIfRootObjectIsNullOrNotToAndFromJson()
         {
             var rule = new ValidationRule<Game>
             {
@@ -124,20 +124,20 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var ruleFromJson = JsonConvert.DeserializeObject<ValidationRule<Game>>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
-            var validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(_game);
+            var validationResult2 = ruleFromJson.IsValid(_game);
             validationResult2.Should().BeTrue();
-            validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(null);
+            validationResult2 = ruleFromJson.IsValid(null);
             validationResult2.Should().BeFalse();
         }
 
         [Fact]
-        public void ApplyRuleToFieldOrProperty()
+        public void ApplyRuleToFieldOrPropertyToAndFromJson()
         {
             var rule = new ValidationRule<Game>
             {
@@ -167,20 +167,20 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var ruleFromJson = JsonConvert.DeserializeObject<ValidationRule<Game>>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
-            var validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(_game);
+            var validationResult2 = ruleFromJson.IsValid(_game);
             validationResult2.Should().BeTrue();
-            validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(someOtherGameWithHighRanking);
+            validationResult2 = ruleFromJson.IsValid(someOtherGameWithHighRanking);
             validationResult2.Should().BeFalse();
         }
 
         [Fact]
-        public void ApplyRuleToSubFieldOrProperty()
+        public void ApplyRuleToSubFieldOrPropertyToAndFromJson()
         {
             var rule = new ValidationRule<Game>
             {
@@ -210,20 +210,20 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var ruleFromJson = JsonConvert.DeserializeObject<ValidationRule<Game>>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
-            var validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(_game);
+            var validationResult2 = ruleFromJson.IsValid(_game);
             validationResult2.Should().BeTrue();
-            validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(new Game { Name = "foo" });
+            validationResult2 = ruleFromJson.IsValid(new Game { Name = "foo" });
             validationResult2.Should().BeFalse();
         }
 
         [Fact]
-        public void ValidationRuleWithAndAlsoChildrenValidationRules()
+        public void ValidationRuleWithAndAlsoChildrenValidationRulesToAndFromJson()
         {
             var rule = new ValidationRule<Game>
             {
@@ -269,20 +269,20 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var ruleFromJson = JsonConvert.DeserializeObject<ValidationRule<Game>>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
-            var validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(_game);
+            var validationResult2 = ruleFromJson.IsValid(_game);
             validationResult2.Should().BeTrue();
-            validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(null);
+            validationResult2 = ruleFromJson.IsValid(null);
             validationResult2.Should().BeFalse();
         }
 
         [Fact]
-        public void ValidataionRuleWithOneNotChild()
+        public void ValidationRuleWithOneNotChildToAndFromJson()
         {
             var rule = new ValidationRule<Game>
             {
@@ -312,21 +312,21 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var ruleFromJson = JsonConvert.DeserializeObject<ValidationRule<Game>>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
-            var validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(_game);
+            var validationResult2 = ruleFromJson.IsValid(_game);
             validationResult2.Should().BeFalse();
 
-            validationResult2 = ((ValidationRule<Game>) ruleFromJson).IsValid(null);
+            validationResult2 = ruleFromJson.IsValid(null);
             validationResult2.Should().BeTrue();
         }
 
         [Fact]
-        public void ValidationRuleWithOrElseChildrenValidationRules()
+        public void ValidationRuleWithOrElseChildrenValidationRulesToAndFromJson()
         {
             var rule = new ValidationRule<Game> { OperatorToUse = "OrElse" };
             rule.ChildrenRules.Add(new ValidationRule<Game>
@@ -378,27 +378,27 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var ruleFromJson = JsonConvert.DeserializeObject<ValidationRule<Game>>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
-            var validationResult2 = ((ValidationRule<Game>)ruleFromJson).IsValid(_game);
+            var validationResult2 = ruleFromJson.IsValid(_game);
             validationResult2.Should().BeTrue();
 
-            validationResult2 = ((ValidationRule<Game>) ruleFromJson).IsValid(null);
+            validationResult2 = ruleFromJson.IsValid(null);
             validationResult2.Should().BeTrue();
 
-            validationResult2 = ((ValidationRule<Game>) ruleFromJson).IsValid(new Game { Name = null });
+            validationResult2 = ruleFromJson.IsValid(new Game { Name = null });
             validationResult2.Should().BeFalse();
 
-            validationResult2 = ((ValidationRule<Game>) ruleFromJson).IsValid(new Game { Name = "a" });
+            validationResult2 = ruleFromJson.IsValid(new Game { Name = "a" });
             validationResult2.Should().BeFalse();
         }
 
         [Fact]
-        public void ValidationRuleWithTwoTypes()
+        public void ValidationRuleWithTwoTypesToAndFromJson()
         {
             var rule = new ValidationRule<Player, Player>
             {
@@ -420,15 +420,15 @@ namespace RuleFactory.Tests.JsonRules
             var ruleJson = JsonConvert.SerializeObject(rule, new JsonConverterForRule());
             _testOutputHelper.WriteLine($"{nameof(ruleJson)}:{Environment.NewLine}{ruleJson}");
             // re-hydrate from json
-            var ruleFromJson = JsonConvert.DeserializeObject<Rule>(ruleJson, new JsonConverterForRule());
+            var ruleFromJson = JsonConvert.DeserializeObject<ValidationRule<Player, Player>>(ruleJson, new JsonConverterForRule());
             compileResult = ruleFromJson.Compile();
             compileResult.Should().BeTrue();
             _testOutputHelper.WriteLine($"{nameof(ruleFromJson)}:{Environment.NewLine}" +
                                         $"{ruleFromJson.ExpressionDebugView()}");
 
-            var validationResult2 = ((ValidationRule<Player, Player>)ruleFromJson).IsValid(_game.Players[0], _game.Players[1]);
+            var validationResult2 = ruleFromJson.IsValid(_game.Players[0], _game.Players[1]);
             validationResult2.Should().BeTrue();
-            validationResult2 = ((ValidationRule<Player, Player>)ruleFromJson).IsValid(_game.Players[1], _game.Players[0]);
+            validationResult2 = ruleFromJson.IsValid(_game.Players[1], _game.Players[0]);
             validationResult2.Should().BeFalse();
         }
     }

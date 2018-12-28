@@ -4,7 +4,7 @@ using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Rules;
-using Sample1PlaceOrder.Model;
+using SampleModel;
 
 namespace Sample1PlaceOrder
 {
@@ -22,13 +22,13 @@ namespace Sample1PlaceOrder
 
             LoadAndCompileRules();
 
-            var commmandLineApplication = new CommandLineApplication(throwOnUnexpectedArg:false);
-            commmandLineApplication.HelpOption("-? | -h | --help");
-            var orderCommand = commmandLineApplication.Option(
+            var commandLineApplication = new CommandLineApplication(throwOnUnexpectedArg:false);
+            commandLineApplication.HelpOption("-? | -h | --help");
+            var orderCommand = commandLineApplication.Option(
                  "-o | --order", "Place an order", CommandOptionType.NoValue
             );
 
-            commmandLineApplication.OnExecute(() =>
+            commandLineApplication.OnExecute(() =>
             {
                 if (orderCommand.HasValue())
                     PlaceAnOrder();
@@ -36,7 +36,7 @@ namespace Sample1PlaceOrder
                 return 0;
             });
 
-            commmandLineApplication.Execute(args);
+            commandLineApplication.Execute(args);
         }
 
         private static void LoadAndCompileRules()

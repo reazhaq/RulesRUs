@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using FluentAssertions;
+using ModelForUnitTests;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
 using RuleFactory.Tests.Fixture;
-using SampleModel;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -29,7 +29,7 @@ namespace RuleFactory.Tests.RulesFactory
         [InlineData("game 1", true)]
         [InlineData("game 2", false)]
         [InlineData("gaMe 2", false)]
-        public void CallEqualsMethodOnNameUsingConstantRule(string param1, bool expectedResult)
+        public void CallEqualsMethodOnNameUsingConstantRuleUsingFactory(string param1, bool expectedResult)
         {
             // call Equals method on Name string object
             // compiles to: Param_0.Name.Equals("Game 1", CurrentCultureIgnoreCase)
@@ -50,7 +50,7 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CallAVoidMethod()
+        public void CallAVoidMethodUsingFactory()
         {
             // call FlipActive method on the game object
             // compiles to: Param_0.FlipActive()
@@ -66,10 +66,24 @@ namespace RuleFactory.Tests.RulesFactory
             _game1.Active.Should().Be(!currentActiveState);
         }
 
+        [Fact]
+        public void CallToUpperUsingFactory()
+        {
+            var rule = MethodCallRulesFactory.CreateMethodCallRule<string,string>("ToUpper", "System.String", null, null);
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"{nameof(rule)}:{Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var foo = "foo";
+            var FOO = rule.Execute(foo);
+            FOO.Should().Be("FOO");
+        }
+
         [Theory]
         [InlineData(1, true)]
         [InlineData(1000, false)]
-        public void CheckToSeeIfPlayerExistsInAGame(int id, bool expectedResult)
+        public void CheckToSeeIfPlayerExistsInAGameUsingFactory(int id, bool expectedResult)
         {
             // call HasPlayer method on the game object
             // compiles to: Param_0.HasPlayer(1000)
@@ -88,32 +102,33 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CallAStringMethodOnDescriptionObject()
+        public void CallAStringMethodOnDescriptionObjectUsingFactory()
         {
             // Description is a string - Call Contains method on Description
             // compiles to: Param_0.Description.Contains("cool")
             var const1 = ConstantRulesFactory.CreateConstantRule<string>("cool");
-            var gameNameContainsKeyWrodCool = MethodCallRulesFactory.CreateMethodCallRule<Game, bool>("Contains",
+            var gameNameContainsKeyWordCool = MethodCallRulesFactory.CreateMethodCallRule<Game, bool>("Contains",
                                 null, (g => g.Description), new List<Rule> {const1});
 
-            var compileResult = gameNameContainsKeyWrodCool.Compile();
+            var compileResult = gameNameContainsKeyWordCool.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(gameNameContainsKeyWrodCool)}:{Environment.NewLine}{gameNameContainsKeyWrodCool.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(gameNameContainsKeyWordCool)}:{Environment.NewLine}" +
+                                        $"{gameNameContainsKeyWordCool.ExpressionDebugView()}");
 
             // check to see if _game1 description contains keyword "cool"
-            var executeResult = gameNameContainsKeyWrodCool.Execute(_game1);
+            var executeResult = gameNameContainsKeyWordCool.Execute(_game1);
             executeResult.Should().BeFalse();
 
             // check to see if _game2 description contains keyword "cool"
-            executeResult = gameNameContainsKeyWrodCool.Execute(_game2);
+            executeResult = gameNameContainsKeyWordCool.Execute(_game2);
             executeResult.Should().BeTrue();
         }
 
         [Fact]
-        public void CallCreateGameStaticMethod()
+        public void CallCreateGameStaticMethodUsingFactory()
         {
             //var game = Game.CreateGame();
-            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "SampleModel.Game", null);
+            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "ModelForUnitTests.Game", null);
 
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
@@ -125,10 +140,10 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CallCreateGameStaticMethod2()
+        public void CallCreateGameStaticMethod2UsingFactory()
         {
             //var game = Game.CreateGame("cool game");
-            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "SampleModel.Game", 
+            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame", "ModelForUnitTests.Game", 
                                                         new List<Rule>{new ConstantRule<string> {Value = "cool game"}});
 
             var compileResult = rule.Compile();
@@ -142,9 +157,34 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CallStaticVoidMethod()
+        public void CallCreateGameStaticMethod3UsingFactory()
         {
-            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", null);
+            //var game = Game.CreateGame("game", "description", 1, true);
+            var methodParams = new List<Rule>
+            {
+                ConstantRulesFactory.CreateConstantRule<string>("game"),
+                ConstantRulesFactory.CreateConstantRule<string>("description"),
+                ConstantRulesFactory.CreateConstantRule<int>("1"),
+                ConstantRulesFactory.CreateConstantRule<bool>("true")
+            };
+            var rule = MethodCallRulesFactory.CreateStaticMethodCallRule<Game>("CreateGame",
+                                            "ModelForUnitTests.Game", methodParams);
+
+            var compileResult = rule.Compile();
+            compileResult.Should().BeTrue();
+            _testOutputHelper.WriteLine($"rule: {Environment.NewLine}" +
+                                        $"{rule.ExpressionDebugView()}");
+
+            var game = rule.Execute();
+            game.Should().NotBeNull();
+            game.Name.Should().Be("game");
+            _testOutputHelper.WriteLine($"{game}");
+        }
+
+        [Fact]
+        public void CallStaticVoidMethodUsingFactory()
+        {
+            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "ModelForUnitTests.Game", null);
  
             var compileResult = rule.Compile();
             compileResult.Should().BeTrue();
@@ -157,9 +197,9 @@ namespace RuleFactory.Tests.RulesFactory
         }
 
         [Fact]
-        public void CallStaticVoidMethod2()
+        public void CallStaticVoidMethod2UsingFactory()
         {
-            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "SampleModel.Game", 
+            var rule = MethodCallRulesFactory.CreateStaticVoidMethodCallRule("SomeVoidStaticMethod", "ModelForUnitTests.Game", 
                                                                             new List<Rule>{new ConstantRule<int> {Value = "99"}});
 
             var compileResult = rule.Compile();

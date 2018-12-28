@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Rules;
 using RuleFactory.RulesFactory;
-using Sample3PlaceOrderRulesUsingFactory.Model;
+using SampleModel;
 
 namespace Sample3PlaceOrderRulesUsingFactory
 {
@@ -23,13 +23,13 @@ namespace Sample3PlaceOrderRulesUsingFactory
 
             LoadAndCompileRules();
 
-            var commmandLineApplication = new CommandLineApplication(throwOnUnexpectedArg:false);
-            commmandLineApplication.HelpOption("-? | -h | --help");
-            var orderCommand = commmandLineApplication.Option(
+            var commandLineApplication = new CommandLineApplication(throwOnUnexpectedArg:false);
+            commandLineApplication.HelpOption("-? | -h | --help");
+            var orderCommand = commandLineApplication.Option(
                  "-o | --order", "Place an order", CommandOptionType.NoValue
             );
 
-            commmandLineApplication.OnExecute(() =>
+            commandLineApplication.OnExecute(() =>
             {
                 if (orderCommand.HasValue())
                     PlaceAnOrder();
@@ -37,7 +37,7 @@ namespace Sample3PlaceOrderRulesUsingFactory
                 return 0;
             });
 
-            commmandLineApplication.Execute(args);
+            commandLineApplication.Execute(args);
         }
 
         private static void LoadAndCompileRules()
