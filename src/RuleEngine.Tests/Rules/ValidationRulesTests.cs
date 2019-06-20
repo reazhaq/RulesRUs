@@ -205,6 +205,9 @@ namespace RuleEngine.Tests.Rules
         }
 
         [Fact]
+        // same as RuleToCheckIfRootObjectIsNullOrNot test - just not doing it in a simpler way
+        // RuleToCheckIfRootObjectIsNullOrNot produces => (Param_0 == null) and (Param_0 != null)
+        // this rule produces => Not((Param_0 != null))
         public void ValidationRuleWithOneNotChild()
         {
             var gameNullRuleByUsingNotWithNotEqualToNullChild = new ValidationRule<Game>
@@ -222,7 +225,8 @@ namespace RuleEngine.Tests.Rules
 
             var compileResult = gameNullRuleByUsingNotWithNotEqualToNullChild.Compile();
             compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(gameNullRuleByUsingNotWithNotEqualToNullChild)}:{Environment.NewLine}{gameNullRuleByUsingNotWithNotEqualToNullChild.ExpressionDebugView()}");
+            _testOutputHelper.WriteLine($"{nameof(gameNullRuleByUsingNotWithNotEqualToNullChild)}:{Environment.NewLine}" +
+                                        $"{gameNullRuleByUsingNotWithNotEqualToNullChild.ExpressionDebugView()}");
 
 
             var validationResult = gameNullRuleByUsingNotWithNotEqualToNullChild.IsValid(_game);

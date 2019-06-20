@@ -92,5 +92,25 @@ namespace RuleFactory.Tests
             foo.Should().BeTrue();
             _testOutputHelper.WriteLine(rule2.ExpressionDebugView());
         }
+
+        [Fact]
+        public void Test4()
+        {
+            var rule = new ConstantRule<int>{Value = "55"};;
+            var settings = new JsonSerializerSettings()
+            {
+                ContractResolver = new CamelCasePropertyNamesContractResolver(),
+                Formatting = Formatting.Indented
+            };
+            settings.Converters.Add(new JsonConverterForRule());
+		
+            var json = JsonConvert.SerializeObject(rule, settings);
+            _testOutputHelper.WriteLine(json);
+
+            var rule2 = JsonConvert.DeserializeObject<Rule>(json, settings);
+            var foo = rule2.Compile();
+            foo.Should().BeTrue();
+            _testOutputHelper.WriteLine(rule2.ExpressionDebugView());
+        }
     }
 }

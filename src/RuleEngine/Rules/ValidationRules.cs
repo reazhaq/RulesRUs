@@ -32,8 +32,10 @@ namespace RuleEngine.Rules
 
             if (!ChildrenRules.Any())
             {
+                if (ValueToValidateAgainst == null)
+                    throw new RuleEngineException($"{nameof(ValueToValidateAgainst)} can't be null");
                 var targetValueParam = Expression.Parameter(typeof(Rule));
-                var targetValueExpression = ValueToValidateAgainst?.BuildExpression(targetValueParam);
+                var targetValueExpression = ValueToValidateAgainst.BuildExpression(targetValueParam);
 
                 var leftExpression = GetExpressionWithSubProperty(rootParameterExpression, ObjectToValidate);
                 var binaryExpressionBody = Expression.MakeBinary(operatorToUse, leftExpression, targetValueExpression);
