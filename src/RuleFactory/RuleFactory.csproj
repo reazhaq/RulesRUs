@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Reaz</Authors>
     <Company>Bluebonnet Software</Company>
     <Description>Rule factory to create expression tree based rules.  Rules Factory can help create rules; since there may be too many details to keep track for a complex rule.</Description>
@@ -20,7 +20,7 @@ https://github.com/reazhaq/RulesRUs/blob/master/RELEASENOTES.MD
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>

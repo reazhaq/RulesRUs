@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Authors>Reaz</Authors>
     <Company>Bluebonnet Software</Company>
     <Description>Create-compile-execute simple business rules at runtime. Built using Expression Tree; once compiled, rule can be executed over and over... with almost next to nothing execution time</Description>
