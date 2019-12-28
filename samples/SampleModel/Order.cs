@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿
+using System.Text.Json;
 
 namespace SampleModel
 {
@@ -9,7 +10,7 @@ namespace SampleModel
 
         public override string ToString()
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented);
+            return JsonSerializer.Serialize(this, new JsonSerializerOptions {WriteIndented = true});
         }
     }
 }

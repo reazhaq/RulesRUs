@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.CommandLineUtils;
-using Newtonsoft.Json;
 using RuleEngine.Interfaces.Rules;
 using RuleEngine.Rules;
 using SampleModel;
@@ -141,8 +143,11 @@ namespace Sample1PlaceOrder
                     ruleErrors.Add(orderRule.RuleError);
             }
 
-            Console.WriteLine("Errors found:");
-            Console.WriteLine(JsonConvert.SerializeObject(ruleErrors, Formatting.Indented));
+            if(ruleErrors.Any())
+            {
+                Console.WriteLine("Errors found:");
+                Console.WriteLine(JsonSerializer.Serialize(ruleErrors, new JsonSerializerOptions {WriteIndented = true}));
+            }
             Console.WriteLine("hit any key to end");
             Console.ReadKey();
         }

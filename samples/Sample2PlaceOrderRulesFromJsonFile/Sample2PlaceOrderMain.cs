@@ -128,7 +128,7 @@ namespace Sample2PlaceOrderRulesFromJsonFile
         private static void SaveRulesToFile()
         {
             var jsonConverter = new JsonConverterForRule();
-            using (var file = new StreamWriter(_ruleFileName))
+            using var file = new StreamWriter(_ruleFileName);
             foreach (var orderRule in OrderRules)
             {
                 var json = JsonConvert.SerializeObject(orderRule, jsonConverter);
