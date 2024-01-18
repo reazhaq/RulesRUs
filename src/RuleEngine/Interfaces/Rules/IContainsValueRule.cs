@@ -1,7 +1,6 @@
-﻿namespace RuleEngine.Interfaces.Rules
+﻿namespace RuleEngine.Interfaces.Rules;
+
+public interface IContainsValueRule<in T>
 {
-    public interface IContainsValueRule<in T>
-    {
-        bool ContainsValue(T valueToSearch);
-    }
+    bool ContainsValue(T valueToSearch);
 }

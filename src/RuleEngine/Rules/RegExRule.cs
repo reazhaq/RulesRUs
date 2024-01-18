@@ -1,59 +1,51 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq.Expressions;
-using System.Text.RegularExpressions;
-using RuleEngine.Common;
-using RuleEngine.Interfaces.Rules;
+﻿namespace RuleEngine.Rules;
 
-namespace RuleEngine.Rules
+public class RegExRule<T> : Rule, IRegExRule<T>
 {
-    public class RegExRule<T> : Rule, IRegExRule<T>
+    private Func<T, bool> CompiledDelegate { get; set; }
+
+    public string RegExToUse;
+    public string ObjectToValidate { get; set; }
+
+    public override Expression BuildExpression(params ParameterExpression[] parameters)
     {
-        private Func<T, bool> CompiledDelegate { get; set; }
+        if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T))
+            throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
 
-        public string RegExToUse;
-        public string ObjectToValidate { get; set; }
+        var param = parameters[0];
+        ExpressionForThisRule = GetExpressionWithSubPropertyForIsMatch(param);
+        return ExpressionForThisRule;
+    }
 
-        public override Expression BuildExpression(params ParameterExpression[] parameters)
-        {
-            if (parameters == null || parameters.Length != 1 || parameters[0].Type != typeof(T))
-                throw new RuleEngineException($"{nameof(BuildExpression)} must call with one parameter of {typeof(T)}");
+    public override bool Compile()
+    {
+        var funcParameter = Expression.Parameter(typeof(T));
+        ExpressionForThisRule = BuildExpression(funcParameter);
+        if (ExpressionForThisRule == null) return false;
 
-            var param = parameters[0];
-            ExpressionForThisRule = GetExpressionWithSubPropertyForIsMatch(param);
-            return ExpressionForThisRule;
-        }
+        Debug.WriteLine($"{nameof(ExpressionForThisRule)}:" +
+                        $"{Environment.NewLine}{ExpressionDebugView()}");
 
-        public override bool Compile()
-        {
-            var funcParameter = Expression.Parameter(typeof(T));
-            ExpressionForThisRule = BuildExpression(funcParameter);
-            if (ExpressionForThisRule == null) return false;
+        CompiledDelegate = Expression.Lambda<Func<T, bool>>(ExpressionForThisRule, funcParameter).Compile();
+        return CompiledDelegate != null;
+    }
 
-            Debug.WriteLine($"{nameof(ExpressionForThisRule)}:" +
-                            $"{Environment.NewLine}{ExpressionDebugView()}");
+    public bool IsMatch(T targetObject)
+    {
+        if (CompiledDelegate == null)
+            throw new RuleEngineException("A Rule must be compiled first");
 
-            CompiledDelegate = Expression.Lambda<Func<T, bool>>(ExpressionForThisRule, funcParameter).Compile();
-            return CompiledDelegate != null;
-        }
+        return CompiledDelegate(targetObject);
+    }
 
-        public bool IsMatch(T targetObject)
-        {
-            if (CompiledDelegate == null)
-                throw new RuleEngineException("A Rule must be compiled first");
+    private Expression GetExpressionWithSubPropertyForIsMatch(ParameterExpression parameterExpression)
+    {
+        var fieldOrProperty = GetExpressionWithSubProperty(parameterExpression, ObjectToValidate);
+        var isMatchParameters = new[] {typeof(string), typeof(string), typeof(RegexOptions)};
+        var isMatchMethod = typeof(Regex).GetMethod("IsMatch", isMatchParameters);
 
-            return CompiledDelegate(targetObject);
-        }
-
-        private Expression GetExpressionWithSubPropertyForIsMatch(ParameterExpression parameterExpression)
-        {
-            var fieldOrProperty = GetExpressionWithSubProperty(parameterExpression, ObjectToValidate);
-            var isMatchParameters = new[] {typeof(string), typeof(string), typeof(RegexOptions)};
-            var isMatchMethod = typeof(Regex).GetMethod("IsMatch", isMatchParameters);
-
-            return Expression.Call(isMatchMethod, fieldOrProperty,
-                Expression.Constant(RegExToUse, typeof(string)),
-                Expression.Constant(RegexOptions.IgnoreCase, typeof(RegexOptions)));
-        }
+        return Expression.Call(isMatchMethod, fieldOrProperty,
+            Expression.Constant(RegExToUse, typeof(string)),
+            Expression.Constant(RegexOptions.IgnoreCase, typeof(RegexOptions)));
     }
 }

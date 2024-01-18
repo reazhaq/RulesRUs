@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-
-namespace ModelForUnitTests
+﻿namespace ModelForUnitTests
 {
     public class Game
     {

@@ -1,7 +1,6 @@
-﻿namespace RuleEngine.Interfaces.Rules
+﻿namespace RuleEngine.Interfaces.Rules;
+
+public interface ISelfReturnRule<T>
 {
-    public interface ISelfReturnRule<T>
-    {
-        T Get(T param);
-    }
+    T Get(T param);
 }

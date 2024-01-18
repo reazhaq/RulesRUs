@@ -1,0 +1,11 @@
+﻿global using RuleEngine.Common;
+global using RuleEngine.Interfaces.Rules;
+global using RuleEngine.Utils;
+global using System;
+global using System.Collections.Generic;
+global using System.Diagnostics;
+global using System.Linq;
+global using System.Linq.Expressions;
+global using System.Reflection;
+global using System.Text;
+global using System.Text.RegularExpressions;

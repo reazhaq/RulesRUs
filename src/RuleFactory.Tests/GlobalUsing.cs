@@ -1,0 +1,13 @@
+﻿global using FluentAssertions;
+global using ModelForUnitTests;
+global using Newtonsoft.Json;
+global using Newtonsoft.Json.Serialization;
+global using RuleEngine.Common;
+global using RuleEngine.Rules;
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using Xunit;
+global using Xunit.Abstractions;
+global using RuleFactory.RulesFactory;
+global using RuleFactory.Tests.Fixture;

@@ -1,9 +1,6 @@
-﻿using RuleEngine.Rules;
+﻿namespace RuleFactory.RulesFactory;
 
-namespace RuleFactory.RulesFactory
+public static class SelfReturnRuleFactory
 {
-    public static class SelfReturnRuleFactory
-    {
-        public static SelfReturnRule<T> CreateSelfReturnRule<T>() => new SelfReturnRule<T>();
-    }
+    public static SelfReturnRule<T> CreateSelfReturnRule<T>() => new SelfReturnRule<T>();
 }

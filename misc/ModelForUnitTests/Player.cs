@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace ModelForUnitTests
+﻿namespace ModelForUnitTests
 {
     public class Player
     {

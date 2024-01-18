@@ -1,326 +1,317 @@
-﻿using FluentAssertions;
-using RuleEngine.Rules;
-using System;
-using System.Linq.Expressions;
-using ModelForUnitTests;
-using Xunit;
-using Xunit.Abstractions;
+﻿namespace RuleEngine.Tests.Rules;
 
-namespace RuleEngine.Tests.Rules
+public class ConditionalRulesTests
 {
-    public class ConditionalRulesTests
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public ConditionalRulesTests(ITestOutputHelper testOutputHelper)
     {
-        private readonly ITestOutputHelper _testOutputHelper;
+        _testOutputHelper = testOutputHelper;
+    }
 
-        public ConditionalRulesTests(ITestOutputHelper testOutputHelper)
+    [Theory]
+    [InlineData("one", "six-six-six")]
+    [InlineData("tWo", "six-six-six")]
+    [InlineData("blah", "blah")]
+    [InlineData("nine", "nine")]
+    public void IfValueContainsReturnDiffValue(string searchValue, string expectedValue)
+    {
+        var valueReplacementIfBad = new ConditionalFuncRule<string, string>
         {
-            _testOutputHelper = testOutputHelper;
-        }
-
-        [Theory]
-        [InlineData("one", "six-six-six")]
-        [InlineData("tWo", "six-six-six")]
-        [InlineData("blah", "blah")]
-        [InlineData("nine", "nine")]
-        public void IfValueContainsReturnDiffValue(string searchValue, string expectedValue)
-        {
-            var valueReplacementIfBad = new ConditionalFuncRule<string, string>
+            ConditionRule = new ContainsValueRule<string>
             {
-                ConditionRule = new ContainsValueRule<string>
-                {
-                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
-                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
-                },
-                TrueRule = new ExpressionFuncRule<string, string>(s => "six-six-six"),
-                FalseRule = new ExpressionFuncRule<string, string>(s => s)
-            };
+                EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+            },
+            TrueRule = new ExpressionFuncRule<string, string>(s => "six-six-six"),
+            FalseRule = new ExpressionFuncRule<string, string>(s => s)
+        };
 
-            var compileResult = valueReplacementIfBad.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
-                                        $"{valueReplacementIfBad.ExpressionDebugView()}");
+        var compileResult = valueReplacementIfBad.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
+                                    $"{valueReplacementIfBad.ExpressionDebugView()}");
 
-            var ruleResult = valueReplacementIfBad.Execute(searchValue);
-            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
-            ruleResult.Should().Be(expectedValue);
-        }
+        var ruleResult = valueReplacementIfBad.Execute(searchValue);
+        _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
+        ruleResult.Should().Be(expectedValue);
+    }
 
-        [Theory]
-        [InlineData("one", "six-six-six")]
-        [InlineData("tWo", "six-six-six")]
-        [InlineData("blah", "blah")]
-        [InlineData("nine", "nine")]
-        public void IfValueContainsReturnDiffValue2(string searchValue, string expectedValue)
+    [Theory]
+    [InlineData("one", "six-six-six")]
+    [InlineData("tWo", "six-six-six")]
+    [InlineData("blah", "blah")]
+    [InlineData("nine", "nine")]
+    public void IfValueContainsReturnDiffValue2(string searchValue, string expectedValue)
+    {
+        var valueReplacementIfBad = new ConditionalFuncRule<string, string>
         {
-            var valueReplacementIfBad = new ConditionalFuncRule<string, string>
+            ConditionRule = new ContainsValueRule<string>
             {
-                ConditionRule = new ContainsValueRule<string>
-                {
-                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
-                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
-                },
-                TrueRule = new ConstantRule<string,string>{Value = "six-six-six"},
-                FalseRule = new SelfReturnRule<string>()
-            };
+                EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+            },
+            TrueRule = new ConstantRule<string,string>{Value = "six-six-six"},
+            FalseRule = new SelfReturnRule<string>()
+        };
 
-            var compileResult = valueReplacementIfBad.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
-                                        $"{valueReplacementIfBad.ExpressionDebugView()}");
+        var compileResult = valueReplacementIfBad.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(valueReplacementIfBad)}:{Environment.NewLine}" +
+                                    $"{valueReplacementIfBad.ExpressionDebugView()}");
 
-            var ruleResult = valueReplacementIfBad.Execute(searchValue);
-            _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
-            ruleResult.Should().Be(expectedValue);
-        }
+        var ruleResult = valueReplacementIfBad.Execute(searchValue);
+        _testOutputHelper.WriteLine($"expected: {expectedValue} - actual: {ruleResult}");
+        ruleResult.Should().Be(expectedValue);
+    }
 
-        [Theory]
-        [InlineData(2)]
-        [InlineData(3)]
-        public void ConditionalOutput(int evenOddValue)
+    [Theory]
+    [InlineData(2)]
+    [InlineData(3)]
+    public void ConditionalOutput(int evenOddValue)
+    {
+        var evenOrOddOutput = new ConditionalIfThElActionRule<int>
         {
-            var evenOrOddOutput = new ConditionalIfThElActionRule<int>
-            {
-                ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
-                TrueRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is even")),
-                FalseRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is odd"))
-            };
+            ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
+            TrueRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is even")),
+            FalseRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is odd"))
+        };
 
-            var compileResult = evenOrOddOutput.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(evenOrOddOutput)}:{Environment.NewLine}" +
-                                        $"{evenOrOddOutput.ExpressionDebugView()}");
+        var compileResult = evenOrOddOutput.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(evenOrOddOutput)}:{Environment.NewLine}" +
+                                    $"{evenOrOddOutput.ExpressionDebugView()}");
 
-            evenOrOddOutput.Execute(evenOddValue);
-        }
+        evenOrOddOutput.Execute(evenOddValue);
+    }
 
-        [Theory]
-        [InlineData(22)]
-        [InlineData(33)]
-        [InlineData(44)]
-        [InlineData(55)]
-        public void ConditionalOutputWithElseEmpty(int evenOddValue)
+    [Theory]
+    [InlineData(22)]
+    [InlineData(33)]
+    [InlineData(44)]
+    [InlineData(55)]
+    public void ConditionalOutputWithElseEmpty(int evenOddValue)
+    {
+        var evenOrOddOutput = new ConditionalIfThElActionRule<int>
         {
-            var evenOrOddOutput = new ConditionalIfThElActionRule<int>
-            {
-                ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
-                TrueRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is even")),
-                FalseRule = new ExpressionActionRule<int>(i => Expression.Empty())
-            };
+            ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
+            TrueRule = new ExpressionActionRule<int>(i => _testOutputHelper.WriteLine($"{i} is even")),
+            FalseRule = new ExpressionActionRule<int>(i => Expression.Empty())
+        };
 
-            var compileResult = evenOrOddOutput.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(evenOrOddOutput)}:{Environment.NewLine}" +
-                                        $"{evenOrOddOutput.ExpressionDebugView()}");
+        var compileResult = evenOrOddOutput.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(evenOrOddOutput)}:{Environment.NewLine}" +
+                                    $"{evenOrOddOutput.ExpressionDebugView()}");
 
-            evenOrOddOutput.Execute(evenOddValue);
-        }
+        evenOrOddOutput.Execute(evenOddValue);
+    }
 
-        [Theory]
-        [InlineData(2, "2 is even")]
-        [InlineData(3, "3 is odd")]
-        public void ConditionalOut(int evenOddValue, string expectedResult)
+    [Theory]
+    [InlineData(2, "2 is even")]
+    [InlineData(3, "3 is odd")]
+    public void ConditionalOut(int evenOddValue, string expectedResult)
+    {
+        var evenOrOddResult = new ConditionalFuncRule<int, string>
         {
-            var evenOrOddResult = new ConditionalFuncRule<int, string>
-            {
-                ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
-                TrueRule = new ExpressionFuncRule<int, string>(i => string.Format($"{i} is even")),
-                FalseRule = new ExpressionFuncRule<int, string>(i => string.Format($"{i} is odd"))
-            };
+            ConditionRule = new ExpressionFuncRule<int, bool>(i => i % 2 == 0),
+            TrueRule = new ExpressionFuncRule<int, string>(i => string.Format($"{i} is even")),
+            FalseRule = new ExpressionFuncRule<int, string>(i => string.Format($"{i} is odd"))
+        };
 
-            var compileResult = evenOrOddResult.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(evenOrOddResult)}:{Environment.NewLine}" +
-                                        $"{evenOrOddResult.ExpressionDebugView()}");
+        var compileResult = evenOrOddResult.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(evenOrOddResult)}:{Environment.NewLine}" +
+                                    $"{evenOrOddResult.ExpressionDebugView()}");
 
-            var ruleResult = evenOrOddResult.Execute(evenOddValue);
-            _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {ruleResult}");
-            ruleResult.Should().BeEquivalentTo(expectedResult);
-        }
+        var ruleResult = evenOrOddResult.Execute(evenOddValue);
+        _testOutputHelper.WriteLine($"expected: {expectedResult} - actual: {ruleResult}");
+        ruleResult.Should().BeEquivalentTo(expectedResult);
+    }
 
-        [Theory]
-        [InlineData("one", "element is present in the collection")]
-        [InlineData("nine", "element is not present in the collection")]
-        public void ConditionalWithConstantRule(string valueToCheck, string expectedOutput)
+    [Theory]
+    [InlineData("one", "element is present in the collection")]
+    [InlineData("nine", "element is not present in the collection")]
+    public void ConditionalWithConstantRule(string valueToCheck, string expectedOutput)
+    {
+        var containsTextRule = new ConditionalFuncRule<string, string>
         {
-            var containsTextRule = new ConditionalFuncRule<string, string>
+            ConditionRule = new ContainsValueRule<string>
             {
-                ConditionRule = new ContainsValueRule<string>
-                {
-                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
-                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
-                },
-                TrueRule = new ConstantRule<string, string> { Value = "element is present in the collection" },
-                FalseRule = new ConstantRule<string, string> { Value = "element is not present in the collection" }
-            };
+                EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+            },
+            TrueRule = new ConstantRule<string, string> { Value = "element is present in the collection" },
+            FalseRule = new ConstantRule<string, string> { Value = "element is not present in the collection" }
+        };
 
-            var compileResult = containsTextRule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(containsTextRule)}:{Environment.NewLine}" +
-                                        $"{containsTextRule.ExpressionDebugView()}");
+        var compileResult = containsTextRule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(containsTextRule)}:{Environment.NewLine}" +
+                                    $"{containsTextRule.ExpressionDebugView()}");
 
-            var ruleResult = containsTextRule.Execute(valueToCheck);
-            _testOutputHelper.WriteLine($"expected: {expectedOutput} - actual: {ruleResult}");
-            ruleResult.Should().BeEquivalentTo(expectedOutput);
-        }
+        var ruleResult = containsTextRule.Execute(valueToCheck);
+        _testOutputHelper.WriteLine($"expected: {expectedOutput} - actual: {ruleResult}");
+        ruleResult.Should().BeEquivalentTo(expectedOutput);
+    }
 
-        [Theory]
-        [InlineData("one", true)]
-        [InlineData("nine", false)]
-        public void ConditionalWithConstantRule2(string valueToCheck, bool expectedOutput)
+    [Theory]
+    [InlineData("one", true)]
+    [InlineData("nine", false)]
+    public void ConditionalWithConstantRule2(string valueToCheck, bool expectedOutput)
+    {
+        var containsTextRule = new ConditionalFuncRule<string, bool>
         {
-            var containsTextRule = new ConditionalFuncRule<string, bool>
+            ConditionRule = new ContainsValueRule<string>
             {
-                ConditionRule = new ContainsValueRule<string>
-                {
-                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
-                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
-                },
-                TrueRule = new ConstantRule<string, bool> { Value = "true" },
-                FalseRule = new ConstantRule<string, bool> { Value = "false" }
-            };
+                EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+            },
+            TrueRule = new ConstantRule<string, bool> { Value = "true" },
+            FalseRule = new ConstantRule<string, bool> { Value = "false" }
+        };
 
-            var compileResult = containsTextRule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(containsTextRule)}:{Environment.NewLine}" +
-                                        $"{containsTextRule.ExpressionDebugView()}");
+        var compileResult = containsTextRule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(containsTextRule)}:{Environment.NewLine}" +
+                                    $"{containsTextRule.ExpressionDebugView()}");
 
-            var ruleResult = containsTextRule.Execute(valueToCheck);
-            _testOutputHelper.WriteLine($"expected: {expectedOutput} - actual: {ruleResult}");
-            ruleResult.Should().Be(expectedOutput);
-        }
+        var ruleResult = containsTextRule.Execute(valueToCheck);
+        _testOutputHelper.WriteLine($"expected: {expectedOutput} - actual: {ruleResult}");
+        ruleResult.Should().Be(expectedOutput);
+    }
 
-        [Theory]
-        [InlineData("one", "true", "false", true)]
-        [InlineData("nine", "true", "null", null)]
-        public void ConditionalWithConstantRule3(string valueToCheck, string trueRuleValue, string falseRuleValue, bool? expectedOutput)
+    [Theory]
+    [InlineData("one", "true", "false", true)]
+    [InlineData("nine", "true", "null", null)]
+    public void ConditionalWithConstantRule3(string valueToCheck, string trueRuleValue, string falseRuleValue, bool? expectedOutput)
+    {
+        var containsTextRule = new ConditionalFuncRule<string, bool?>
         {
-            var containsTextRule = new ConditionalFuncRule<string, bool?>
+            ConditionRule = new ContainsValueRule<string>
             {
-                ConditionRule = new ContainsValueRule<string>
-                {
-                    EqualityComparer = StringComparer.OrdinalIgnoreCase,
-                    CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
-                },
-                TrueRule = new ConstantRule<string, bool?> { Value = trueRuleValue },
-                FalseRule = new ConstantRule<string, bool?> { Value = falseRuleValue }
-            };
+                EqualityComparer = StringComparer.OrdinalIgnoreCase,
+                CollectionToSearch = { "one", "two", "three", "four", "five", "six" }
+            },
+            TrueRule = new ConstantRule<string, bool?> { Value = trueRuleValue },
+            FalseRule = new ConstantRule<string, bool?> { Value = falseRuleValue }
+        };
 
-            var compileResult = containsTextRule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(containsTextRule)}:{Environment.NewLine}" +
-                                        $"{containsTextRule.ExpressionDebugView()}");
+        var compileResult = containsTextRule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(containsTextRule)}:{Environment.NewLine}" +
+                                    $"{containsTextRule.ExpressionDebugView()}");
 
-            var ruleResult = containsTextRule.Execute(valueToCheck);
-            _testOutputHelper.WriteLine($"expected: {expectedOutput} - actual: {ruleResult}");
-            ruleResult.Should().Be(expectedOutput);
-        }
+        var ruleResult = containsTextRule.Execute(valueToCheck);
+        _testOutputHelper.WriteLine($"expected: {expectedOutput} - actual: {ruleResult}");
+        ruleResult.Should().Be(expectedOutput);
+    }
 
-        [Fact]
-        public void ConditionalRuleToUpdateName()
+    [Fact]
+    public void ConditionalRuleToUpdateName()
+    {
+        var conditionalUpdateValue = new ConditionalIfThActionRule<Game>
         {
-            var conditionalUpdateValue = new ConditionalIfThActionRule<Game>
+            ConditionRule = new MethodCallRule<Game, bool>
             {
-                ConditionRule = new MethodCallRule<Game, bool>
-                {
-                    ObjectToCallMethodOn = "Name",
-                    MethodToCall = "Equals",
-                    MethodParameters = {
-                        new ConstantRule<string> { Value = "some name" }, 
-                        new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
-                    }
-                },
-                TrueRule = new UpdateValueRule<Game>
-                {
-                    ObjectToUpdate = "Name",
-                    SourceDataRule = new ConstantRule<string> { Value = "updated name" }
+                ObjectToCallMethodOn = "Name",
+                MethodToCall = "Equals",
+                MethodParameters = {
+                    new ConstantRule<string> { Value = "some name" }, 
+                    new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
                 }
-            };
+            },
+            TrueRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Name",
+                SourceDataRule = new ConstantRule<string> { Value = "updated name" }
+            }
+        };
 
-            var compileResult = conditionalUpdateValue.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(conditionalUpdateValue)}:{Environment.NewLine}" +
-                                        $"{conditionalUpdateValue.ExpressionDebugView()}");
+        var compileResult = conditionalUpdateValue.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(conditionalUpdateValue)}:{Environment.NewLine}" +
+                                    $"{conditionalUpdateValue.ExpressionDebugView()}");
 
-            var game = new Game { Name = "some name" };
-            _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
-            conditionalUpdateValue.Execute(game);
-            _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
-            game.Name.Should().Be("updated name");
-        }
+        var game = new Game { Name = "some name" };
+        _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
+        conditionalUpdateValue.Execute(game);
+        _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
+        game.Name.Should().Be("updated name");
+    }
 
-        [Fact]
-        public void ConditionalRuleToUpdateNameToSomethingElse()
+    [Fact]
+    public void ConditionalRuleToUpdateNameToSomethingElse()
+    {
+        var conditionalIfThElRule = new ConditionalIfThElActionRule<Game>
         {
-            var conditionalIfThElRule = new ConditionalIfThElActionRule<Game>
+            ConditionRule = new MethodCallRule<Game, bool>
             {
-                ConditionRule = new MethodCallRule<Game, bool>
-                {
-                    ObjectToCallMethodOn = "Name",
-                    MethodToCall = "Equals",
-                    MethodParameters = {
-                        new ConstantRule<string> { Value = "some name" }, 
-                        new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
-                    }
-                },
-                TrueRule = new UpdateValueRule<Game>
-                {
-                    ObjectToUpdate = "Name",
-                    SourceDataRule = new ConstantRule<string> { Value = "true name" }
-                },
-                FalseRule = new UpdateValueRule<Game>
-                {
-                    ObjectToUpdate = "Name",
-                    SourceDataRule = new ConstantRule<string> { Value = "false name" }
+                ObjectToCallMethodOn = "Name",
+                MethodToCall = "Equals",
+                MethodParameters = {
+                    new ConstantRule<string> { Value = "some name" }, 
+                    new ConstantRule<StringComparison> { Value = "CurrentCultureIgnoreCase" }
                 }
-            };
+            },
+            TrueRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Name",
+                SourceDataRule = new ConstantRule<string> { Value = "true name" }
+            },
+            FalseRule = new UpdateValueRule<Game>
+            {
+                ObjectToUpdate = "Name",
+                SourceDataRule = new ConstantRule<string> { Value = "false name" }
+            }
+        };
 
-            var compileResult = conditionalIfThElRule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(conditionalIfThElRule)}:{Environment.NewLine}" +
-                                        $"{conditionalIfThElRule.ExpressionDebugView()}");
+        var compileResult = conditionalIfThElRule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(conditionalIfThElRule)}:{Environment.NewLine}" +
+                                    $"{conditionalIfThElRule.ExpressionDebugView()}");
 
-            var game = new Game { Name = "some name" };
-            _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
-            conditionalIfThElRule.Execute(game);
-            _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
-            game.Name.Should().Be("true name");
+        var game = new Game { Name = "some name" };
+        _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
+        conditionalIfThElRule.Execute(game);
+        _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
+        game.Name.Should().Be("true name");
 
-            conditionalIfThElRule.Execute(game);
-            _testOutputHelper.WriteLine($"after after game.Name: {game.Name}");
-            game.Name.Should().Be("false name");
-        }
+        conditionalIfThElRule.Execute(game);
+        _testOutputHelper.WriteLine($"after after game.Name: {game.Name}");
+        game.Name.Should().Be("false name");
+    }
 
-        [Fact]
-        public void ConditionalRuleLookAtOneValueUpdateAnother()
+    [Fact]
+    public void ConditionalRuleLookAtOneValueUpdateAnother()
+    {
+        var conditionalUpdate = new ConditionalIfThActionRule<Player>
         {
-            var conditionalUpdate = new ConditionalIfThActionRule<Player>
+            ConditionRule = new ValidationRule<Player>
             {
-                ConditionRule = new ValidationRule<Player>
-                {
-                    ObjectToValidate = "Country.CountryCode",
-                    OperatorToUse = "Equal",
-                    ValueToValidateAgainst = new ConstantRule<string> { Value = "ab" }
-                },
-                TrueRule = new UpdateValueRule<Player>
-                {
-                    ObjectToUpdate = "CurrentCoOrdinates.X",
-                    SourceDataRule = new ConstantRule<int> { Value = "999" }
-                }
-            };
-
-            var compileResult = conditionalUpdate.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(conditionalUpdate)}:{Environment.NewLine}" +
-                                        $"{conditionalUpdate.ExpressionDebugView()}");
-
-            var player = new Player
+                ObjectToValidate = "Country.CountryCode",
+                OperatorToUse = "Equal",
+                ValueToValidateAgainst = new ConstantRule<string> { Value = "ab" }
+            },
+            TrueRule = new UpdateValueRule<Player>
             {
-                Country = new Country { CountryCode = "ab" },
-                CurrentCoOrdinates = new CoOrdinate { X = 1, Y = 1 }
-            };
-            conditionalUpdate.Execute(player);
-            player.CurrentCoOrdinates.X.Should().Be(999);
-            _testOutputHelper.WriteLine($"expected: 999 - actual: {player.CurrentCoOrdinates.X}");
-        }
+                ObjectToUpdate = "CurrentCoOrdinates.X",
+                SourceDataRule = new ConstantRule<int> { Value = "999" }
+            }
+        };
+
+        var compileResult = conditionalUpdate.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(conditionalUpdate)}:{Environment.NewLine}" +
+                                    $"{conditionalUpdate.ExpressionDebugView()}");
+
+        var player = new Player
+        {
+            Country = new Country { CountryCode = "ab" },
+            CurrentCoOrdinates = new CoOrdinate { X = 1, Y = 1 }
+        };
+        conditionalUpdate.Execute(player);
+        player.CurrentCoOrdinates.X.Should().Be(999);
+        _testOutputHelper.WriteLine($"expected: 999 - actual: {player.CurrentCoOrdinates.X}");
     }
 }

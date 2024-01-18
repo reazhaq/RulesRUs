@@ -1,116 +1,108 @@
-﻿using System;
-using FluentAssertions;
-using ModelForUnitTests;
-using RuleEngine.Rules;
-using Xunit;
-using Xunit.Abstractions;
+﻿namespace RuleEngine.Tests.Rules;
 
-namespace RuleEngine.Tests.Rules
+public class UpdateRulesTests
 {
-    public class UpdateRulesTests
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public UpdateRulesTests(ITestOutputHelper testOutputHelper)
     {
-        private readonly ITestOutputHelper _testOutputHelper;
+        _testOutputHelper = testOutputHelper;
+    }
 
-        public UpdateRulesTests(ITestOutputHelper testOutputHelper)
+    [Fact]
+    public void UpdatePropertyStingWithDifferentValue()
+    {
+        var game = new Game {Name = "game name"};
+        var nameChangeRule = new UpdateValueRule<Game, string>
         {
-            _testOutputHelper = testOutputHelper;
-        }
+            ObjectToUpdate = "Name"
+        };
 
-        [Fact]
-        public void UpdatePropertyStingWithDifferentValue()
+        var compileResult = nameChangeRule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}" +
+                                    $"{nameChangeRule.ExpressionDebugView()}");
+
+        _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
+        nameChangeRule.UpdateFieldOrPropertyValue(game, "new name");
+        game.Name.Should().Be("new name");
+        _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
+    }
+
+    [Fact]
+    public void UpdatePropertyFromAnotherRule()
+    {
+        var game = new Game {Name = "game name"};
+        var nameChangeRule = new UpdateValueRule<Game>
         {
-            var game = new Game {Name = "game name"};
-            var nameChangeRule = new UpdateValueRule<Game, string>
-            {
-                ObjectToUpdate = "Name"
-            };
+            ObjectToUpdate = "Name",
+            SourceDataRule = new ConstantRule<string> {Value = "name from constant rule"}
+        };
 
-            var compileResult = nameChangeRule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}" +
-                                        $"{nameChangeRule.ExpressionDebugView()}");
+        var compileResult = nameChangeRule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}" +
+                                    $"{nameChangeRule.ExpressionDebugView()}");
 
-            _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
-            nameChangeRule.UpdateFieldOrPropertyValue(game, "new name");
-            game.Name.Should().Be("new name");
-            _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
-        }
+        _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
+        nameChangeRule.UpdateFieldOrPropertyValue(game);
+        game.Name.Should().Be("name from constant rule");
+        _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
+    }
 
-        [Fact]
-        public void UpdatePropertyFromAnotherRule()
+    [Fact]
+    public void UpdateStringRef()
+    {
+        // source value is fixed with a constant rule
+        var rule = new UpdateRefValueRule<string>
         {
-            var game = new Game {Name = "game name"};
-            var nameChangeRule = new UpdateValueRule<Game>
-            {
-                ObjectToUpdate = "Name",
-                SourceDataRule = new ConstantRule<string> {Value = "name from constant rule"}
-            };
+            SourceDataRule = new ConstantRule<string>{Value = "something"}
+        };
 
-            var compileResult = nameChangeRule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{nameof(nameChangeRule)}:{Environment.NewLine}" +
-                                        $"{nameChangeRule.ExpressionDebugView()}");
+        var compileResult = rule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"UpdateRefValueRule<string>:{Environment.NewLine}" +
+                                    $"{rule.ExpressionDebugView()}");
 
-            _testOutputHelper.WriteLine($"before game.Name: {game.Name}");
-            nameChangeRule.UpdateFieldOrPropertyValue(game);
-            game.Name.Should().Be("name from constant rule");
-            _testOutputHelper.WriteLine($"after game.Name: {game.Name}");
-        }
+        var string1 = "one";
+        rule.RefUpdate(ref string1);
+        string1.Should().Be("something");
 
-        [Fact]
-        public void UpdateStringRef()
+        // source value shall come as argument
+        var rule2 = new UpdateRefValueRule<string>();
+        compileResult = rule2.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"UpdateRefValueRule<string, string>:{Environment.NewLine}" +
+                                    $"{rule2.ExpressionDebugView()}");
+
+        string1 = null;
+        rule2.RefUpdate(ref string1, "some other value");
+        string1.Should().Be("some other value");
+    }
+
+    [Fact]
+    public void UpdateIntRef()
+    {
+        var rule = new UpdateRefValueRule<int>
         {
-            // source value is fixed with a constant rule
-            var rule = new UpdateRefValueRule<string>
-            {
-                SourceDataRule = new ConstantRule<string>{Value = "something"}
-            };
+            SourceDataRule = new ConstantRule<int>{Value = "99"}
+        };
 
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"UpdateRefValueRule<string>:{Environment.NewLine}" +
-                                        $"{rule.ExpressionDebugView()}");
+        var compileResult = rule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");
 
-            var string1 = "one";
-            rule.RefUpdate(ref string1);
-            string1.Should().Be("something");
+        var myInt = 0;
+        rule.RefUpdate(ref myInt);
+        myInt.Should().Be(99);
 
-            // source value shall come as argument
-            var rule2 = new UpdateRefValueRule<string>();
-            compileResult = rule2.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"UpdateRefValueRule<string, string>:{Environment.NewLine}" +
-                                        $"{rule2.ExpressionDebugView()}");
+        var rule2 = new UpdateRefValueRule<int>();
+        compileResult = rule2.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"UpdateRefValueRule<int, int>:{Environment.NewLine}" +
+                                    $"{rule2.ExpressionDebugView()}");
 
-            string1 = null;
-            rule2.RefUpdate(ref string1, "some other value");
-            string1.Should().Be("some other value");
-        }
-
-        [Fact]
-        public void UpdateIntRef()
-        {
-            var rule = new UpdateRefValueRule<int>
-            {
-                SourceDataRule = new ConstantRule<int>{Value = "99"}
-            };
-
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"{rule.ExpressionDebugView()}");
-
-            var myInt = 0;
-            rule.RefUpdate(ref myInt);
-            myInt.Should().Be(99);
-
-            var rule2 = new UpdateRefValueRule<int>();
-            compileResult = rule2.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"UpdateRefValueRule<int, int>:{Environment.NewLine}" +
-                                        $"{rule2.ExpressionDebugView()}");
-
-            rule2.RefUpdate(ref myInt, -99);
-            myInt.Should().Be(-99);
-        }
+        rule2.RefUpdate(ref myInt, -99);
+        myInt.Should().Be(-99);
     }
 }

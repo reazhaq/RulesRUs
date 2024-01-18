@@ -1,71 +1,63 @@
-﻿using System;
-using FluentAssertions;
-using ModelForUnitTests;
-using RuleEngine.Rules;
-using Xunit;
-using Xunit.Abstractions;
+﻿namespace RuleEngine.Tests.Rules;
 
-namespace RuleEngine.Tests.Rules
+public class SelfReturnRuleTests
 {
-    public class SelfReturnRuleTests
+    private readonly ITestOutputHelper _testOutputHelper;
+
+    public SelfReturnRuleTests(ITestOutputHelper testOutputHelper)
     {
-        private readonly ITestOutputHelper _testOutputHelper;
+        _testOutputHelper = testOutputHelper;
+    }
 
-        public SelfReturnRuleTests(ITestOutputHelper testOutputHelper)
-        {
-            _testOutputHelper = testOutputHelper;
-        }
+    [Theory]
+    [InlineData(5)]
+    [InlineData(-5)]
+    [InlineData(int.MaxValue)]
+    public void IntSelfReturn(int someValue)
+    {
+        var rule = new SelfReturnRule<int>();
+        var compileResult = rule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"selfReturnRule for Int:{Environment.NewLine}" +
+                                    $"{rule.ExpressionDebugView()}");
 
-        [Theory]
-        [InlineData(5)]
-        [InlineData(-5)]
-        [InlineData(int.MaxValue)]
-        public void IntSelfReturn(int someValue)
-        {
-            var rule = new SelfReturnRule<int>();
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"selfReturnRule for Int:{Environment.NewLine}" +
-                                        $"{rule.ExpressionDebugView()}");
+        var value = rule.Get(someValue);
+        value.Should().Be(someValue);
+    }
 
-            var value = rule.Get(someValue);
-            value.Should().Be(someValue);
-        }
+    [Theory]
+    [InlineData("one")]
+    [InlineData(null)]
+    [InlineData("")]
+    public void StringSelfReturn(string someValue)
+    {
+        var rule = new SelfReturnRule<string>();
+        var compileResult = rule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"selfReturnRule for String:{Environment.NewLine}" +
+                                    $"{rule.ExpressionDebugView()}");
 
-        [Theory]
-        [InlineData("one")]
-        [InlineData(null)]
-        [InlineData("")]
-        public void StringSelfReturn(string someValue)
-        {
-            var rule = new SelfReturnRule<string>();
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"selfReturnRule for String:{Environment.NewLine}" +
-                                        $"{rule.ExpressionDebugView()}");
+        var value = rule.Get(someValue);
+        value.Should().Be(someValue);
 
-            var value = rule.Get(someValue);
-            value.Should().Be(someValue);
+        var referenceEquals = ReferenceEquals(someValue, value);
+        referenceEquals.Should().BeTrue();
+    }
 
-            var referenceEquals = ReferenceEquals(someValue, value);
-            referenceEquals.Should().BeTrue();
-        }
+    [Fact]
+    public void GameSelfReturn()
+    {
+        var rule = new SelfReturnRule<Game>();
+        var compileResult = rule.Compile();
+        compileResult.Should().BeTrue();
+        _testOutputHelper.WriteLine($"selfReturnRule for Game:{Environment.NewLine}" +
+                                    $"{rule.ExpressionDebugView()}");
 
-        [Fact]
-        public void GameSelfReturn()
-        {
-            var rule = new SelfReturnRule<Game>();
-            var compileResult = rule.Compile();
-            compileResult.Should().BeTrue();
-            _testOutputHelper.WriteLine($"selfReturnRule for Game:{Environment.NewLine}" +
-                                        $"{rule.ExpressionDebugView()}");
+        var someGame = new Game();
+        var value = rule.Get(someGame);
+        value.Should().Be(someGame);
 
-            var someGame = new Game();
-            var value = rule.Get(someGame);
-            value.Should().Be(someGame);
-
-            var referenceEquals = ReferenceEquals(someGame, value);
-            referenceEquals.Should().BeTrue();
-        }
+        var referenceEquals = ReferenceEquals(someGame, value);
+        referenceEquals.Should().BeTrue();
     }
 }

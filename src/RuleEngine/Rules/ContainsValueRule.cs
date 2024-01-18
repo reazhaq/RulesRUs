@@ -1,54 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Linq.Expressions;
-using RuleEngine.Common;
-using RuleEngine.Interfaces.Rules;
-using RuleEngine.Utils;
+﻿namespace RuleEngine.Rules;
 
-namespace RuleEngine.Rules
+public class ContainsValueRule<T> : Rule, IContainsValueRule<T>
 {
-    public class ContainsValueRule<T> : Rule, IContainsValueRule<T>
+    private Func<T, bool> CompiledDelegate { get; set; }
+
+    public List<T> CollectionToSearch = new List<T>();
+
+    public string EqualityComparerClassName { get; set; }
+    public string EqualityComparerPropertyName { get;set; }
+    public IEqualityComparer<T> EqualityComparer { get; set; } = EqualityComparer<T>.Default;
+
+    public override Expression BuildExpression(params ParameterExpression[] parameters)
     {
-        private Func<T, bool> CompiledDelegate { get; set; }
+        if (!string.IsNullOrEmpty(EqualityComparerClassName) && !string.IsNullOrEmpty(EqualityComparerPropertyName))
+            EqualityComparer =
+                ReflectionExtensions.GetEqualityComparerProperty<T>(EqualityComparerClassName,
+                    EqualityComparerPropertyName);
 
-        public List<T> CollectionToSearch = new List<T>();
+        Expression<Func<T, bool>> expression = s => CollectionToSearch.Contains(s, EqualityComparer);
+        ExpressionForThisRule = expression;
+        return expression;
+    }
 
-        public string EqualityComparerClassName { get; set; }
-        public string EqualityComparerPropertyName { get;set; }
-        public IEqualityComparer<T> EqualityComparer { get; set; } = EqualityComparer<T>.Default;
+    public override bool Compile()
+    {
+        var parameter = Expression.Parameter(typeof(T));
+        ExpressionForThisRule = BuildExpression(parameter);
+        if (!(ExpressionForThisRule is Expression<Func<T, bool>>)) return false;
 
-        public override Expression BuildExpression(params ParameterExpression[] parameters)
-        {
-            if (!string.IsNullOrEmpty(EqualityComparerClassName) && !string.IsNullOrEmpty(EqualityComparerPropertyName))
-                EqualityComparer =
-                    ReflectionExtensions.GetEqualityComparerProperty<T>(EqualityComparerClassName,
-                        EqualityComparerPropertyName);
+        Debug.WriteLine($"expression ={Environment.NewLine}{ExpressionDebugView()}");
 
-            Expression<Func<T, bool>> expression = s => CollectionToSearch.Contains(s, EqualityComparer);
-            ExpressionForThisRule = expression;
-            return expression;
-        }
+        CompiledDelegate = (ExpressionForThisRule as Expression<Func<T, bool>>)?.Compile();
+        return CompiledDelegate != null;
+    }
 
-        public override bool Compile()
-        {
-            var parameter = Expression.Parameter(typeof(T));
-            ExpressionForThisRule = BuildExpression(parameter);
-            if (!(ExpressionForThisRule is Expression<Func<T, bool>>)) return false;
+    public bool ContainsValue(T valueToSearch)
+    {
+        if (CompiledDelegate == null)
+            throw new RuleEngineException("A Rule must be compiled first");
 
-            Debug.WriteLine($"expression ={Environment.NewLine}{ExpressionDebugView()}");
-
-            CompiledDelegate = (ExpressionForThisRule as Expression<Func<T, bool>>)?.Compile();
-            return CompiledDelegate != null;
-        }
-
-        public bool ContainsValue(T valueToSearch)
-        {
-            if (CompiledDelegate == null)
-                throw new RuleEngineException("A Rule must be compiled first");
-
-            return CompiledDelegate(valueToSearch);
-        }
+        return CompiledDelegate(valueToSearch);
     }
 }

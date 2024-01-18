@@ -1,0 +1,14 @@
+﻿global using FluentAssertions;
+global using Microsoft.CSharp.RuntimeBinder;
+global using ModelForUnitTests;
+global using RuleEngine.Common;
+global using RuleEngine.Rules;
+global using RuleEngine.Tests.Fixture;
+global using RuleEngine.Utils;
+global using System;
+global using System.Collections.Generic;
+global using System.Linq;
+global using System.Linq.Expressions;
+global using System.Text;
+global using Xunit;
+global using Xunit.Abstractions;
