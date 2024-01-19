@@ -1,3 +1,7 @@
+# Version 8.0.0
+- Everything upgraded to dotnet-8
+- dependent pkgs updated to latest (as of Jan 18, 2024)
+
 # Version 1.3.0
 - New rule:
   - Func Block rule; simple way to combine number of similar rules into one rule - return the result of the last rule's result

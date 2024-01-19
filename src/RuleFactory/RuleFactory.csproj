@@ -1,16 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Authors>Reaz</Authors>
     <Company>Bluebonnet Software</Company>
     <Description>Rule factory to create expression tree based rules.  Rules Factory can help create rules; since there may be too many details to keep track for a complex rule.</Description>
     <PackageLicenseUrl>https://github.com/reazhaq/RulesRUs/blob/master/LICENSE</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/reazhaq/RulesRUs</PackageProjectUrl>
     <RepositoryUrl>https://github.com/reazhaq/RulesRUs</RepositoryUrl>
-    <Version>1.3.0$(VersionSuffix)</Version>
-    <PackageReleaseNotes>- New Factory Method:
-  - Func Block Rule
+    <Version>8.0.0$(VersionSuffix)</Version>
+    <PackageReleaseNotes>- upgraded to dotnet 8
 
 https://github.com/reazhaq/RulesRUs/blob/master/RELEASENOTES.MD
     </PackageReleaseNotes>

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution-items", "solution-items", "{ABDECE90-C6B3-4A19-8F80-553814BE49CE}"
 	ProjectSection(SolutionItems) = preProject
@@ -40,7 +40,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{8A3FB0F0-6
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelForUnitTests", "misc\ModelForUnitTests\ModelForUnitTests.csproj", "{ACC9EC08-F074-4453-934E-BE19FA24CF6C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleModel", "samples\SampleModel\SampleModel.csproj", "{F0510B08-978D-40EC-8933-9E22070D29CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleModel", "samples\SampleModel\SampleModel.csproj", "{F0510B08-978D-40EC-8933-9E22070D29CC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
